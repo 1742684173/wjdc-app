@@ -1,0 +1,20 @@
+// @flow
+import type {
+  Props as PropsType,
+  InputProps as InputPropsType,
+  FieldProps as FieldPropsType,
+} from 'redux-form/es/FieldProps.types.js.flow';
+
+export type FieldProps = PropsType;
+
+export type InputProps = InputPropsType;
+
+export type MetaProps = $PropertyType<FieldPropsType, 'meta'>;
+
+export type RenderFieldProps = FieldPropsType;
+
+export type RenderFieldComponentProps = {
+  ...$Exact<InputProps>,
+  meta: MetaProps,
+};
+

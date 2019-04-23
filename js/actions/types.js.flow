@@ -1,0 +1,12 @@
+// @flow
+export type ReduxAction = { type: $Subtype<string> };
+
+export type PromiseAction = Promise<ReduxAction>;
+
+export type ThunkAction = (Dispatch, GetState) => any;
+
+export type Action = ReduxAction | PromiseAction | ThunkAction;
+
+export type Dispatch = (Action) => any;
+
+export type GetState = () => Object;
