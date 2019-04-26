@@ -11,6 +11,7 @@ import BillInfo from './work/bill';
 import Bills from './work/bill/Bills';
 import BillForm from './work/bill/BillForm';
 import BillMethodForm from './work/bill/BillMethodForm';
+import BillSortForm from './work/bill/BillSortForm';
 import Contact from './work/contact';
 import ContactDetail from './work/contact/ContactDetail'
 
@@ -20,6 +21,7 @@ const AppStack = StackNavigator({
   Bills,
   BillForm,
   BillMethodForm,
+  BillSortForm,
   Publish,
   Contact,
   ContactDetail,

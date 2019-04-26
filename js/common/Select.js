@@ -40,6 +40,12 @@ export default class Select extends Component{
     this.props.onChange(item.id);
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.values !== this.props.values){
+      nextProps.values.length > 0?this.props.onChange(nextProps.values[0].id):null;
+    }
+  }
+
   render(){
     const {
       values,

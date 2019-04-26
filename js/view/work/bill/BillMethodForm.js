@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {Text, ScrollView,View, StyleSheet, Alert} from 'react-native';
 import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
 import {connect} from 'react-redux';
-import Back from '../../../common/Back';
 import {reduxForm} from 'redux-form';
 import Field from '../../../common/Field';
 import TextField from '../../../common/TextField';
@@ -10,7 +9,6 @@ import TextArea from '../../../common/TextArea';
 import Button from '../../../common/Button';
 import * as config from '../../../config';
 import * as actions from '../../../actions/index';
-import MyLoad from "../../../common/MyLoad";
 import BaseComponent from "../../base/BaseComponent";
 
 class BillMethodForm extends BaseComponent {
@@ -26,9 +24,6 @@ class BillMethodForm extends BaseComponent {
     this.item = this.props.navigation.state.params.item;
     this.func = this.props.navigation.state.params.func;
     this.setTitle(this.props.navigation.state.params.title);
-  }
-
-  componentWillMount(){
     this.item?this.props.initialize(this.item):null;
   }
 
@@ -54,14 +49,12 @@ class BillMethodForm extends BaseComponent {
     try{
       this.showActivityIndicator();
 
-      let myParams = Object.assign(object,{parentid:1})
-      const {type,code,msg,data} = await this.props.postAction(this.func,myParams,'添加/编辑分类','form');
-      console.log('=>'+JSON.stringify(data));
+      const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑方式','form');
 
       if(type === this.func){
         if(code === 1){
           this.showAlert({
-            content:(this.item?'编辑':'添加')+'分类成功,是否继续'+'？',
+            content:(this.item?'编辑':'添加')+'成功,是否继续'+'？',
             confirmText:'是',
             cancelText:'否',
             confirm:this._confirm,
@@ -85,13 +78,13 @@ class BillMethodForm extends BaseComponent {
 
         <View style={{height:pxTodpHeight(24)}}/>
 
-        <Field name={'name'} component={TextField} title={'分类名称'} isNeed={true}/>
+        <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
 
         <View style={{height:pxTodpHeight(24)}}/>
-        <Field name={'descs'} component={TextArea} title={'分类描述'} isNeed={false} height={pxTodpHeight(200)}/>
+        <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={pxTodpHeight(200)}/>
 
         <View style={{height:pxTodpHeight(100)}}/>
-        <Button style={{height:pxTodpHeight(78),marginHorizontal: pxTodpWidth(30)}}
+        <Button style={{height:pxTodpHeight(78)}}
                 onPress={this.props.handleSubmit(this._handleSubmit)}>
           <Text style={styles.btnSubmit}>提交</Text>
         </Button>

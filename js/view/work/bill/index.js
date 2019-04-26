@@ -62,7 +62,7 @@ class BillInfo extends BaseComponent {
 
   //去新增帐单界面
   _onAddBillBtn = () => {
-    this.props.navigation.navigate('AddBill',{
+    this.props.navigation.navigate('BillForm',{
       title:'添加帐单',
       callback:(data)=>{
         this.getBillInfo();
@@ -71,6 +71,10 @@ class BillInfo extends BaseComponent {
 
   //去帐单历史记录界面
   _onBillsBtn = () => {
+    if(this.state.billsData.length === 0){
+      this.showToast('还没有记录哦');
+      return;
+    }
     this.props.navigation.navigate('Bills');
   }
 
@@ -114,7 +118,7 @@ class BillInfo extends BaseComponent {
           {/*查找历史消费*/}
           <TouchableOpacity onPress={this._onBillsBtn}>
             <ImageBackground style={styles.div3} source={addBillPic}>
-              <Text style={styles.font2}>历史记录</Text>
+              <Text style={styles.font2}>帐单统计</Text>
             </ImageBackground>
           </TouchableOpacity>
         </View>
@@ -122,7 +126,7 @@ class BillInfo extends BaseComponent {
         <Title text={'最近消费'} style={{marginTop:pxTodpHeight(30),marginBottom:pxTodpHeight(10)}}/>
 
         {/*当天的消费情况*/}
-        <View style={{flex:1, marginHorizontal:pxTodpWidth(30),}}>
+        <TouchableOpacity style={{flex:1, marginHorizontal:pxTodpWidth(30),}} onPress={this._onBillsBtn}>
           {
             this.state.billsData.length===0?(
               <Image source={nullDataPic} style={{height:pxTodpHeight(210),width:'100%'}} resizeMode={'contain'}/>
@@ -135,7 +139,7 @@ class BillInfo extends BaseComponent {
                       {item.sortName}
                     </Text>
                     {/*分类金额*/}
-                    <Text style={{color:item.sums>0?'#f03':'#fffa03',fontSize:pxTodpWidth(30)}}>
+                    <Text style={{color:item.sums>0?'#f03':'#00cd00',fontSize:pxTodpWidth(30)}}>
                       {item.sums>0?('+'+item.sums):item.sums}
                     </Text>
                   </View>
@@ -153,7 +157,7 @@ class BillInfo extends BaseComponent {
             })
           }
 
-        </View>
+        </TouchableOpacity>
       </View>
     )
 

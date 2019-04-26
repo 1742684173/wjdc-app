@@ -6,12 +6,7 @@ import FetchUtil from '../common/FetchUtil';
 import {SERVER_ADDRES} from "../config";
 
 
-let myparams= {
-  pageNum:1,
-  pageSize:10,
-  sortName:null,
-  condition:null
-};
+
 
 let fetchUtil = new FetchUtil();
 
@@ -40,7 +35,7 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
   console.log((desc?desc:'')+'sign信息：'+JSON.stringify(sign));
 
   //body参数
-  const params = Object.assign({},myparams,object);
+  const params = Object.assign({},object);
   console.log((desc?desc:'')+'params信息：'+JSON.stringify(params));
 
   try{

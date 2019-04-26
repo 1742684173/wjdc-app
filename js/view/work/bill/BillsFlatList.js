@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import nullDataIcon from "../../../img/common/nullDataIcon.png";
 import moment from "moment";
 
-export default class BillFlatList extends Component{
+export default class BillsFlatList extends Component{
   static propTypes = {
     data:PropTypes.any,//传入的数据
     onRefresh:PropTypes.func,//刷新数据
@@ -55,26 +55,25 @@ export default class BillFlatList extends Component{
     return (
       <TouchableOpacity style={styles.itemView} onPress={()=>this._goDetail(item)}>
 
-        <View style={styles.topView}>
-          <Text style={{fontSize:pxTodpWidth(30)}}>
-            {moment(item.dates).format("YYYY-MM-DD")}
-            <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>
-              ({item.sort})
+          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+            {/*分类名称*/}
+            <Text style={{fontSize:pxTodpWidth(30)}}>
+              {item.sortName}
             </Text>
-          </Text>
-          <Text style={{color:item.sums>0?'#f03':'#fffa03',fontSize:pxTodpWidth(30)}}>
-            {item.sums>0?('+'+item.sums):item.sums}
-          </Text>
-        </View>
+            {/*分类金额*/}
+            <Text style={{color:item.sums>0?'#f03':'#00cd00',fontSize:pxTodpWidth(30)}}>
+              {item.sums>0?('+'+item.sums):item.sums}
+            </Text>
+          </View>
 
-        {/*内容*/}
-        <Text
-          numberOfLines={3}
-          ellipsizeMode={'tail'}
-          style={{color:'#666666',fontSize:pxTodpWidth(24)}}
-        >
-          {item.descs}
-        </Text>
+          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+            <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>
+              来源:{item.methodName}
+            </Text>
+            <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>
+              时间:{moment(item.dates).format("YYYY-MM-DD hh:mm:ss")}
+            </Text>
+          </View>
 
       </TouchableOpacity>
     );
@@ -101,6 +100,7 @@ export default class BillFlatList extends Component{
 
 const styles = StyleSheet.create({
   itemView:{
+    justifyContent:'space-around',
     height:pxTodpHeight(100),
     width:pxTodpWidth(690),
     backgroundColor:'#ffffff',

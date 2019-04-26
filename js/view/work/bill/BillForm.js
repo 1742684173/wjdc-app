@@ -15,10 +15,10 @@ import Button from '../../../common/Button';
 import Select from '../../../common/Select';
 import * as config from '../../../config';
 import * as actions from '../../../actions/index';
-import MyLoad from "../../../common/MyLoad";
 import moment from "moment";
 import BaseComponent from "../../base/BaseComponent";
 
+const selectType = [{key:'out',value:'支出'},{key:'in',value:'收入'}];
 class BillForm extends BaseComponent {
 
   state = {
@@ -39,7 +39,7 @@ class BillForm extends BaseComponent {
 
   //获取
   _getBillInfo = async() => {
-    this.refs.myLoad.showActivityIndicator();
+    this.showActivityIndicator();
 
     try{
 
@@ -55,39 +55,49 @@ class BillForm extends BaseComponent {
       const billData = !!!this.id?null:await this.props.postAction(config.FIND_BILL,{id:this.id},'查询消费');
       billData===null?null:this._dealParams(billData);
 
+      this.hideActivityIndicator();
+
       this._dealParams({});
     }catch (e) {
-      this.refs.myLoad.showToast(e.message || e.note);
+      this.showToast(e.message || e.note);
     }
-
   }
 
   //刷新消费分类
   _onRefreshSort = async () => {
-    this.refs.myLoad.showActivityIndicator();
+    this.showActivityIndicator();
     try{
       //分类
       const sortData = await this.props.postAction(config.FIND_BILL_SORT,{pageSize:1000},'查询消费类别');
+      this.hideActivityIndicator();
       this._dealParams(sortData);
     }catch (e) {
-      this.refs.myLoad.showToast(e.message || e.note);
+      this.showToast(e.message || e.note);
     }
   }
 
   //消费消费方式
   _onRefreshMethod = async () => {
-    this.refs.myLoad.showActivityIndicator();
+    this.showActivityIndicator();
     try{
       //方式
       const methodData = await this.props.postAction(config.FIND_BILL_METHOD,{pageSize:1000},'查询消费方式');
+      this.hideActivityIndicator();
       this._dealParams(methodData);
     }catch (e) {
-      this.refs.myLoad.showToast(e.message || e.note);
+      this.showToast(e.message || e.note);
     }
   }
 
   //处理返回请求结果
   _dealParams = (params:Object) => {
+    // this.props.initialize({
+    //   method:this.state.selectMethod.length>0?this.state.selectMethod[0].id:null,
+    //   sort:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
+    //   dates:moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+    //   type:selectType[0].key+''
+    // });
+
     let {type,code,msg,data} = params;
     switch (type) {
         //消费类别
@@ -99,7 +109,7 @@ class BillForm extends BaseComponent {
             this.setState({selectSort:selectSort});
           }
         }else{
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
         }
         break;
 
@@ -112,15 +122,9 @@ class BillForm extends BaseComponent {
             this.setState({selectMethod:selectMethod});
           }
         }else{
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
         }
 
-        this.props.initialize({
-          method:this.state.selectMethod.length>0?this.state.selectMethod[0].id:null,
-          sort:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
-          dates:moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
-          type:this.props.sums===1?selectType[0].key:selectType[1].key
-        });
         break;
 
         //修改帐单时查询帐单信息
@@ -129,35 +133,34 @@ class BillForm extends BaseComponent {
           if(data.total > 0){
             this.props.initialize(data.list[0]);
           }else{
-            this.refs.myLoad.showToast('帐单数据为空');
+            this.showToast('帐单数据为空');
           }
         }else{
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
         }
         break;
 
       //通过id删除消费方式
       case config.DELETE_BILL_METHOD_BY_ID:
         if(code === 1){
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
           this._onRefreshMethod();
         }else{
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
         }
         break;
 
       //通过id删除消费方式
       case config.DELETE_BILL_SORT_BY_ID:
         if(code === 1){
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
           this._onRefreshSort();
         }else{
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
         }
         break;
 
       default:
-        this.refs.myLoad.hideActivityIndicator();
         break;
 
     }
@@ -166,32 +169,37 @@ class BillForm extends BaseComponent {
   //添加
   _addBill = async (object:Object) => {
 
-    const {method,dates,sums,sort} = object;
+    const {methodId,dates,sums,sortId,type} = object;
     if(sums === undefined || sums === null || sums.length === 0){
-      this.refs.myLoad.showToast('请输入消费金额');
+      this.showToast('请输入消费金额');
       return;
     }
 
-    if(sort === undefined || sort === null || sort.length === 0){
-      this.refs.myLoad.showToast('请选择消费分类');
+    if(methodId === undefined || methodId === null || methodId.length === 0){
+      this.showToast('请选择消费方式');
       return;
     }
 
-    this.refs.myLoad.showActivityIndicator();
+    if(sortId === undefined || sortId === null || sortId.length === 0){
+      this.showToast('请选择消费分类');
+      return;
+    }
+
+    this.showActivityIndicator();
     try{
-      const {type,code,msg,data} = await this.props.postAction(config.ADD_BILL,Object.assign(object,{sums:sums*method}),'添加帐单','form');
-      console.log('=>'+JSON.stringify(data));
+      const {type,code,msg} =
+        await this.props.postAction(config.ADD_BILL,Object.assign(object,{sums:type==='in'?sums:-1*sums}),'添加帐单','form');
 
       if(type === config.ADD_BILL){
         if(code === 1){
-          this.refs.myLoad.showAlert({
+          this.showAlert({
             content:'添加成功,是否继续？',
             confirmText:'是',
             cancelText:'否',
             confirm:()=>{
               this.props.initialize({
-                method:this.state.selectMethod.length>0?this.state.selectMethod[0].id:null,
-                sort:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
+                methodId:this.state.selectMethod.length>0?this.state.selectMethod[0].id:null,
+                sortId:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
                 dates:moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
                 type:this.props.sums===1?selectType[0].key:selectType[1].key
               });
@@ -203,17 +211,17 @@ class BillForm extends BaseComponent {
           });
 
         }else{
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
         }
       }
     }catch (e) {
-      this.refs.myLoad.showToast(e.message||'未知错误');
+      this.showToast(e.message||'未知错误');
     }
   }
 
   //增加分类
   _addSortBtn = () => {
-    this.props.navigation.navigate('AddSort',{
+    this.props.navigation.navigate('BillSortForm',{
       title:'添加消费分类',
       func:config.ADD_BILL_SORT,
       callback:this._onRefreshSort
@@ -231,20 +239,20 @@ class BillForm extends BaseComponent {
 
   //编辑方式
   _editMethodBtn = (item) =>{
-    this.props.navigation.navigate('AddSort',{
+    this.props.navigation.navigate('BillMethodForm',{
       title:'编辑消费方式',
       item,
-      func:config.UPDATE_BILL_METHOD,
+      func:config.UPDATE_BILL_METHOD_BY_ID,
       callback:this._onRefreshMethod
     });
   }
 
   //编辑分类
   _editSortBtn = (item) =>{
-    this.props.navigation.navigate('AddSort',{
+    this.props.navigation.navigate('BillSortForm',{
       title:'编辑消费分类',
       item,
-      func:config.UPDATE_BILL_SORT,
+      func:config.UPDATE_BILL_SORT_BY_ID,
       callback:this._onRefreshSort
     });
   }
@@ -255,7 +263,7 @@ class BillForm extends BaseComponent {
 
   //提示是否通过id删除消费方式
   _deleteMethodBtn = (item) => {
-    this.refs.myLoad.showAlert({
+    this.showAlert({
       content:'确认删除【'+item.name+'】?',
         cancel:this._cancelDelete,
       confirm:()=>this._confirmDeleteMethod(item.id)
@@ -264,19 +272,19 @@ class BillForm extends BaseComponent {
 
   //确认删除消费方式
   _confirmDeleteMethod = async (id:number) => {
-    this.refs.myLoad.showActivityIndicator();
+    this.showActivityIndicator();
     try{
       //方式
       const methodData = await this.props.postAction(config.DELETE_BILL_METHOD_BY_ID,{id:id},'通过id删除消费方式');
       this._dealParams(methodData);
     }catch (e) {
-      this.refs.myLoad.showToast(e.message || e.note);
+      this.showToast(e.message || e.note);
     }
   }
 
   //提示是否通过id删除消费类别
   _deleteSortBtn = (item) => {
-    this.refs.myLoad.showAlert({
+    this.showAlert({
       content:'确认删除【'+item.name+'】?',
       cancel:this._cancelDelete,
       confirm:()=>this._confirmDeleteSort(item.id)
@@ -285,13 +293,13 @@ class BillForm extends BaseComponent {
 
   //确认删除消费类别
   _confirmDeleteSort = async (id:number) => {
-    this.refs.myLoad.showActivityIndicator();
+    this.showActivityIndicator();
     try{
       //方式
       const methodData = await this.props.postAction(config.DELETE_BILL_SORT_BY_ID,{id:id},'通过id删除消费方式');
       this._dealParams(methodData);
     }catch (e) {
-      this.refs.myLoad.showToast(e.message || e.note);
+      this.showToast(e.message || e.note);
     }
   }
 
@@ -302,8 +310,7 @@ class BillForm extends BaseComponent {
 
         <View style={{height:pxTodpHeight(24)}}/>
         <Field name={'type'} component={RadioButton} title={'消费类型'} isNeed={true}
-          values={selectType}
-          defaultValue={this.props.sums===1?selectType[0].key:selectType[1].key}
+          values={selectType} defaultValue={selectType[0].key}
         />
 
         <Field name={'dates'} component={DateTimeField}
@@ -328,7 +335,7 @@ class BillForm extends BaseComponent {
 
         <View style={{position:'absolute',top:pxTodpHeight(370)}}>
           <Field
-            name={'sort'} component={Select} title={'消费分类'} isNeed={true}
+            name={'sortId'} component={Select} title={'消费分类'} isNeed={true}
             values={this.state.selectSort}
             isShowAdd={true}
             addBtn={this._addSortBtn}
@@ -341,7 +348,7 @@ class BillForm extends BaseComponent {
 
         <View style={{position:'absolute',top:pxTodpHeight(280)}}>
           <Field
-            name={'method'} component={Select} title={'消费方式'} isNeed={true}
+            name={'methodId'} component={Select} title={'消费方式'} isNeed={true}
             values={this.state.selectMethod}
             isShowAdd={true}
             addBtn={this._addMethodBtn}

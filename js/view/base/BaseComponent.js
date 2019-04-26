@@ -15,6 +15,13 @@ import Toast from "react-native-root-toast";
 import backImg from '../../img/common/back-icon.png';
 import Search from "../../common/Search";
 
+let myparams= {
+  currentPage:0,
+  pageSize:10,
+  sortName:null,
+  condition:null
+};
+
 export default class BaseComponent extends Component<any> {
 
   state = {
@@ -42,7 +49,11 @@ export default class BaseComponent extends Component<any> {
 
   //返回
   _goBack = () => {
-    console.log('1111');
+    this.props.navigation.state?(this.props.navigation.state.params?(
+      this.props.navigation.state.params.callback?
+        this.props.navigation.state.params.callback({}):null
+    ):null):null;
+    this.props.navigation.goBack();
   }
 
   //设置标题

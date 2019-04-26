@@ -34,7 +34,7 @@ class Input extends Component<any> {
       disableUnderline,
       prefix,
       postfix,
-      // onChange,
+      onChange,
       //onFocus,
       value,
       ...other
@@ -49,7 +49,7 @@ class Input extends Component<any> {
           placeholderTextColor={'#dcdcdc'}
           style={[styles.input, inputStyle]}
           underlineColorAndroid={'transparent'}
-          // onChangeText={(text)=>onChange(text)}
+          onChangeText={(text)=>onChange(text)}
           defaultValue={value}
           {...other}
         />

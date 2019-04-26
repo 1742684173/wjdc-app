@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MyDialog from '../../../common/MyDialog';
 import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from 'react-native';
 import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
-import BillFlatList from './BillFlatList';
+import BillsFlatList from './BillsFlatList';
 import LoadView from '../../../common/LoadView';
 import Search from '../../../common/Search';
 import {connect} from 'react-redux';
@@ -15,34 +15,27 @@ import BillLabel from "./BillLabel";
 import {reduxForm} from "redux-form";
 import MyLoad from "../../../common/MyLoad";
 import moment from "moment";
+import BaseComponent from "../../base/BaseComponent";
 
-let pageToal=0;
-let pageNum = 1;//当前第几页
-let condition=null;//查询条件
-
-class Bills extends Component {
+class Bills extends BaseComponent {
   static navigationOptions = ({navigation}) => ({
     headerLeft:<Back navigation={navigation}/>,
     title: '历史帐单',
     headerRight:<View/>,
   });
 
+  state = {
+    total:0,//事件总数
+    foot:1,
+    data:[],
+    selectSort:[],//消费方式
+    selectMethod:[],//消费类别
+  }
+
   // 构造
   constructor(props) {
     super(props);
-    // 初始状态
-    this.state = {
-      visible:true,//加载框
-      total:0,//事件总数
-      foot:1,
-      modelVisible:false,//是否显示model
-      data:[],
-      selectSort:[],//消费方式
-      selectMethod:[],//消费类别
-    };
-
-    pageNum = 1;//当前第几页
-    condition=null;//查询条件
+    this.setTitle('历史记录')
   }
 
   componentDidMount(){
@@ -50,7 +43,7 @@ class Bills extends Component {
   }
 
   _getBillInfo = async () => {
-    this.refs.myLoad.showActivityIndicator();
+    this.showActivityIndicator();
 
     try{
 
@@ -67,9 +60,8 @@ class Bills extends Component {
       const billData = await this.props.postAction(config.FIND_BILL,params,'查询消费');
       this._dealParams(billData);
 
-      this._dealParams({});
     }catch (e) {
-      this.refs.myLoad.showToast(e.message || e.note);
+      this.showToast(e.message || e.note);
     }
   }
 
@@ -85,7 +77,7 @@ class Bills extends Component {
             this.setState({selectSort: selectSort});
           }
         } else {
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
         }
         break;
 
@@ -98,7 +90,7 @@ class Bills extends Component {
             this.setState({selectMethod: selectMethod});
           }
         } else {
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
         }
 
         break;
@@ -127,18 +119,17 @@ class Bills extends Component {
 
           this.setState({foot:foot,data:myData});
         } else {
-          this.refs.myLoad.showToast(msg);
+          this.showToast(msg);
         }
 
         break;
-      default:
-        this.refs.myLoad.hideActivityIndicator();
-        break;
     }
+
+    this.hideActivityIndicator();
   }
 
   _getBillList = async (object:Object) => {
-    this.refs.myLoad.showActivityIndicator();
+    this.showActivityIndicator();
 
     try{
       //帐单
@@ -148,7 +139,7 @@ class Bills extends Component {
 
       this._dealParams({});
     }catch (e) {
-      this.refs.myLoad.showToast(e.message || e.note);
+      this.showToast(e.message || e.note);
     }
   }
 
@@ -197,12 +188,12 @@ class Bills extends Component {
 
   //前往详情界面
   _onItemClick = (item) => {
-    // this.props.navigation.navigate('AccountDetail', {
-    //   item:item,
-    //   // callback:(data)=>{
-    //   //   this._onRefresh();
-    //   // }
-    // })
+    this.props.navigation.navigate('BillDetail', {
+      item:item,
+      // callback:(data)=>{
+      //   this._onRefresh();
+      // }
+    })
   }
 
   //去新增帐单界面
@@ -224,10 +215,11 @@ class Bills extends Component {
   }
 
   render() {
-    return (
+    super.render();
+    let view = (
       <View style={styles.contain}>
 
-        <BillFlatList
+        <BillsFlatList
           data={this.state.data}
           footView={this._footView}
           onEndReached={this._onEndReached}
@@ -247,6 +239,8 @@ class Bills extends Component {
         <MyLoad ref={'myLoad'}/>
       </View>
     )
+
+    return super.renderBase(view);
   }
 
 }
@@ -254,7 +248,8 @@ class Bills extends Component {
 const styles = StyleSheet.create({
   contain:{
     flex:1,
-    backgroundColor:'#f2f2f2'
+    backgroundColor:'#f2f2f2',
+    paddingTop: pxTodpHeight(30)
   },
 });
 

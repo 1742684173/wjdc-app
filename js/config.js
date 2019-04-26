@@ -21,24 +21,15 @@ export const FIND_BILL = '/bill/find.do';
 //增加帐单方式
 export const ADD_BILL_METHOD = '/billMethod/add.do';
 export const DELETE_BILL_METHOD_BY_ID = '/billMethod/deleteById.do';
-export const UPDATE_BILL_METHOD = '/billMethod/update.do';
+export const UPDATE_BILL_METHOD_BY_ID = '/billMethod/updateById.do';
 export const FIND_BILL_METHOD = '/billMethod/find.do';
 
 //增加帐单类别
 export const ADD_BILL_SORT = '/billSort/add.do';
 export const DELETE_BILL_SORT_BY_ID = '/billSort/deleteById.do';
-export const UPDATE_BILL_SORT = '/billSort/update.do';
+export const UPDATE_BILL_SORT_BY_ID = '/billSort/updateById.do';
 export const FIND_BILL_SORT = '/billSort/find.do';
 
-
-
-
-//查询分类
-export const FIND_SORT = '/sort/findSort.do';
-//新增分类
-export const ADD_SORT = '/sort/addSort.do';
-//编辑分类
-export const EDIT_SORT = '/sort/editSort.do';
 
 //存储AsyncStorage
 //登录帐户key
