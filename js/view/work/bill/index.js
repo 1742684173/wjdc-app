@@ -26,24 +26,18 @@ class BillInfo extends BaseComponent {
     this.setTitle('我的帐单');
   }
 
-  componentDidMount = async () => {
-    this.showActivityIndicator();
-    try{
-      let billParams = await this.props.postAction(config.FIND_BILL,{pageSize:5,sortName:'dates'},'查询账单');
-      this.dealParam(billParams)
-    }catch (e) {
-      this.showToast(JSON.stringify(e));
-    }
+  componentDidMount(){
+    this.getBillInfo();
   }
 
   dealParam = (params) => {
     const {type,code,msg,data} = params;
     switch (type) {
-      case config.FIND_BILL:
-        if(code === 1){
+      case config.BILL_FIND:
+        if(code === config.CODE_SUCCESS){
           this.setState({billsData:data.list})
         }else{
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
         break;
     }
@@ -53,7 +47,7 @@ class BillInfo extends BaseComponent {
   getBillInfo = async () => {
     this.showActivityIndicator();
     try{
-      let billParams = await this.props.postAction(config.FIND_BILL,{pageSize:5,sortName:'dates'},'查询账单');
+      let billParams = await this.props.postAction(config.BILL_FIND,{pageSize:4,sortName:'dates desc'},'查询账单');
       this.dealParam(billParams)
     }catch (e) {
       this.showToast(JSON.stringify(e));
@@ -75,7 +69,10 @@ class BillInfo extends BaseComponent {
       this.showToast('还没有记录哦');
       return;
     }
-    this.props.navigation.navigate('Bills');
+    this.props.navigation.navigate('Bills',{
+      callback:(data)=>{
+        this.getBillInfo();
+      }});
   }
 
   render() {
@@ -126,7 +123,7 @@ class BillInfo extends BaseComponent {
         <Title text={'最近消费'} style={{marginTop:pxTodpHeight(30),marginBottom:pxTodpHeight(10)}}/>
 
         {/*当天的消费情况*/}
-        <TouchableOpacity style={{flex:1, marginHorizontal:pxTodpWidth(30),}} onPress={this._onBillsBtn}>
+        <TouchableOpacity style={{marginHorizontal:pxTodpWidth(30),}} onPress={this._onBillsBtn}>
           {
             this.state.billsData.length===0?(
               <Image source={nullDataPic} style={{height:pxTodpHeight(210),width:'100%'}} resizeMode={'contain'}/>

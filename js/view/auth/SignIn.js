@@ -64,13 +64,13 @@ class SignIn extends BaseComponent {
       await AsyncStorage.setItem(config.LOGIN_ACCOUNT_KEY,account);
       await AsyncStorage.setItem(config.LOGIN_PASSWORD_KEY,password);
       if(type === config.SIGN_IN){
-        if(code === 1){
+        if(code === config.CODE_SUCCESS){
           await AsyncStorage.setItem(config.LOGIN_TOKEN_KEY,data.token);
           await this.hideActivityIndicator();
           this.props.navigation.navigate('App');
 
         }else{
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
       }
     }catch (e) {

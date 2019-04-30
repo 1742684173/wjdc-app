@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import Bill from '../work/bill';
+import BillInfo from '../work/bill';
 import Carousel from "./Carousel";
 import {View} from "react-native";
 
@@ -28,7 +28,7 @@ export default class Home extends Component<any> {
 
   render() {
     const screens = [
-      <Bill key={0} navigation={this.props.navigation}/>,
+      <BillInfo key={1} navigation={this.props.navigation}/>,
     ];
 
     return (

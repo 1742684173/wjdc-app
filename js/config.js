@@ -2,6 +2,15 @@
 //签名参数
 export const SIGN = '1as2jfa3jkfda.jkakk';
 
+//访问成功
+export const CODE_SUCCESS = 200;
+//访问错误 服务器不理解请求的语法。
+export const CODE_ERROR = 400;
+//请求要求身份验证。 对于需要登录的网页，服务器可能返回此响应。。
+export const SESSION_CODE_ERROR = 401;
+//服务器没有打开
+export const SERVER_DISCONNECT = 1000;
+
 /**
  * 网络请求接口和参数
  */
@@ -14,21 +23,21 @@ export const SIGN_IN = '/user/signIn.do';
 export const SIGN_OUT = '/user/signOut.do';
 
 //新增帐单
-export const ADD_BILL = '/bill/add.do';
-//查询帐单
-export const FIND_BILL = '/bill/find.do';
+export const BILL_ADD = '/bill/add.do';
+export const BILL_FIND = '/bill/find.do';
+export const BILL_FIND_BY_ID = '/bill/findById.do';
 
 //增加帐单方式
-export const ADD_BILL_METHOD = '/billMethod/add.do';
-export const DELETE_BILL_METHOD_BY_ID = '/billMethod/deleteById.do';
-export const UPDATE_BILL_METHOD_BY_ID = '/billMethod/updateById.do';
-export const FIND_BILL_METHOD = '/billMethod/find.do';
+export const BILL_METHOD_ADD = '/billMethod/add.do';
+export const BILL_METHOD_DELETE_BY_ID = '/billMethod/deleteById.do';
+export const BILL_METHOD_UPDATE_BY_ID = '/billMethod/updateById.do';
+export const BILL_METHOD_FIND = '/billMethod/find.do';
 
 //增加帐单类别
-export const ADD_BILL_SORT = '/billSort/add.do';
-export const DELETE_BILL_SORT_BY_ID = '/billSort/deleteById.do';
-export const UPDATE_BILL_SORT_BY_ID = '/billSort/updateById.do';
-export const FIND_BILL_SORT = '/billSort/find.do';
+export const BILL_SORT_ADD = '/billSort/add.do';
+export const BILL_SORT_DELETE_BY_ID = '/billSort/deleteById.do';
+export const BILL_SORT_UPDATE_BY_ID = '/billSort/updateById.do';
+export const BILL_SORT_FIND = '/billSort/find.do';
 
 
 //存储AsyncStorage

@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import MyDialog from '../../../common/MyDialog';
-import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from 'react-native';
-import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
-import BillsFlatList from './BillsFlatList';
-import LoadView from '../../../common/LoadView';
-import Search from '../../../common/Search';
-import {connect} from 'react-redux';
+import React, { Component } from "react";
+import MyDialog from "../../../common/MyDialog";
+import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from "react-native";
+import {pxTodpWidth, pxTodpHeight, ScreenWidth} from "../../../common/ScreenUtil"
+import BillsFlatList from "./BillsFlatList";
+import LoadView from "../../../common/LoadView";
+import Search from "../../../common/Search";
+import {connect} from "react-redux";
 import * as toast from "../../../common/MyToast";
 import Back from "../../../common/Back";
 import DataBetween from "../../../common/DataBetween";
-import * as config from '../../../config';
-import * as actions from '../../../actions';
+import * as config from "../../../config";
+import * as actions from "../../../actions";
 import BillLabel from "./BillLabel";
 import {reduxForm} from "redux-form";
 import MyLoad from "../../../common/MyLoad";
@@ -18,11 +18,6 @@ import moment from "moment";
 import BaseComponent from "../../base/BaseComponent";
 
 class Bills extends BaseComponent {
-  static navigationOptions = ({navigation}) => ({
-    headerLeft:<Back navigation={navigation}/>,
-    title: '历史帐单',
-    headerRight:<View/>,
-  });
 
   state = {
     total:0,//事件总数
@@ -30,114 +25,63 @@ class Bills extends BaseComponent {
     data:[],
     selectSort:[],//消费方式
     selectMethod:[],//消费类别
+    modelVisible:false,//是否显示model
   }
 
   // 构造
   constructor(props) {
     super(props);
-    this.setTitle('历史记录')
+    this.currentPage = 1;
+    this.pageSize = 10;
+    this.condition = null;
+    this.sortName = "dates desc";
+
+    this.setTitle("历史记录");
   }
 
   componentDidMount(){
-    this._getBillInfo();
+    this._getBillList();
   }
 
-  _getBillInfo = async () => {
+  _getBillList = async () => {
     this.showActivityIndicator();
 
     try{
-
-      //分类
-      const sortData = await this.props.postAction(config.FIND_BILL_SORT,{pageSize:1000},'查询消费类别');
-      this._dealParams(sortData);
-
-      //方式
-      const methodData = await this.props.postAction(config.FIND_BILL_METHOD,{pageSize:1000},'查询消费方式');
-      this._dealParams(methodData);
-
       //帐单
-      let params= {pageNum:pageNum,pageSize:10,condition:condition};
-      const billData = await this.props.postAction(config.FIND_BILL,params,'查询消费');
-      this._dealParams(billData);
-
-    }catch (e) {
-      this.showToast(e.message || e.note);
-    }
-  }
-
-  _dealParams = (params:Object) => {
-    let {type,code,msg,data} = params;
-    switch (type) {
-      //消费类别
-      case config.FIND_BILL_SORT:
-        let selectSort = [];
-        if (code === 1) {
-          data.list.map((item, i) => selectSort.push(item));
-          if (selectSort.length > 0) {
-            this.setState({selectSort: selectSort});
-          }
-        } else {
-          this.showToast(msg);
-        }
-        break;
-
-      //消费方式
-      case config.FIND_BILL_METHOD:
-        let selectMethod = [];
-        if (code === 1) {
-          data.list.map((item, i) => selectMethod.push(item));
-          if (selectMethod.length > 0) {
-            this.setState({selectMethod: selectMethod});
-          }
-        } else {
-          this.showToast(msg);
-        }
-
-        break;
-
-      //消费
-      case config.FIND_BILL:
-        if (code === 1) {
+      let params= {
+        currentPage:this.currentPage,
+        pageSize:this.pageSize,
+        condition:this.condition,
+        sortName:this.sortName,
+      };
+      const {type,code,msg,data} = await this.props.postAction(config.BILL_FIND,params,"查询消费");
+      if(type === config.BILL_FIND){
+        if (code === config.CODE_SUCCESS) {
           let myData = this.state.data;
-          //是否有上一页，有就添加，没有就直接替换
-          if(data.hasPreviousPage){
+          if(this.currentPage === 1){
+            myData = data.list;
+          }else{
             data.list.map((item,i)=>{
               myData.push(item)
             })
-          }else{
-            myData = data.list;
           }
 
           //总页数
-          pageToal = data.total;
+          this.totalPage = data.totalPage;
 
           let foot = 0;
           //是否有下一页
-          if(!data.hasNextPage){
+          if(data.currentPage === data.totalPage){
             foot = 1;//listView底部显示没有更多数据了
           }
 
           this.setState({foot:foot,data:myData});
+          this.hideActivityIndicator();
         } else {
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
+      }
 
-        break;
-    }
-
-    this.hideActivityIndicator();
-  }
-
-  _getBillList = async (object:Object) => {
-    this.showActivityIndicator();
-
-    try{
-      //帐单
-      let params= Object.assign({},{pageNum:pageNum,condition:condition},object);
-      const billData = await this.props.postAction(config.FIND_BILL,params,'查询消费');
-      this._dealParams(billData);
-
-      this._dealParams({});
     }catch (e) {
       this.showToast(e.message || e.note);
     }
@@ -145,9 +89,9 @@ class Bills extends BaseComponent {
 
   //条件查询
   _onSearchBtn = (value) => {
-    pageNum = 1;
-    condition = value;
-    this._getBillList({});
+    this.currentPage = 1;
+    this.condition = value;
+    this._getBillList();
   }
 
   //加载
@@ -157,11 +101,11 @@ class Bills extends BaseComponent {
       return;
     }
 
-    if(pageNum!=1 && pageNum>=pageToal){
+    if(this.currentPage!=1 && this.currentPage >= this.totalPage){
       //this.setState({foot:1});
       return;
     }else{
-      pageNum++;
+      this.currentPage++;
     }
 
     //底部显示正在加载更多数据
@@ -171,8 +115,8 @@ class Bills extends BaseComponent {
   }
 
   _onRefresh = () => {
-    pageNum = 1;
-    condition=null;
+    this.currentPage = 1;
+    this.condition=null;
     this.refs.search.clearSearchInput();
     this._getBillList()
   }
@@ -188,17 +132,19 @@ class Bills extends BaseComponent {
 
   //前往详情界面
   _onItemClick = (item) => {
-    this.props.navigation.navigate('BillDetail', {
-      item:item,
-      // callback:(data)=>{
-      //   this._onRefresh();
-      // }
+    this.props.navigation.navigate("BillDetail", {
+      id:item.id,
+      callback:(data)=>{
+        this._onRefresh();
+      }
     })
   }
 
   //去新增帐单界面
   _onAddBtn = () => {
-    this.props.navigation.navigate('AddBill',{callback:(data)=>{
+    this.props.navigation.navigate("BillForm",{
+      title:'添加帐单',
+      callback:(data)=>{
         this._onRefresh();
       }});
   }
@@ -209,15 +155,32 @@ class Bills extends BaseComponent {
   }
 
   //根据条件查询
-  _sumbit = (object:Object) => {
-    pageNum = 1;
-    this._getBillList(object);
+  _sumbit = (object) => {
+    this.currentPage = 1;
+    console.log(JSON.stringify(object));
+    this._getBillList();
   }
 
   render() {
     super.render();
     let view = (
       <View style={styles.contain}>
+
+        <View style={{backgroundColor:"#ffffff",marginBottom: pxTodpHeight(10)}}>
+          <Search
+            ref={"search"}
+            placeholder={"请转入关健字"}//提示
+            isShowBeforeBtn={true}//是否显示前面按钮
+            onBeforeBtn={this._onSearchBtn}//
+            // beforeImg={beforeImg}//图标
+            isShowMiddle={true}//是否显示中间按钮
+            onMiddleBtn={this._onAddBtn}
+            // middleImg={middleImg}//图标
+            isShowBehind={true}//是否显示后面按钮
+            onBehindBtn={this._onSelectBtn}
+            // behindImg={behindImg}//图标
+          />
+        </View>
 
         <BillsFlatList
           data={this.state.data}
@@ -232,11 +195,12 @@ class Bills extends BaseComponent {
           method={this.state.selectMethod}
           sort={this.state.selectSort}
           hideModal={()=>this.setState({modelVisible:false})}
-          submit={this._sumbit}
+          onSubmit={this._sumbit}
+          onReset={()=>{}}
           onRequestClose={()=>this.setState({modelVisible:false})}
         />
 
-        <MyLoad ref={'myLoad'}/>
+        <MyLoad ref={"myLoad"}/>
       </View>
     )
 
@@ -248,8 +212,7 @@ class Bills extends BaseComponent {
 const styles = StyleSheet.create({
   contain:{
     flex:1,
-    backgroundColor:'#f2f2f2',
-    paddingTop: pxTodpHeight(30)
+    backgroundColor:"#f2f2f2",
   },
 });
 

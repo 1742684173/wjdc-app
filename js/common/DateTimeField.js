@@ -17,9 +17,9 @@ export default class DateTimeField extends Component {
     //时间格式化
 
     switch (props.mode) {
-      case 'time':format = 'hh:mm:ss';break;
+      case 'time':format = 'HH:mm:ss';break;
       case 'date':format = 'YYYY-MM-DD';break;
-      case 'datetime':format = 'YYYY-MM-DD hh:mm:ss';break;
+      case 'datetime':format = 'YYYY-MM-DD HH:mm:ss';break;
     }
 
     props.onChange(moment(curDate).format(format));
@@ -52,6 +52,7 @@ export default class DateTimeField extends Component {
         </View>
         <DateTimePicker
           //date={new Date(value)}
+          is24Hour={true}
           mode={mode?mode:'date'}
           datePickerModeAndroid={'spinner'}
           isVisible={this.state.isDateTimePickerVisible}

@@ -6,7 +6,13 @@ import FetchUtil from '../common/FetchUtil';
 import {SERVER_ADDRES} from "../config";
 
 
-
+let myparams= {
+  currentPage:1,
+  pageSize:10,
+  sortName:null,
+  condition:null,
+  all:null,
+};
 
 let fetchUtil = new FetchUtil();
 
@@ -35,7 +41,7 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
   console.log((desc?desc:'')+'sign信息：'+JSON.stringify(sign));
 
   //body参数
-  const params = Object.assign({},object);
+  const params = Object.assign({},myparams,object);
   console.log((desc?desc:'')+'params信息：'+JSON.stringify(params));
 
   try{
@@ -47,11 +53,15 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
       .setBody(params)
       .dofetch();
 
-    console.log((desc?desc:'')+'返回信息：'+JSON.stringify(data));
     result = Object.assign({},result,data);
   }catch (e) {
     console.log((desc?desc:'')+'返回异常：'+JSON.stringify(e));
-    result = Object.assign(result,{msg:JSON.stringify(e)});
+    //服务器断开
+    if("server error TypeError: Network request failed" === e){
+      result = Object.assign(result,{code:config.SERVER_DISCONNECT,msg:e});
+    }else{
+      result = Object.assign(result,{code:-1,msg:JSON.stringify(e)});
+    }
   }
   console.log((desc?desc:'')+'返回结果：'+JSON.stringify(result));
   return result;

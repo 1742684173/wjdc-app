@@ -10,6 +10,7 @@ import DrawerSideBar from './DrawerSideBar';
 import BillInfo from './work/bill';
 import Bills from './work/bill/Bills';
 import BillForm from './work/bill/BillForm';
+import BillDetail from './work/bill/BillDetail';
 import BillMethodForm from './work/bill/BillMethodForm';
 import BillSortForm from './work/bill/BillSortForm';
 import Contact from './work/contact';
@@ -20,6 +21,7 @@ const AppStack = StackNavigator({
   BillInfo,
   Bills,
   BillForm,
+  BillDetail,
   BillMethodForm,
   BillSortForm,
   Publish,

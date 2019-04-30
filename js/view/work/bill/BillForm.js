@@ -44,15 +44,15 @@ class BillForm extends BaseComponent {
     try{
 
       //分类
-      const sortData = await this.props.postAction(config.FIND_BILL_SORT,{pageSize:1000},'查询消费类别');
+      const sortData = await this.props.postAction(config.BILL_SORT_FIND,{pageSize:1000},'查询消费类别');
       this._dealParams(sortData);
 
       //方式
-      const methodData = await this.props.postAction(config.FIND_BILL_METHOD,{pageSize:1000},'查询消费方式');
+      const methodData = await this.props.postAction(config.BILL_METHOD_FIND,{pageSize:1000},'查询消费方式');
       this._dealParams(methodData);
 
       //帐单
-      const billData = !!!this.id?null:await this.props.postAction(config.FIND_BILL,{id:this.id},'查询消费');
+      const billData = !!!this.id?null:await this.props.postAction(config.BILL_FIND,{id:this.id},'查询消费');
       billData===null?null:this._dealParams(billData);
 
       this.hideActivityIndicator();
@@ -68,7 +68,7 @@ class BillForm extends BaseComponent {
     this.showActivityIndicator();
     try{
       //分类
-      const sortData = await this.props.postAction(config.FIND_BILL_SORT,{pageSize:1000},'查询消费类别');
+      const sortData = await this.props.postAction(config.BILL_SORT_FIND,{pageSize:1000},'查询消费类别');
       this.hideActivityIndicator();
       this._dealParams(sortData);
     }catch (e) {
@@ -81,7 +81,7 @@ class BillForm extends BaseComponent {
     this.showActivityIndicator();
     try{
       //方式
-      const methodData = await this.props.postAction(config.FIND_BILL_METHOD,{pageSize:1000},'查询消费方式');
+      const methodData = await this.props.postAction(config.BILL_METHOD_FIND,{pageSize:1000},'查询消费方式');
       this.hideActivityIndicator();
       this._dealParams(methodData);
     }catch (e) {
@@ -91,19 +91,12 @@ class BillForm extends BaseComponent {
 
   //处理返回请求结果
   _dealParams = (params:Object) => {
-    // this.props.initialize({
-    //   method:this.state.selectMethod.length>0?this.state.selectMethod[0].id:null,
-    //   sort:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
-    //   dates:moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
-    //   type:selectType[0].key+''
-    // });
-
     let {type,code,msg,data} = params;
     switch (type) {
         //消费类别
-      case config.FIND_BILL_SORT:
+      case config.BILL_SORT_FIND:
         let selectSort = [];
-        if(code === 1){
+        if(code === config.CODE_SUCCESS){
           data.list.map((item,i)=>selectSort.push(item));
           if(selectSort.length >0){
             this.setState({selectSort:selectSort});
@@ -114,9 +107,9 @@ class BillForm extends BaseComponent {
         break;
 
       //消费方式
-      case config.FIND_BILL_METHOD:
+      case config.BILL_METHOD_FIND:
         let selectMethod = [];
-        if(code === 1){
+        if(code === config.CODE_SUCCESS){
           data.list.map((item,i)=>selectMethod.push(item));
           if(selectMethod.length >0){
             this.setState({selectMethod:selectMethod});
@@ -128,8 +121,8 @@ class BillForm extends BaseComponent {
         break;
 
         //修改帐单时查询帐单信息
-      case config.FIND_BILL:
-        if(code === 1){
+      case config.BILL_FIND:
+        if(code === config.CODE_SUCCESS){
           if(data.total > 0){
             this.props.initialize(data.list[0]);
           }else{
@@ -141,8 +134,8 @@ class BillForm extends BaseComponent {
         break;
 
       //通过id删除消费方式
-      case config.DELETE_BILL_METHOD_BY_ID:
-        if(code === 1){
+      case config.BILL_METHOD_DELETE_BY_ID:
+        if(code === config.CODE_SUCCESS){
           this.showToast(msg);
           this._onRefreshMethod();
         }else{
@@ -151,8 +144,8 @@ class BillForm extends BaseComponent {
         break;
 
       //通过id删除消费方式
-      case config.DELETE_BILL_SORT_BY_ID:
-        if(code === 1){
+      case config.BILL_SORT_DELETE_BY_ID:
+        if(code === config.CODE_SUCCESS){
           this.showToast(msg);
           this._onRefreshSort();
         }else{
@@ -188,17 +181,17 @@ class BillForm extends BaseComponent {
     this.showActivityIndicator();
     try{
       const {type,code,msg} =
-        await this.props.postAction(config.ADD_BILL,Object.assign(object,{sums:type==='in'?sums:-1*sums}),'添加帐单','form');
+        await this.props.postAction(config.BILL_ADD,Object.assign(object,{sums:type==='in'?sums:-1*sums}),'添加帐单','form');
 
-      if(type === config.ADD_BILL){
-        if(code === 1){
+      if(type === config.BILL_ADD){
+        if(code === config.CODE_SUCCESS){
           this.showAlert({
             content:'添加成功,是否继续？',
             confirmText:'是',
             cancelText:'否',
             confirm:()=>{
               this.props.initialize({
-                methodId:this.state.selectMethod.length>0?this.state.selectMethod[0].id:null,
+                methodId:this.state.selectMethod.length>0?this.state.selectMethod[1].id:null,
                 sortId:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
                 dates:moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
                 type:this.props.sums===1?selectType[0].key:selectType[1].key
@@ -223,7 +216,7 @@ class BillForm extends BaseComponent {
   _addSortBtn = () => {
     this.props.navigation.navigate('BillSortForm',{
       title:'添加消费分类',
-      func:config.ADD_BILL_SORT,
+      func:config.BILL_SORT_ADD,
       callback:this._onRefreshSort
     });
   }
@@ -232,7 +225,7 @@ class BillForm extends BaseComponent {
   _addMethodBtn = () => {
     this.props.navigation.navigate('BillMethodForm',{
       title:'添加消费方式',
-      func:config.ADD_BILL_METHOD,
+      func:config.BILL_METHOD_ADD,
       callback:this._onRefreshMethod
     });
   }
@@ -242,7 +235,7 @@ class BillForm extends BaseComponent {
     this.props.navigation.navigate('BillMethodForm',{
       title:'编辑消费方式',
       item,
-      func:config.UPDATE_BILL_METHOD_BY_ID,
+      func:config.BILL_METHOD_UPDATE_BY_ID,
       callback:this._onRefreshMethod
     });
   }
@@ -252,7 +245,7 @@ class BillForm extends BaseComponent {
     this.props.navigation.navigate('BillSortForm',{
       title:'编辑消费分类',
       item,
-      func:config.UPDATE_BILL_SORT_BY_ID,
+      func:config.BILL_SORT_UPDATE_BY_ID,
       callback:this._onRefreshSort
     });
   }
@@ -275,7 +268,7 @@ class BillForm extends BaseComponent {
     this.showActivityIndicator();
     try{
       //方式
-      const methodData = await this.props.postAction(config.DELETE_BILL_METHOD_BY_ID,{id:id},'通过id删除消费方式');
+      const methodData = await this.props.postAction(config.BILL_METHOD_DELETE_BY_ID,{id:id},'通过id删除消费方式');
       this._dealParams(methodData);
     }catch (e) {
       this.showToast(e.message || e.note);
@@ -296,7 +289,7 @@ class BillForm extends BaseComponent {
     this.showActivityIndicator();
     try{
       //方式
-      const methodData = await this.props.postAction(config.DELETE_BILL_SORT_BY_ID,{id:id},'通过id删除消费方式');
+      const methodData = await this.props.postAction(config.BILL_SORT_DELETE_BY_ID,{id:id},'通过id删除消费方式');
       this._dealParams(methodData);
     }catch (e) {
       this.showToast(e.message || e.note);

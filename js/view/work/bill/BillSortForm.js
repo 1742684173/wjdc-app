@@ -52,7 +52,7 @@ class BillSortForm extends BaseComponent {
       const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑分类','form');
 
       if(type === this.func){
-        if(code === 1){
+        if(code === config.CODE_SUCCESS){
           this.showAlert({
             content:(this.item?'编辑':'添加')+'成功,是否继续'+'？',
             confirmText:'是',
