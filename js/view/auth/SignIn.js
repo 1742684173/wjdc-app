@@ -13,15 +13,15 @@ import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withNavigation } from 'react-navigation';
 import Button from '../../common/Button';
-import MyDialog from '../../common/MyDialog';
 import Field from '../../common/Field';
 import * as config from '../../config';
 import {postAction} from '../../actions';
 import Input from '../../common/Input';
 import BaseComponent from '../base/BaseComponent';
-import {pxTodpWidth,pxTodpHeight,md5} from "../../common/ScreenUtil";
+import {pxTodpWidth,pxTodpHeight,md5} from '../../common/ScreenUtil';
 
 class SignIn extends BaseComponent {
+
   static navigationOptions = ({navigation}) => ({
     header:null,
   });

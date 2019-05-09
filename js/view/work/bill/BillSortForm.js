@@ -27,6 +27,10 @@ class BillSortForm extends BaseComponent {
     this.item?this.props.initialize(this.item):null;
   }
 
+  componentDidMount = async () => {
+    await this.initBase();
+  }
+
   _confirm = ()=>{
     this.hideActivityIndicator();
     this.item?null:this.props.reset();
@@ -55,16 +59,20 @@ class BillSortForm extends BaseComponent {
         if(code === config.CODE_SUCCESS){
           this.showAlert({
             content:(this.item?'编辑':'添加')+'成功,是否继续'+'？',
-            confirmText:'是',
-            cancelText:'否',
-            confirm:this._confirm,
-            cancel:this._cancel
+            buttons:[
+              {
+                text:'是',
+                onPress:this._confirm
+              },
+              {
+                text:'否',
+                onPress:this._cancel
+              }
+            ]
           });
         }else{
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
-      }else{
-        this.showToast('找不到请求地址');
       }
     }catch (e) {
       this.showToast(e.message||'未知错误');

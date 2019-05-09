@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import MyDialog from '../../../common/MyDialog';
 import {ImageBackground,Text, View, StyleSheet, TouchableOpacity, Image,} from 'react-native';
 import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
 import {connect} from 'react-redux';
@@ -7,7 +6,6 @@ import Back from "../../../common/Back";
 import Title from "../../../common/Title";
 import * as config from '../../../config';
 import * as actions from '../../../actions';
-import MyLoad from "../../../common/MyLoad";
 import addBillPic from '../../../img/work/bill/addBill.png';
 import nullDataPic from '../../../img/common/nullDataIcon.png';
 import moment from "moment";
@@ -21,13 +19,14 @@ class BillInfo extends BaseComponent {
   }
 
   // 构造
-  constructor(props) {
+  constructor(props){
     super(props);
     this.setTitle('我的帐单');
   }
 
-  componentDidMount(){
-    this.getBillInfo();
+  componentDidMount = async () => {
+    await this.initBase();
+    await this.getBillInfo();
   }
 
   dealParam = (params) => {
@@ -41,14 +40,15 @@ class BillInfo extends BaseComponent {
         }
         break;
     }
-    this.hideActivityIndicator();
   }
 
   getBillInfo = async () => {
-    this.showActivityIndicator();
+    await this.showActivityIndicator();
     try{
-      let billParams = await this.props.postAction(config.BILL_FIND,{pageSize:4,sortName:'dates desc'},'查询账单');
-      this.dealParam(billParams)
+      let billParams = await this.props.postAction(config.BILL_FIND,{pageSize:4,currentPage:1,sortName:'dates desc'},'查询账单');
+      this.dealParam(billParams);
+
+      await this.hideActivityIndicator();
     }catch (e) {
       this.showToast(JSON.stringify(e));
     }

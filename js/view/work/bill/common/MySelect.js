@@ -21,6 +21,7 @@ import add from '../../../../img/common/add.png';
 import edit from '../../../../img/common/edit.png';
 import del from '../../../../img/common/delete1.png';
 import Title from "../../../../common/Title";
+import moment from "moment";
 
 type Props = {
   values:Array,//数据
@@ -28,6 +29,11 @@ type Props = {
 }
 
 export default class MySelect extends Component{
+  constructor(props) {
+    super(props);
+
+    props.defaultValue?props.onChange(props.defaultValue):null;
+  }
 
   _onChange = (item) => {
     if(this.props.value === item.id){
@@ -42,6 +48,7 @@ export default class MySelect extends Component{
       values,
       title,
       value,
+      ...others
     } = this.props;
 
     let select = values.map((item,i)=>{

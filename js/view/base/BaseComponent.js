@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,22 +9,25 @@ import {
   Alert,
   TouchableOpacity,
   SafeAreaView,
-} from "react-native";
-import {pxTodpHeight, pxTodpWidth,md5} from "../../common/ScreenUtil";
-import Toast from "react-native-root-toast";
-import backImg from "../../img/common/back-icon.png";
-import Search from "../../common/Search";
-import * as config from "../../config";
-import MessageButton from "../MessageButton";
+} from 'react-native';
+import {pxTodpHeight, pxTodpWidth,md5} from '../../common/ScreenUtil';
+import Toast from 'react-native-root-toast';
+import backImg from '../../img/common/back-icon.png';
+import * as config from '../../config';
+import MessageButton from '../MessageButton';
+import MyDialog from '../../common/MyDialog';
 
 export default class BaseComponent extends Component<any> {
 
   state = {
-    netStatus:0,//none：离线状态 cellular:备通过蜂窝数据流量联网 wifi:通过wifi联网 unknown:联网状态异常
-    isShowActivityIndicator:false,//是否显示加载
-    showActivityIndicatorTitle:"正在加载中",
-    data:[],//获取的数据
-    isShowSearchView:false,//是否显示搜索框
+    netStatus:0,//none：离线状态 cellular:通过蜂窝数据流量联网 wifi:通过wifi联网 unknown:联网状态异常
+    dialogType:'load',//load alert others
+    isDialogVisible:false,//是否显示加载框
+    dialogTitle:'信息提示',//加载框提示
+    dialogContent:null,//当dialogType为alert时是字符串，当是others时是相关控件
+    dialogButtons:[],//{text:'',onPress:()=>{}}
+    dialogOnRequestClose:()=>{},//modal返回监听
+    dialogOnShowClose:()=>{}//modal显示之前调用
   }
 
   static navigationOptions = ({navigation}) => {
@@ -37,10 +40,126 @@ export default class BaseComponent extends Component<any> {
           <Image source={backImg}/>
         </TouchableOpacity>
       ),
-      title: params?params.title:"",
+      title: params?params.title:'',
       headerRight:<MessageButton/>,
     }
   };
+
+  constructor(props){
+    super(props);
+    this.toast = null;
+    this.props.navigation.setParams({goBack:this._goBack});
+  }
+
+  initBase = async () => {
+    await this.setState({
+      netStatus:0,//none：离线状态 cellular:通过蜂窝数据流量联网 wifi:通过wifi联网 unknown:联网状态异常
+      dialogType:'load',//load alert others
+      isDialogVisible:false,//是否显示加载框
+      dialogTitle:'信息提示',//加载框提示
+      dialogContent:null,//当dialogType为alert时是字符串，当是others时是相关控件
+      dialogButtons:[],//{text:'',onPress:()=>{}}
+      dialogOnRequestClose:()=>{},//modal返回监听
+      dialogOnShowClose:()=>{}//modal显示之前调用
+    });
+    console.log('this.state----------->'+JSON.stringify(this.state));
+  }
+
+  componentDidMount(){
+    NetInfo.getConnectionInfo().done(status=> this.setState({netStatus:status}));
+    //监听网络状态改变
+    NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  componentWillUnMount(){
+    NetInfo.removeEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
+  //处理请求的错误
+  handleRequestError = async (code:number,msg?:string) => {
+    switch (code) {
+      //会话正确
+      case config.CODE_SUCCESS:
+        this.hideActivityIndicator();
+        break;
+
+      //会话错误
+      case config.SESSION_CODE_ERROR:
+        this.showAlert({
+          title:'信息提示',
+          content:msg,
+          buttons:[
+            {
+              text: '确认',
+              onPress:async ()=>{
+                await this.props.postAction(config.SIGN_OUT,{},'登出');
+                await this.hideActivityIndicator();
+                this.props.navigation.navigate('SignIn');
+              }
+            },
+          ]
+        })
+        break;
+
+        //主求参数错误
+      case config.CODE_ERROR:
+        this.showToast(msg);
+        break;
+
+        //服务器断开
+      case config.SERVER_DISCONNECT:
+        this.showAlert({
+          title:'信息提示',
+          content:'很报歉，服务器正在维修中，请稍后再使用',
+          buttons:[
+            {
+              text: '确认',
+              onPress:()=>{
+                this.hideActivityIndicator();
+              }
+            },
+          ]
+        })
+        break;
+
+      default:this.showToast(msg);
+    }
+  }
+
+  renderBase(view){
+
+    return (
+      <SafeAreaView style={{flex:1}}>
+        <View
+          style={styles.contain}
+          keyboardShouldPersistTaps={'handled'}
+          stickyHeaderIndices={[0]}
+        >
+          <MyDialog
+            type={this.state.dialogType}
+            visible={this.state.isDialogVisible}
+            title={this.state.dialogTitle}
+            content={this.state.dialogContent}
+            buttons={this.state.dialogButtons}
+            onRequestClose={this.state.dialogOnRequestClose}
+            onShow={this.state.dialogOnShow}
+          />
+          {
+            //断网显示
+            this.renderDisNet()
+          }
+
+          {
+            view
+          }
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  render(){
+    return null;
+  }
 
   //返回
   _goBack = () => {
@@ -56,89 +175,15 @@ export default class BaseComponent extends Component<any> {
     this.props.navigation.setParams({title: title});
   }
 
-  constructor(props){
-    super(props);
-    this.toast = null;
-    this.props.navigation.setParams({goBack:this._goBack});
-  }
-
-  componentDidMount(){
-    NetInfo.getConnectionInfo().done(status=> this.setState({netStatus:status}));
-    //监听网络状态改变
-    NetInfo.addEventListener("connectionChange", this.handleConnectivityChange);
-  }
-
-  componentWillUnMount(){
-    NetInfo.removeEventListener("connectionChange", this.handleConnectivityChange);
-  }
-
-  //处理请求的错误
-  handleRequestError = (code:number,msg?:string) => {
-    this.hideActivityIndicator();
-    switch (code) {
-      //会话错误
-      case config.SESSION_CODE_ERROR:
-        Alert.alert(
-         "信息提示",
-          msg,
-          [
-            {
-              text: "确认",
-              onPress:async ()=>{
-                this.showActivityIndicator();
-                await this.props.postAction(config.SIGN_OUT,{},"登出");
-                this.hideActivityIndicator();
-                this.props.navigation.navigate("SignIn");
-              }
-            },
-          ],
-          { cancelable: false }
-        )
-        break;
-
-        //主求参数错误
-      case config.CODE_ERROR:
-        this.showToast(msg);
-        break;
-
-        //服务器断开
-      case config.SERVER_DISCONNECT:
-        Alert.alert(
-          "信息提示", "很报歉，服务器正在维修中，请稍后再使用",
-          [{text: "确认", onPress:null}],
-          { cancelable: false }
-        )
-        break;
-
-      default:this.showToast(msg);
-    }
-  }
-
   //处理网络
   handleConnectivityChange = (connectionInfo) => {
-    console.log("网络类型："+connectionInfo.type)
+    console.log('网络类型：'+connectionInfo.type)
     this.setState({netStatus:connectionInfo.type});
   }
 
-  //显示加载
-  showActivityIndicator = async (content?:string) => {
-    await this.setState({
-      isShowActivityIndicator:true,
-      showActivityIndicatorTitle:content?content:"正在加载中"
-    })
-  }
-
-  //隐蔽加载
-  hideActivityIndicator = async () => {
-    await this.setState({
-      isShowActivityIndicator:false,
-      showActivityIndicatorTitle:"正在加载中"
-    })
-  }
-
   //显示提示
-  showToast(content:string,time?:number) {
-    this.hideActivityIndicator();
+  showToast = async (content:string,time?:number) => {
+    await this.hideActivityIndicator();
 
     if (this.toast !== null) {
       Toast.hide(this.toast);
@@ -155,41 +200,57 @@ export default class BaseComponent extends Component<any> {
     }
   }
 
-  //显示alert
-  showAlert(value:{ title?:string,content:string, cancel?:Function,confirm?:Function, cancelText?:string,confirmText?:string }){
-    const {title,content,cancel,confirm,cancelText,confirmText} = value;
-    this.hideActivityIndicator();
-    Alert.alert(
-      title?title:"信息提示",
-      content,
-      [
-        //{text: "Ask me later", onPress: () => console.log("Ask me later pressed")},
-        {text: cancelText?cancelText:"取消", onPress:cancel, style: "cancel"},
-        {text: confirmText?confirmText:"确认", onPress:confirm},
-      ],
-      { cancelable: false }
-    )
+  //显示加载
+  showActivityIndicator = async (content?:string) => {
+    await this.setState({
+      dialogType:'load',
+      isDialogVisible:true,
+      dialogTitle:content?content:'正在加载中'
+    })
   }
 
-  //显示加载
-  renderActivityIndicator(){
-    let view = this.state.isShowActivityIndicator?(
-      <View style={styles.containActivityIndicator}>
-        <ActivityIndicator size="large" color="#333"/>
-        <Text style={{marginTop:10,color:"#333",fontSize:15}}>
-          {this.state.showActivityIndicatorTitle}
-        </Text>
-      </View>
-    ):null;
-    return view;
+  //隐蔽加载
+  hideActivityIndicator = async () => {
+    await this.setState({
+      dialogType:'load',//load alert others
+      isDialogVisible:false,//是否显示加载框
+      dialogTitle:'信息提示',//加载框提示
+      dialogContent:null,//当dialogType为alert时是字符串，当是others时是相关控件
+      dialogButtons:[],//{text:'',onPress:()=>{}}
+      dialogOnRequestClose:()=>{},//modal返回监听
+      dialogOnShowClose:()=>{}//modal显示之前调用
+    });
+  }
+
+  //显示alert
+  showAlert = async (obj:{title?:string,content:string,buttons?:Array}) => {
+    await this.setState({
+      dialogType:'alert',
+      isDialogVisible:true,
+      dialogTitle:obj.title?obj.title:'信息提示',
+      dialogContent:obj.content,
+      dialogButtons:obj.buttons.length?obj.buttons:[],
+    })
+  }
+
+  hideAlert = async () => {
+    await this.setState({
+      dialogType:'load',//load alert others
+      isDialogVisible:false,//是否显示加载框
+      dialogTitle:'信息提示',//加载框提示
+      dialogContent:null,//当dialogType为alert时是字符串，当是others时是相关控件
+      dialogButtons:[],//{text:'',onPress:()=>{}}
+      dialogOnRequestClose:()=>{},//modal返回监听
+      dialogOnShowClose:()=>{}//modal显示之前调用
+    });
   }
 
   //网络异常显示
   renderDisNet(){
-    return this.state.netStatus === "none" || this.state.netStatus === "unknown"?(
+    return this.state.netStatus === 'none' || this.state.netStatus === 'unknown'?(
       <View style={styles.containDisNet}>
-        <Text style={{marginTop:pxTodpHeight(96),fontSize:pxTodpWidth(30),color:"#999"}}>
-          {this.state.netStatus === "none"?"网络己断开":"联网状态异常"}
+        <Text style={{marginTop:pxTodpHeight(96),fontSize:pxTodpWidth(30),color:'#999'}}>
+          {this.state.netStatus === 'none'?'网络己断开':'联网状态异常'}
         </Text>
       </View>
     ):null
@@ -202,54 +263,24 @@ export default class BaseComponent extends Component<any> {
   showTopView(){
     this.setState({isShowSearch:true});
   }
-
-  renderBase(view){
-    return (
-      <SafeAreaView style={{flex:1}}>
-        <View
-          style={styles.contain}
-          keyboardShouldPersistTaps={"handled"}
-          stickyHeaderIndices={[0]}
-        >
-          {
-            //断网显示
-            this.renderDisNet()
-          }
-
-          {
-            view
-          }
-
-          {
-            //加载框显示
-            this.renderActivityIndicator()
-          }
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  render(){
-    return null;
-  }
 }
 
 const styles = StyleSheet.create({
   contain:{
     flex:1,
-    backgroundColor:"#f2f2f2"
+    backgroundColor:'#f2f2f2'
   },
   containActivityIndicator:{
-    position:"absolute",
-    top:0,left:0,right:0,bottom:0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor:"#00000000"
+    position:'absolute',
+    top:-30,left:0,right:0,bottom:0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:'#00000000'
   },
   containDisNet:{
     height: pxTodpHeight(80),
-    alignItems: "center",
-    backgroundColor:"#fcdaa6"
+    alignItems: 'center',
+    backgroundColor:'#fcdaa6'
   }
 });
 

@@ -19,7 +19,8 @@ class BillDetail extends BaseComponent {
     this.setTitle("帐单详情");
   }
 
-  componentDidMount(){
+  componentDidMount = async () => {
+    await this.initBase();
     this._getBill();
   }
 
@@ -38,9 +39,8 @@ class BillDetail extends BaseComponent {
       if(type === config.BILL_FIND){
         if(code === config.CODE_SUCCESS){
           data.totalCount >0 ? this.setState({data:data.list[0]}):null;
-        }else{
-          this.handleRequestError(code,msg);
         }
+        this.handleRequestError(code,msg);
       }
     }catch (e) {
       this.showToast(e.message || e.note);

@@ -1,4 +1,4 @@
-import React, {Node} from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Modal,
@@ -7,83 +7,121 @@ import {
   StyleSheet,
   ActivityIndicator,
 }from 'react-native';
-import {pxTodpHeight, pxTodpWidth, ScreenWidth} from "./ScreenUtil";
+import {pxTodpHeight, pxTodpWidth, ScreenWidth} from './ScreenUtil';
 export type Props = {
-  isLoad?:boolean,//是否加载中
-  isChild?:boolean,//是否自定义
-  child?:Node,//自定义
-  visible?:boolean,//是否显示
-  info?:Node,//提示信息
-  msg?:string,//提示信息
-  cancel?:Function,//取消
-  cancelText?:string,//取消显示文字
-  confirm?:Function,//确认
-  confirmText?:string,//确认显示文字
-  onRequestClose?:Function,//返回监听
-  height?:number,//窗口高度,有info或msg一定要
-  //infoStyle?:any,
+  type?:string,//类形: load->加载框 alert->弹出框 others->自定义  默认是load
+  visible:boolean,//是否显示
+  title?:string,//标题
+  content?:any,//内容
+  buttons?:Array,
+  onRequestClose?:Function,
+  onShow?:Function,//显示前调用
 }
 
-const MyDialog = (props:Props) => {
-  const {
-    isChild,
-    child,
-    isLoad,
-    visible,
-    info,
-    msg,
-    cancel,
-    cancelText,
-    confirm,
-    confirmText,
-    onRequestClose,
-    height
-  } = props;
-  return(
-    <Modal
-     animationType={'slide'}
-     transparent={true}
-     visible={visible}
-     onRequestClose={onRequestClose}
-     onShow={() => {}}
-    >
-      <View style={styles.contain}>
-        {
-          isChild?child:
-          isLoad?(<View>
-            <ActivityIndicator/>
-            <Text style={{color:'#333',fontSize:pxTodpWidth(24)}}>正在加载中...</Text>
-          </View>):
-          <View style={[styles.modal,{height:pxTodpHeight(height)}]}>
-            {
-              info?info:<Text style={{color:'#666',fontSize:pxTodpWidth(30)}}>{msg}</Text>
-            }
-            <View style={styles.btnView}>
-              {/*取消按钮*/}
-              <TouchableOpacity style={styles.btn} onPress={cancel}>
-                <Text style={{fontSize:pxTodpWidth(32),color:'#666666'}}>{cancelText?cancelText:'取消'}</Text>
-              </TouchableOpacity>
+class MyDialog extends Component{
+  state = {
+    visible:false,
+  }
 
-              <View style={{width:1,height:pxTodpHeight(100),backgroundColor:'#dcdcdc'}}/>
+  componentWillReceiveProps(nextProps){
+    if(this.props.visible != nextProps.visible){
+      this.setState({visible:nextProps.visible});
+    }
+  }
 
-              {/*确认按钮*/}
-              <TouchableOpacity style={styles.btn} onPress={confirm}>
-                <Text style={{fontSize:pxTodpWidth(32),color:'#21c3fe'}}>{confirmText?confirmText:'确认'}</Text>
-              </TouchableOpacity>
+  render(){
+    const {
+      type,
+      visible,
+      title,
+      content,
+      buttons,
+      onRequestClose,
+      onShow,
+    } = this.props;
+
+    let view = null;
+    switch (type) {
+      case 'alert':
+        view = (
+          <View style={styles.modal}>
+            <Text style={{color:'#333',fontSize:pxTodpWidth(30),marginVertical:pxTodpHeight(30)}}>
+              {title?title:''}
+            </Text>
+            <View style={{marginHorizontal: pxTodpWidth(10)}}>
+              <Text style={{color:'#666',fontSize:pxTodpWidth(30),marginBottom: pxTodpHeight(30)}}>
+                {content?content:''}
+              </Text>
+            </View>
+            <View style={[styles.btnView,{flexDirection:buttons.length>3?'column':'row'}]}>
+              {
+                buttons.length >0?(
+                  buttons.map((item,i)=>{
+                    return (
+                      <TouchableOpacity
+                        key={i}
+                        style={[styles.btn,{borderRightWidth:i===buttons.length-1?0:1}]}
+                        onPress={item.onPress}>
+                        <Text style={{fontSize:pxTodpWidth(30),color:'#666666'}}>
+                          {item.text}
+                        </Text>
+                      </TouchableOpacity>
+                    )
+                  })
+                ):(
+                  <TouchableOpacity style={[styles.btn]} onPress={()=>{
+                    this.setState({visible:false});
+                  }}>
+                    <Text style={{fontSize:pxTodpWidth(30),color:'#666666'}}>
+                      确定
+                    </Text>
+                  </TouchableOpacity>
+                )
+
+              }
             </View>
 
           </View>
-        }
+        );
+        break;
 
-      </View>
-    </Modal>
-  )
+      case 'others':
+        view = content;
+        break;
+
+      default:
+        view = (
+          <View style={{alignItems:'center'}}>
+            <ActivityIndicator size={'large'} color={'#fff'}/>
+            <Text style={{color:'#333',fontSize:pxTodpWidth(30)}}>
+              {title}
+            </Text>
+          </View>
+        );
+        break;
+    }
+
+    return(
+      <Modal
+        animationType={'none'}
+        transparent={true}
+        visible={this.state.visible}
+        onRequestClose={onRequestClose?onRequestClose:()=>{}}
+        onShow={onShow?onShow:()=>{}}
+      >
+        <View style={styles.contain}>
+          {view}
+        </View>
+      </Modal>
+    )
+  }
 }
+
 
 const styles = StyleSheet.create({
   contain:{
     flex:1,
-    width:ScreenWidth,
+    width:'100%',
     alignItems:'center',
     justifyContent:'center',
     backgroundColor:'rgba(0, 0, 0, 0.3)'
@@ -91,20 +129,9 @@ const styles = StyleSheet.create({
   modal:{
     width:pxTodpWidth(500),
     backgroundColor:'#ffffff',
-    //height:pxTodpHeight(300),
     borderRadius:pxTodpWidth(20),
-    justifyContent:'space-between'
-  },
-  infoView:{
-    // backgroundColor:'#ff0033',
-    width:pxTodpWidth(500),
-    height:pxTodpHeight(200),
     justifyContent:'center',
     alignItems:'center',
-  },
-  info:{
-    fontSize:pxTodpWidth(34),
-    color:'#333333',
   },
   divider:{
     width:pxTodpWidth(500),
@@ -112,21 +139,22 @@ const styles = StyleSheet.create({
     backgroundColor:'#dcdcdc'
   },
   btnView:{
-    width:pxTodpWidth(500),
-    height:pxTodpHeight(100),
+    width:'100%',
+    height:pxTodpHeight(90),
     flexDirection:'row',
     justifyContent:'center',
     alignItems:'center',
     borderTopColor:'#dcdcdc',
     borderTopWidth:1
-
-
   },
   btn:{
     flex:1,
+    height:'100%',
     justifyContent:'center',
+    borderColor:'#dcdcdc',
     alignItems:'center',
   }
 })
+
 
 export default MyDialog;

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import MyDialog from '../../../common/MyDialog';
 import {Text, ScrollView,View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from 'react-native';
 import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
 import {connect} from 'react-redux';
-import * as toast from '../../../common/MyToast';
-import Back from '../../../common/Back';
 import {formValueSelector, reduxForm} from 'redux-form';
 import Field from '../../../common/Field';
 import TextField from '../../../common/TextField';
@@ -33,7 +30,8 @@ class BillForm extends BaseComponent {
     this.setTitle(this.id?'修改帐单':'增加帐单');
   }
 
-  componentDidMount(){
+  componentDidMount = async () => {
+    await this.initBase();
     this._getBillInfo();
   }
 
@@ -44,11 +42,11 @@ class BillForm extends BaseComponent {
     try{
 
       //分类
-      const sortData = await this.props.postAction(config.BILL_SORT_FIND,{pageSize:1000},'查询消费类别');
+      const sortData = await this.props.postAction(config.BILL_SORT_FIND,{},'查询消费类别');
       this._dealParams(sortData);
 
       //方式
-      const methodData = await this.props.postAction(config.BILL_METHOD_FIND,{pageSize:1000},'查询消费方式');
+      const methodData = await this.props.postAction(config.BILL_METHOD_FIND,{},'查询消费方式');
       this._dealParams(methodData);
 
       //帐单
@@ -57,7 +55,6 @@ class BillForm extends BaseComponent {
 
       this.hideActivityIndicator();
 
-      this._dealParams({});
     }catch (e) {
       this.showToast(e.message || e.note);
     }
@@ -102,7 +99,7 @@ class BillForm extends BaseComponent {
             this.setState({selectSort:selectSort});
           }
         }else{
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
         break;
 
@@ -115,7 +112,7 @@ class BillForm extends BaseComponent {
             this.setState({selectMethod:selectMethod});
           }
         }else{
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
 
         break;
@@ -129,7 +126,7 @@ class BillForm extends BaseComponent {
             this.showToast('帐单数据为空');
           }
         }else{
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
         break;
 
@@ -139,7 +136,7 @@ class BillForm extends BaseComponent {
           this.showToast(msg);
           this._onRefreshMethod();
         }else{
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
         break;
 
@@ -149,7 +146,7 @@ class BillForm extends BaseComponent {
           this.showToast(msg);
           this._onRefreshSort();
         }else{
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
         break;
 
@@ -181,30 +178,37 @@ class BillForm extends BaseComponent {
     this.showActivityIndicator();
     try{
       const {type,code,msg} =
-        await this.props.postAction(config.BILL_ADD,Object.assign(object,{sums:type==='in'?sums:-1*sums}),'添加帐单','form');
+        await this.props.postAction(config.BILL_ADD,Object.assign(object,{sums:object.type==='in'?sums:-1*sums}),'添加帐单','form');
 
       if(type === config.BILL_ADD){
         if(code === config.CODE_SUCCESS){
           this.showAlert({
             content:'添加成功,是否继续？',
-            confirmText:'是',
-            cancelText:'否',
-            confirm:()=>{
-              this.props.initialize({
-                methodId:this.state.selectMethod.length>0?this.state.selectMethod[1].id:null,
-                sortId:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
-                dates:moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
-                type:this.props.sums===1?selectType[0].key:selectType[1].key
-              });
-            },
-            cancel:()=>{
-              this.props.navigation.state.params.callback({});
-              this.props.navigation.goBack();
-            }
+            buttons:[
+              {
+                text:'是',
+                onPress:()=>{
+                  this.hideActivityIndicator();
+                  this.props.initialize({
+                    methodId:this.state.selectMethod.length>0?this.state.selectMethod[0].id:null,
+                    sortId:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
+                    dates:moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+                    type:this.props.sums===1?selectType[0].key:selectType[1].key
+                  });
+                }
+              },
+              {
+                text:'否',
+                onPress:()=>{
+                  this.props.navigation.state.params.callback({});
+                  this.props.navigation.goBack();
+                }
+              }
+            ]
           });
 
         }else{
-          this.showToast(msg);
+          this.handleRequestError(code,msg);
         }
       }
     }catch (e) {
@@ -251,15 +255,23 @@ class BillForm extends BaseComponent {
   }
 
   _cancelDelete = () => {
-
+    this.hideActivityIndicator();
   }
 
   //提示是否通过id删除消费方式
   _deleteMethodBtn = (item) => {
     this.showAlert({
       content:'确认删除【'+item.name+'】?',
-        cancel:this._cancelDelete,
-      confirm:()=>this._confirmDeleteMethod(item.id)
+      buttons:[
+        {
+          text:'确认',
+          onPress:()=>this._confirmDeleteMethod(item.id)
+        },
+        {
+          text:'取消',
+          onPress:this._cancelDelete
+        }
+      ]
     });
   }
 
@@ -279,8 +291,16 @@ class BillForm extends BaseComponent {
   _deleteSortBtn = (item) => {
     this.showAlert({
       content:'确认删除【'+item.name+'】?',
-      cancel:this._cancelDelete,
-      confirm:()=>this._confirmDeleteSort(item.id)
+      buttons:[
+        {
+          text:'确认',
+          onPress:()=>this._confirmDeleteSort(item.id)
+        },
+        {
+          text:'取消',
+          onPress:this._cancelDelete
+        }
+      ]
     });
   }
 
@@ -308,6 +328,7 @@ class BillForm extends BaseComponent {
 
         <Field name={'dates'} component={DateTimeField}
           mode={'datetime'} title={'消费时间'} isNeed={true}
+               defaultValue={new Date()}
         />
 
         <View style={{height:pxTodpHeight(10)}}/>

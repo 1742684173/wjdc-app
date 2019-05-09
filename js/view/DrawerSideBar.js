@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import {StyleSheet, View, Text, Button, TouchableHighlight, AsyncStorage} from 'react-native';
 import { connect } from 'react-redux';
 import {pxTodpHeight, pxTodpWidth} from "../common/ScreenUtil";
-import MyDialog from "../common/MyDialog";
 import * as actions from "../actions";
 import * as config from "../config";
 
@@ -26,8 +25,6 @@ class DrawerSideBar extends Component<any> {
   render() {
     return (
       <View style={styles.content}>
-
-        <MyDialog isLoad={true} visible={this.state.visible} onRequestClose={()=>{}}/>
 
         <View style={{marginTop:pxTodpHeight(200)}}>
           <Text onPress={this._exit}>

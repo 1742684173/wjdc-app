@@ -2,7 +2,6 @@ import React,{Component} from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import {pxTodpHeight,pxTodpWidth,ScreenWidth} from "../../../common/ScreenUtil";
 import {phoneCall,sendMessage} from "../../../common/Tool";
-import MyDialog from "../../../common/MyDialog";
 import {connect} from 'react-redux';
 import * as actions from '../../../actions';
 import MyPhoneFlatList from '../../MyPhoneFlatList';
@@ -70,20 +69,6 @@ class ContactDetail extends Component{
 
     return(
       <View style={styles.contain}>
-
-        <MyDialog isLoad={true} visible={this.state.isLoad} onRequestClose={()=>{}}/>
-
-        <MyDialog
-          isChild={true}
-          child={
-            <MyPhoneFlatList
-              data={this.state.phoneList}
-              onSelectPhone={this._phone}
-              cancel={()=>this.setState({isShowDialog:false})}
-            />
-          }
-          visible={this.state.isShowDialog}
-          onRequestClose={()=>this.setState({isShowDialog:false})}/>
 
         <View style={[styles.div,{height:pxTodpHeight(328)}]}>
           <Image source={this.state.ygxq.Ygxq_YGXB} resizeMode={'contain'} style={styles.icon}/>

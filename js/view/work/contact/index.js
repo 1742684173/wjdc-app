@@ -2,7 +2,6 @@ import React,{Component} from 'react';
 import {View, StyleSheet, Animated,} from 'react-native';
 import {pxTodpHeight,pxTodpWidth} from '../../../common/ScreenUtil';
 import Search from '../../../common/Search';
-import MyDialog from '../../../common/MyDialog';
 import * as actions from '../../../actions';
 import {connect} from 'react-redux';
 import MySectionList from './MySectionList';
@@ -94,7 +93,6 @@ class Contact extends Component{
     return(
       <View keyboardDismissMode={'on-drag'} style={{backgroundColor:'#ffffff'}}>
 
-        <MyDialog isLoad={true} visible={this.state.isLoad} onRequestClose={()=>{}}/>
 
         <Search
           placeholder={'请输入姓名'}

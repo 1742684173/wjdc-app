@@ -13,7 +13,6 @@ import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withNavigation } from 'react-navigation';
 import Button from '../../common/Button';
-import MyDialog from '../../common/MyDialog';
 import {pxTodpHeight, pxTodpWidth, md5} from '../../common/ScreenUtil';
 import Input from '../../common/Input';
 import Field from '../../common/Field';
@@ -127,7 +126,6 @@ class SignUp extends Component<any> {
         keyboardShouldPersistTaps='handled'
       >
 
-        <MyDialog isLoad={true} visible={this.state.visible} onRequestClose={()=>{}}/>
         <View>
           <View style={styles.switch}>
             <TouchableOpacity

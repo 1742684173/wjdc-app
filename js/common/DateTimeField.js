@@ -22,7 +22,7 @@ export default class DateTimeField extends Component {
       case 'datetime':format = 'YYYY-MM-DD HH:mm:ss';break;
     }
 
-    props.onChange(moment(curDate).format(format));
+    props.defaultValue?props.onChange(moment(props.defaultValue).format(format)):null;
   }
 
 
