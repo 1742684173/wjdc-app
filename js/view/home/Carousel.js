@@ -28,46 +28,46 @@ import {Dimensions, StyleSheet, View} from "react-native";
 import {pxTodpHeight, pxTodpWidth, ScreenHeight, ScreenWidth} from "../../common/ScreenUtil";
 
 type Props = {
-  count: number,
-  selectedIndex: number,
-  onSelectedIndexChange?: (index: number) => void,
-  renderCard: (index: number) => ReactElement<any>,
-  style?: any
+    count: number,
+    selectedIndex: number,
+    onSelectedIndexChange?: (index: number) => void,
+    renderCard: (index: number) => ReactElement<any>,
+    style?: any
 };
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 
 class Carousel extends React.Component {
-  props: Props;
+    props: Props;
 
-  static CardWidth = WINDOW_WIDTH;
+    static CardWidth = WINDOW_WIDTH;
 
 
 
-  render() {
-    let cards = [];
-    const { renderCard,selectedIndexScreen } = this.props;
+    render() {
+        let cards = [];
+        const { renderCard,selectedIndexScreen } = this.props;
 
-    React.Children.map(renderCard, (child, i) => {
-      let content = null;
-      // if (Math.abs(selectedIndex - i) === 0) {
-      if (selectedIndexScreen - i >= 0) {
-        content = (
-          <View key={i} style={{flex:1}}>
-            {child}
-          </View>
-        )
-      }
-      cards.push(content);
-    });
+        React.Children.map(renderCard, (child, i) => {
+            let content = null;
+            // if (Math.abs(selectedIndex - i) === 0) {
+            if (selectedIndexScreen - i >= 0) {
+                content = (
+                    <View key={i} style={{flex:1}}>
+                        {child}
+                    </View>
+                )
+            }
+            cards.push(content);
+        });
 
-    return (
-      <ViewPager {...this.props} bounces={true}>
-        {cards}
-      </ViewPager>
-    );
+        return (
+            <ViewPager {...this.props} bounces={true}>
+                {cards}
+            </ViewPager>
+        );
 
-  }
+    }
 }
 
 module.exports = Carousel;

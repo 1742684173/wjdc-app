@@ -8,17 +8,17 @@ import logger from './logger';
 import reducers from '../reducers';
 
 const persistedReducer = persistReducer({
-  key: 'root',
-  storage: AsyncStorage,
-  whitelist: ['user'],
+    key: 'root',
+    storage: AsyncStorage,
+    whitelist: ['user'],
 }, reducers);
 
 const configureStore = () => {
-  const enhancer = applyMiddleware(thunk, promise, logger);
-  const store = createStore(persistedReducer, enhancer);
+    const enhancer = applyMiddleware(thunk, promise, logger);
+    const store = createStore(persistedReducer, enhancer);
 
-  const persistor = persistStore(store);
-  return { store, persistor };
+    const persistor = persistStore(store);
+    return { store, persistor };
 };
 
 export default configureStore;

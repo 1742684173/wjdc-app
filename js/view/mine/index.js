@@ -4,19 +4,19 @@ import {pxTodpWidth} from "../../common/ScreenUtil";
 import {connect} from 'react-redux'
 
 class Mine extends Component {
-  static navigationOptions = (navigation) =>({
-    title:'我的',
-  })
+    static navigationOptions = (navigation) =>({
+        title:'我的',
+    })
 
-  render(){
-    return null;
-  }
+    render(){
+        return null;
+    }
 }
 
 const styles = StyleSheet.create({
-  contain:{
+    contain:{
 
-  }
+    }
 });
 
 

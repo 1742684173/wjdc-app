@@ -23,220 +23,220 @@
 
 import React from "react";
 import {
-  View,
-  StyleSheet,
-  ScrollView,
-  ViewPagerAndroid,
-  Platform
+    View,
+    StyleSheet,
+    ScrollView,
+    ViewPagerAndroid,
+    Platform
 } from "react-native";
 import {pxTodpHeight, pxTodpWidth, ScreenHeight, ScreenWidth} from "../../common/ScreenUtil";
 
 type Props = {
-  count: number,
-  selectedIndex: number,
-  onSelectedIndexChange?: (index: number) => void,
-  bounces?: boolean,
-  children?: any,
-  style?: any
+    count: number,
+    selectedIndex: number,
+    onSelectedIndexChange?: (index: number) => void,
+    bounces?: boolean,
+    children?: any,
+    style?: any
 };
 
 type State = {
-  width: number,
-  height: number,
-  selectedIndex: number,
-  initialSelectedIndex: number,
-  scrollingTo: ?number
+    width: number,
+    height: number,
+    selectedIndex: number,
+    initialSelectedIndex: number,
+    scrollingTo: ?number
 };
 
 class ViewPager extends React.Component {
-  props: Props;
-  state: State;
+    props: Props;
+    state: State;
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      width: 0,
-      height: 0,
-      selectedIndex: this.props.selectedIndex,
-      initialSelectedIndex: this.props.selectedIndex,
-      scrollingTo: null
-    };
-    (this: any).handleHorizontalScroll = this.handleHorizontalScroll.bind(this);
-    (this: any).adjustCardSize = this.adjustCardSize.bind(this);
-  }
-
-  _renderDot(index,lenth){
-    let dots = [];
-    for(let i=0;i<lenth;i++){
-      if(index === i){
-        dots.push(<View key={i} style={[styles.swiperDot,{backgroundColor:'#21c3ff',width:pxTodpWidth(30),height:pxTodpHeight(10)}]}/>);
-      }else{
-        dots.push(<View key={i} style={[styles.swiperDot,{backgroundColor:'#e5e5e5',width:pxTodpWidth(16),height:pxTodpHeight(10)}]}/>)
-      }
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            width: 0,
+            height: 0,
+            selectedIndex: this.props.selectedIndex,
+            initialSelectedIndex: this.props.selectedIndex,
+            scrollingTo: null
+        };
+        (this: any).handleHorizontalScroll = this.handleHorizontalScroll.bind(this);
+        (this: any).adjustCardSize = this.adjustCardSize.bind(this);
     }
-    return dots;
-  }
 
-  render() {
-    return (
-      <View style={{flex:1,backgroundColor:'#fff'}} >
-
-        {
-          //Platform.OS === "ios"?this.renderIOS():this.renderAndroid()
-          this.renderIOS()
+    _renderDot(index,lenth){
+        let dots = [];
+        for(let i=0;i<lenth;i++){
+            if(index === i){
+                dots.push(<View key={i} style={[styles.swiperDot,{backgroundColor:'#21c3ff',width:pxTodpWidth(30),height:pxTodpHeight(10)}]}/>);
+            }else{
+                dots.push(<View key={i} style={[styles.swiperDot,{backgroundColor:'#e5e5e5',width:pxTodpWidth(16),height:pxTodpHeight(10)}]}/>)
+            }
         }
+        return dots;
+    }
 
-        <View style={[styles.dotView]}>
-          {
-            this._renderDot(this.state.selectedIndex,this.props.count)
-          }
-        </View>
+    render() {
+        return (
+            <View style={{flex:1,backgroundColor:'#fff'}} >
 
-      </View>
-    );
+                {
+                    //Platform.OS === "ios"?this.renderIOS():this.renderAndroid()
+                    this.renderIOS()
+                }
 
-  }
+                <View style={[styles.dotView]}>
+                    {
+                        this._renderDot(this.state.selectedIndex,this.props.count)
+                    }
+                </View>
 
-  renderIOS() {
-    return (
-      <ScrollView
-        ref={c => (this._scrollview = c)}
-        contentOffset={{
-          x: this.state.width * this.state.initialSelectedIndex,
-          y: 0
-        }}
-        style={[styles.scrollview, this.props.style]}
-        horizontal={true}
-        pagingEnabled={true}
-        bounces={!!this.props.bounces}
-        scrollsToTop={false}
-        onScroll={this.handleHorizontalScroll}
-        scrollEventThrottle={100}
-        removeClippedSubviews={false}
-        automaticallyAdjustContentInsets={false}
-        directionalLockEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        onLayout={this.adjustCardSize}
-      >
-        {this.renderContent()}
-      </ScrollView>
-    );
-  }
+            </View>
+        );
 
-  renderAndroid() {
-    return (
-      <ViewPagerAndroid
-        ref={c => (this._scrollview = c)}
-        initialPage={this.state.initialSelectedIndex}
-        onPageSelected={this.handleHorizontalScroll}
-        style={styles.container}
-      >
-        {this.renderContent()}
-      </ViewPagerAndroid>
-    );
-  }
+    }
 
-  adjustCardSize(e: any) {
-    this.setState({
-      width: e.nativeEvent.layout.width,
-      height: e.nativeEvent.layout.height
-    });
-  }
+    renderIOS() {
+        return (
+            <ScrollView
+                ref={c => (this._scrollview = c)}
+                contentOffset={{
+                    x: this.state.width * this.state.initialSelectedIndex,
+                    y: 0
+                }}
+                style={[styles.scrollview, this.props.style]}
+                horizontal={true}
+                pagingEnabled={true}
+                bounces={!!this.props.bounces}
+                scrollsToTop={false}
+                onScroll={this.handleHorizontalScroll}
+                scrollEventThrottle={100}
+                removeClippedSubviews={false}
+                automaticallyAdjustContentInsets={false}
+                directionalLockEnabled={true}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                onLayout={this.adjustCardSize}
+            >
+                {this.renderContent()}
+            </ScrollView>
+        );
+    }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.selectedIndex !== this.state.selectedIndex) {
-      if (Platform.OS === "ios") {
-        this._scrollview.scrollTo({
-          x: nextProps.selectedIndex * this.state.width,
-          animated: true
+    renderAndroid() {
+        return (
+            <ViewPagerAndroid
+                ref={c => (this._scrollview = c)}
+                initialPage={this.state.initialSelectedIndex}
+                onPageSelected={this.handleHorizontalScroll}
+                style={styles.container}
+            >
+                {this.renderContent()}
+            </ViewPagerAndroid>
+        );
+    }
+
+    adjustCardSize(e: any) {
+        this.setState({
+            width: e.nativeEvent.layout.width,
+            height: e.nativeEvent.layout.height
         });
-        this.setState({ scrollingTo: nextProps.selectedIndex });
-      } else {
-        this._scrollview.setPage(nextProps.selectedIndex);
-        this.setState({ selectedIndex: nextProps.selectedIndex });
-      }
     }
-  }
 
-  renderContent(): Array<ReactElement> {
-    const { width, height } = this.state;
-    const style = Platform.OS === "ios" && styles.card;
-    return React.Children.map(this.props.children, (child, i) => (
-      <View style={[style, { width, height }]} key={"r_" + i}>
-        {child}
-      </View>
-    ));
-  }
+    componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.selectedIndex !== this.state.selectedIndex) {
+            if (Platform.OS === "ios") {
+                this._scrollview.scrollTo({
+                    x: nextProps.selectedIndex * this.state.width,
+                    animated: true
+                });
+                this.setState({ scrollingTo: nextProps.selectedIndex });
+            } else {
+                this._scrollview.setPage(nextProps.selectedIndex);
+                this.setState({ selectedIndex: nextProps.selectedIndex });
+            }
+        }
+    }
 
-  handleHorizontalScroll(e: any) {
-    let selectedIndex = e.nativeEvent.position;
-    if (selectedIndex === undefined) {
-      selectedIndex = Math.round(
-        e.nativeEvent.contentOffset.x / this.state.width
-      );
+    renderContent(): Array<ReactElement> {
+        const { width, height } = this.state;
+        const style = Platform.OS === "ios" && styles.card;
+        return React.Children.map(this.props.children, (child, i) => (
+            <View style={[style, { width, height }]} key={"r_" + i}>
+                {child}
+            </View>
+        ));
     }
-    if (selectedIndex < 0 || selectedIndex >= this.props.count) {
-      return;
+
+    handleHorizontalScroll(e: any) {
+        let selectedIndex = e.nativeEvent.position;
+        if (selectedIndex === undefined) {
+            selectedIndex = Math.round(
+                e.nativeEvent.contentOffset.x / this.state.width
+            );
+        }
+        if (selectedIndex < 0 || selectedIndex >= this.props.count) {
+            return;
+        }
+        if (
+            this.state.scrollingTo !== null &&
+            this.state.scrollingTo !== selectedIndex
+        ) {
+            return;
+        }
+        if (
+            this.props.selectedIndex !== selectedIndex ||
+            this.state.scrollingTo !== null
+        ) {
+            this.setState({ selectedIndex, scrollingTo: null }, () => {
+                // the onSelectedIndexChange handler can change props.selectedIndex, so we want
+                // to call it after the state has actually changed to avoid extra scrollTo call
+                // (see componentWillReceiveProps)
+                const { onSelectedIndexChange } = this.props;
+                onSelectedIndexChange && onSelectedIndexChange(selectedIndex);
+            });
+        }
     }
-    if (
-      this.state.scrollingTo !== null &&
-      this.state.scrollingTo !== selectedIndex
-    ) {
-      return;
-    }
-    if (
-      this.props.selectedIndex !== selectedIndex ||
-      this.state.scrollingTo !== null
-    ) {
-      this.setState({ selectedIndex, scrollingTo: null }, () => {
-        // the onSelectedIndexChange handler can change props.selectedIndex, so we want
-        // to call it after the state has actually changed to avoid extra scrollTo call
-        // (see componentWillReceiveProps)
-        const { onSelectedIndexChange } = this.props;
-        onSelectedIndexChange && onSelectedIndexChange(selectedIndex);
-      });
-    }
-  }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  scrollview: {
-    flex: 1,
-    backgroundColor: "transparent"
-  },
-  card: {
-    backgroundColor: "transparent"
-  },
-  dotView:{
-    width:'100%',
-    justifyContent:'center',
-    flexDirection:'row',
-    position:'absolute',
-    zIndex:1000,
-    bottom:5,
-    backgroundColor:'#00000000'
-  },
-  swiperDot:{
-    borderRadius:pxTodpWidth(10),
-    marginHorizontal:pxTodpWidth(5),
-  },
-  imgBg:{
-    height:ScreenHeight,
-    width:ScreenWidth,
-    alignItems:'flex-end',
-    justifyContent:'flex-end'
-  },
-  touch:{
-    backgroundColor:'#932D91',
-    height:pxTodpHeight(120),
-    width:pxTodpWidth(258),
-    marginRight:pxTodpWidth(64),
-    marginBottom:pxTodpHeight(160)
-  },
+    container: {
+        flex: 1
+    },
+    scrollview: {
+        flex: 1,
+        backgroundColor: "transparent"
+    },
+    card: {
+        backgroundColor: "transparent"
+    },
+    dotView:{
+        width:'100%',
+        justifyContent:'center',
+        flexDirection:'row',
+        position:'absolute',
+        zIndex:1000,
+        bottom:5,
+        backgroundColor:'#00000000'
+    },
+    swiperDot:{
+        borderRadius:pxTodpWidth(10),
+        marginHorizontal:pxTodpWidth(5),
+    },
+    imgBg:{
+        height:ScreenHeight,
+        width:ScreenWidth,
+        alignItems:'flex-end',
+        justifyContent:'flex-end'
+    },
+    touch:{
+        backgroundColor:'#932D91',
+        height:pxTodpHeight(120),
+        width:pxTodpWidth(258),
+        marginRight:pxTodpWidth(64),
+        marginBottom:pxTodpHeight(160)
+    },
 });
 
 module.exports = ViewPager;

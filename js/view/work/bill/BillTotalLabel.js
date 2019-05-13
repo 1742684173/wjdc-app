@@ -18,25 +18,13 @@ type Props = {
     submit?:Function,//提交
 };
 
-//按方式查，按种类查 按时间 金额大小 支出/收入
-const sortName = [
-    {id:'method',name:'按消费方式升序'},
-    {id:'method desc',name:'按消费方式降序'},
-    {id:'sort',name:'按消费类别升序'},
-    {id:'sort desc',name:'按消费类别降序'},
-    {id:'dates',name:'按消费时间升序'},
-    {id:'dates desc',name:'按消费时间降序'},
-    {id:'sums',name:'按消费金额升序'},
-    {id:'sums desc',name:'按消费金额降序'},
-];
-
 const type = [
     {id:'all',name:'所有'},
     {id:'in',name:'收入'},
     {id:'out',name:'支出'},
 ];
 
-class BillLabel extends Component<Props> {
+class BillTotalLabel extends Component<Props> {
 
     _onReset = async () => {
         this.props.onReset();
@@ -63,9 +51,9 @@ class BillLabel extends Component<Props> {
                         keyboardShouldPersistTaps={'handled'}
                     >
 
-                        <Field name={'type'} component={MySelect} title={'根据类形查询'} values={type}/>
+                        <Field name={'type'} component={MySelect} title={'根据类形统计'} values={type}/>
 
-                        <Title text={'根据时间区间查询'} style={styles.title}/>
+                        <Title text={'根据时间区间统计'} style={styles.title}/>
                         <View style={{paddingHorizontal: pxTodpWidth(20)}}>
                             <Field name={'startTime'} component={DateTimeField} title={'开始时间'}
                                    defaultValue={selectLabel.startTime}/>
@@ -76,7 +64,7 @@ class BillLabel extends Component<Props> {
                                    defaultValue={selectLabel.endTime}/>
                         </View>
 
-                        <Title text={'根据金额区间查询'} style={styles.title}/>
+                        <Title text={'根据金额区间统计'} style={styles.title}/>
                         <View style={{marginHorizontal: pxTodpWidth(30)}}>
                             <Field name={'minSum'} component={TextField} title={'最小金额'}
                                    keyboardType={'numeric'} defaultValue={selectLabel.minSum}/>
@@ -87,13 +75,10 @@ class BillLabel extends Component<Props> {
                                    keyboardType={'numeric'} defaultValue={selectLabel.maxSum}/>
                         </View>
 
-                        <Field name={'sortName'} component={MySelect} title={'排序'}
-                               values={sortName} defaultValue={selectLabel.sortName}/>
-
-                        <Field name={'method'} component={MySelect} title={'根据方式查询'}
+                        <Field name={'method'} component={MySelect} title={'根据方式统计'}
                                values={method} defaultValue={selectLabel.method}/>
 
-                        <Field name={'sort'} component={MySelect} title={'根据分类查询'}
+                        <Field name={'sort'} component={MySelect} title={'根据分类统计'}
                                values={sort} value={selectLabel.sort}/>
 
                         <View style={{height:200}}/>
@@ -173,8 +158,8 @@ const styles = StyleSheet.create({
     }
 });
 
-const ReduxBillLabelForm = reduxForm({
-    form: 'BillLabelForm',
-})(BillLabel)
+const ReduxBillTotalLabelForm = reduxForm({
+    form: 'BillTotalLabelForm',
+})(BillTotalLabel)
 
-export default connect(null,actions)(ReduxBillLabelForm);
+export default connect(null,actions)(ReduxBillTotalLabelForm);

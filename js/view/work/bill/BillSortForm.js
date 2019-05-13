@@ -12,113 +12,113 @@ import * as actions from '../../../actions/index';
 import BaseComponent from "../../base/BaseComponent";
 
 class BillSortForm extends BaseComponent {
-  state = {
-    data:[],
-    selectSort:[],
-  }
-
-  // 构造
-  constructor(props) {
-    super(props);
-
-    this.item = this.props.navigation.state.params.item;
-    this.func = this.props.navigation.state.params.func;
-    this.setTitle(this.props.navigation.state.params.title);
-    this.item?this.props.initialize(this.item):null;
-  }
-
-  componentDidMount = async () => {
-    await this.initBase();
-  }
-
-  _confirm = ()=>{
-    this.hideActivityIndicator();
-    this.item?null:this.props.reset();
-  }
-
-  _cancel = () => {
-    this.hideActivityIndicator();
-    this.props.navigation.state.params.callback({});
-    this.props.navigation.goBack();
-  }
-
-  //添加
-  _handleSubmit = async (object:Object) => {
-    const {name} = object;
-    if(name === undefined || name === null || name.length === 0){
-      this.showToast('请输入名称');
-      return;
+    state = {
+        data:[],
+        selectSort:[],
     }
 
-    try{
-      this.showActivityIndicator();
+    // 构造
+    constructor(props) {
+        super(props);
 
-      const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑分类','form');
+        this.item = this.props.navigation.state.params.item;
+        this.func = this.props.navigation.state.params.func;
+        this.setTitle(this.props.navigation.state.params.title);
+        this.item?this.props.initialize(this.item):null;
+    }
 
-      if(type === this.func){
-        if(code === config.CODE_SUCCESS){
-          this.showAlert({
-            content:(this.item?'编辑':'添加')+'成功,是否继续'+'？',
-            buttons:[
-              {
-                text:'是',
-                onPress:this._confirm
-              },
-              {
-                text:'否',
-                onPress:this._cancel
-              }
-            ]
-          });
-        }else{
-          this.handleRequestError(code,msg);
+    componentDidMount = async () => {
+        await this.initBase();
+    }
+
+    _confirm = ()=>{
+        this.hideActivityIndicator();
+        this.item?null:this.props.reset();
+    }
+
+    _cancel = () => {
+        this.hideActivityIndicator();
+        this.props.navigation.state.params.callback({});
+        this.props.navigation.goBack();
+    }
+
+    //添加
+    _handleSubmit = async (object:Object) => {
+        const {name} = object;
+        if(name === undefined || name === null || name.length === 0){
+            this.showToast('请输入名称');
+            return;
         }
-      }
-    }catch (e) {
-      this.showToast(e.message||'未知错误');
+
+        try{
+            this.showActivityIndicator();
+
+            const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑分类','form');
+
+            if(type === this.func){
+                if(code === config.CODE_SUCCESS){
+                    this.showAlert({
+                        content:(this.item?'编辑':'添加')+'成功,是否继续'+'？',
+                        buttons:[
+                            {
+                                text:'是',
+                                onPress:this._confirm
+                            },
+                            {
+                                text:'否',
+                                onPress:this._cancel
+                            }
+                        ]
+                    });
+                }else{
+                    this.handleRequestError(code,msg);
+                }
+            }
+        }catch (e) {
+            this.showToast(e.message||'未知错误');
+        }
     }
-  }
 
-  render() {
-    super.render();
-    let view = (
-      <ScrollView style={styles.contain} keyboardShouldPersistTaps={'handled'}>
+    render() {
+        super.render();
+        let view = (
+            <ScrollView style={styles.contain} keyboardShouldPersistTaps={'handled'}>
 
-        <View style={{height:pxTodpHeight(24)}}/>
+                <View style={{height:pxTodpHeight(24)}}/>
 
-        <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
+                <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
 
-        <View style={{height:pxTodpHeight(24)}}/>
-        <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={pxTodpHeight(200)}/>
+                <View style={{height:pxTodpHeight(24)}}/>
+                <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={pxTodpHeight(200)}/>
 
-        <View style={{height:pxTodpHeight(100)}}/>
-        <Button style={{height:pxTodpHeight(78)}}
-                onPress={this.props.handleSubmit(this._handleSubmit)}>
-          <Text style={styles.btnSubmit}>提交</Text>
-        </Button>
+                <View style={{height:pxTodpHeight(100)}}/>
+                <Button style={{height:pxTodpHeight(78)}}
+                        onPress={this.props.handleSubmit(this._handleSubmit)}>
+                    <Text style={styles.btnSubmit}>提交</Text>
+                </Button>
 
-      </ScrollView>
-    );
+            </ScrollView>
+        );
 
-    return super.renderBase(view);;
-  }
+        return super.renderBase(view);;
+    }
 
 }
 
 const styles = StyleSheet.create({
-  contain:{
-    flex:1,
-    backgroundColor:'#fff',
-    paddingHorizontal: pxTodpWidth(30),
-  },
-  btnSubmit:{
-    fontSize:pxTodpWidth(40),
-    color:'#fff'
-  },
+    contain:{
+        flex:1,
+        backgroundColor:'#fff',
+        paddingHorizontal: pxTodpWidth(30),
+    },
+    btnSubmit:{
+        fontSize:pxTodpWidth(40),
+        color:'#fff'
+    },
 });
 
 const ReduxBillSortForm = reduxForm({
-  form: 'BillSortForm',
+    form: 'BillSortForm',
 })(BillSortForm)
 
 

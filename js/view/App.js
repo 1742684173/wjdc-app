@@ -9,6 +9,7 @@ import Publish from './publish';
 import DrawerSideBar from './DrawerSideBar';
 import BillInfo from './work/bill';
 import Bills from './work/bill/Bills';
+import BillTotal from './work/bill/BillTotal';
 import BillForm from './work/bill/BillForm';
 import BillDetail from './work/bill/BillDetail';
 import BillMethodForm from './work/bill/BillMethodForm';
@@ -17,36 +18,37 @@ import Contact from './work/contact';
 import ContactDetail from './work/contact/ContactDetail'
 
 const AppStack = StackNavigator({
-  Main,
-  BillInfo,
-  Bills,
-  BillForm,
-  BillDetail,
-  BillMethodForm,
-  BillSortForm,
-  Publish,
-  Contact,
-  ContactDetail,
+    Main,
+    BillInfo,
+    Bills,
+    BillTotal,
+    BillForm,
+    BillDetail,
+    BillMethodForm,
+    BillSortForm,
+    Publish,
+    Contact,
+    ContactDetail,
 },);
 
 
 const AuthStack = StackNavigator(
-  {
-    SignIn,
-    SignUp,
-    FindPwd,
-  },
+    {
+        SignIn,
+        SignUp,
+        FindPwd,
+    },
 );
 
 export default SwitchNavigator(
-  {
-    AuthLoading,
-    Auth: AuthStack,
-    // App:AppStack
-    App: DrawerNavigator({
-      AppStack,
-    }, {
-      contentComponent: DrawerSideBar,
-    }),
-  },
+    {
+        AuthLoading,
+        Auth: AuthStack,
+        // App:AppStack
+        App: DrawerNavigator({
+            AppStack,
+        }, {
+            contentComponent: DrawerSideBar,
+        }),
+    },
 );

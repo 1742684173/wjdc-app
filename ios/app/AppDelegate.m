@@ -19,6 +19,10 @@
   
  [[UIDatePicker appearance] setLocale:[[NSLocale alloc]initWithLocaleIdentifier:@"zh_CN"]];
   
+  //NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];//设置为英文显示
+//    NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"];//设置为中文显示
+//    datePicker.locale = locale;
+  //  [locale release];
   
 #ifdef DEBUG
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];

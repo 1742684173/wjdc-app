@@ -5,7 +5,7 @@ import userReducer from './userReducer';
 import webscoketReducer from './webscoketReducer';
 
 export default combineReducers({
-  user: userReducer,
-  form,
-  websocket:webscoketReducer,
+    user: userReducer,
+    form,
+    websocket:webscoketReducer,
 });

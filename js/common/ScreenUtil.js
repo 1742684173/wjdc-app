@@ -26,9 +26,9 @@ function pxTodpHeight(px){
 
 //md5加密
 function md5(str:string) {
-  let md =forge.md.md5.create();
-  md.update(str);
-  return md.digest().toHex();
+    let md =forge.md.md5.create();
+    md.update(str);
+    return md.digest().toHex();
 }
 
 export {md5,pxTodpWidth,pxTodpHeight};

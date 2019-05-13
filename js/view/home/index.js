@@ -5,41 +5,41 @@ import Carousel from "./Carousel";
 import {View} from "react-native";
 
 export default class Home extends Component<any> {
-  static navigationOptions = ({navigation}) => ({
-    headerLeft:<View/>,
-    title: '首页',
-    headerRight:<View/>,
-  });
-
-  constructor(props){
-    super(props);
-    this.state =({
-      screen:0,//显示第几屏
-      selectedIndexScreen:0,
+    static navigationOptions = ({navigation}) => ({
+        headerLeft:<View/>,
+        title: '首页',
+        headerRight:<View/>,
     });
-  }
 
-  _onSelectedIndexChange = (selectedIndex) => {
-    if(selectedIndex >= this.state.selectedIndexScreen){
-      this.setState({selectedIndexScreen:selectedIndex});
+    constructor(props){
+        super(props);
+        this.state =({
+            screen:0,//显示第几屏
+            selectedIndexScreen:0,
+        });
     }
-    this.setState({screen:selectedIndex});
-  }
 
-  render() {
-    const screens = [
-      <BillInfo key={1} navigation={this.props.navigation}/>,
-    ];
+    _onSelectedIndexChange = (selectedIndex) => {
+        if(selectedIndex >= this.state.selectedIndexScreen){
+            this.setState({selectedIndexScreen:selectedIndex});
+        }
+        this.setState({screen:selectedIndex});
+    }
 
-    return (
-      <Carousel
-        count={screens.length}
-        selectedIndex={this.state.screen}
-        selectedIndexScreen={this.state.selectedIndexScreen}
-        onSelectedIndexChange={this._onSelectedIndexChange}
-        renderCard={screens}
-      />
-    );
-  }
+    render() {
+        const screens = [
+            <BillInfo key={1} navigation={this.props.navigation}/>,
+        ];
+
+        return (
+            <Carousel
+                count={screens.length}
+                selectedIndex={this.state.screen}
+                selectedIndexScreen={this.state.selectedIndexScreen}
+                onSelectedIndexChange={this._onSelectedIndexChange}
+                renderCard={screens}
+            />
+        );
+    }
 
 }

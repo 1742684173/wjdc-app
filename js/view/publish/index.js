@@ -4,9 +4,9 @@ import {Text, ScrollView,View, StyleSheet, TouchableOpacity, ListView, BackHandl
 
 export default class Publish extends Component {
 
-  render() {
-    return null;
-  }
+    render() {
+        return null;
+    }
 
 }
 

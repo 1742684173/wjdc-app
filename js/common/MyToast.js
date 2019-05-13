@@ -8,17 +8,17 @@ let toast;
 let shortTime = 1000;
 let longTime = 2000;
 export const toastShort = (content) => {
-  if (toast !== undefined) {
-    Toast.hide(toast);
-  }
-  toast = Toast.show(content.toString(), {
-    duration: shortTime,//Toast.durations.SHORT,
-    position: Toast.positions.CENTER,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0
-  });
+    if (toast !== undefined) {
+        Toast.hide(toast);
+    }
+    toast = Toast.show(content.toString(), {
+        duration: shortTime,//Toast.durations.SHORT,
+        position: Toast.positions.CENTER,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+    });
 };
 
 /**
@@ -26,17 +26,17 @@ export const toastShort = (content) => {
  * @param content bottom
  */
 export const toastShort_bottom = (content) => {
-  if (toast !== undefined) {
-    Toast.hide(toast);
-  }
-  toast = Toast.show(content.toString(), {
-    duration: shortTime,//Toast.durations.SHORT,
-    position: Toast.positions.BOTTOM,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0
-  });
+    if (toast !== undefined) {
+        Toast.hide(toast);
+    }
+    toast = Toast.show(content.toString(), {
+        duration: shortTime,//Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+    });
 };
 
 /**
@@ -44,17 +44,17 @@ export const toastShort_bottom = (content) => {
  * @param content top
  */
 export const toastShort_top = (content) => {
-  if (toast !== undefined) {
-    Toast.hide(toast);
-  }
-  toast = Toast.show(content.toString(), {
-    duration: shortTime,//Toast.durations.SHORT,
-    position: Toast.positions.TOP,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0
-  });
+    if (toast !== undefined) {
+        Toast.hide(toast);
+    }
+    toast = Toast.show(content.toString(), {
+        duration: shortTime,//Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+    });
 };
 
 
@@ -63,17 +63,17 @@ export const toastShort_top = (content) => {
  * @param content center
  */
 export const toastLong = (content) => {
-  if (toast !== undefined) {
-    Toast.hide(toast);
-  }
-  toast = Toast.show(content.toString(), {
-    duration: longTime,//Toast.durations.LONG,
-    position: Toast.positions.CENTER,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0
-  });
+    if (toast !== undefined) {
+        Toast.hide(toast);
+    }
+    toast = Toast.show(content.toString(), {
+        duration: longTime,//Toast.durations.LONG,
+        position: Toast.positions.CENTER,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+    });
 };
 
 /**
@@ -81,17 +81,17 @@ export const toastLong = (content) => {
  * @param content bottom
  */
 export const toastLong_bottom = (content) => {
-  if (toast !== undefined) {
-    Toast.hide(toast);
-  }
-  toast = Toast.show(content.toString(), {
-    duration: longTime,//Toast.durations.LONG,
-    position: Toast.positions.BOTTOM,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0
-  });
+    if (toast !== undefined) {
+        Toast.hide(toast);
+    }
+    toast = Toast.show(content.toString(), {
+        duration: longTime,//Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+    });
 };
 
 /**
@@ -99,15 +99,15 @@ export const toastLong_bottom = (content) => {
  * @param content top
  */
 export const toastLong_top = (content) => {
-  if (toast !== undefined) {
-    Toast.hide(toast);
-  }
-  toast = Toast.show(content.toString(), {
-    duration: longTime,//Toast.durations.LONG,
-    position: Toast.positions.TOP,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0
-  });
+    if (toast !== undefined) {
+        Toast.hide(toast);
+    }
+    toast = Toast.show(content.toString(), {
+        duration: longTime,//Toast.durations.LONG,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+    });
 };

@@ -14,9 +14,9 @@ import {pxTodpWidth} from "./ScreenUtil";
 
 const IOSTransitionSpec = {
     timing: Animated.spring,
-  stiffness: 1000,
-  damping: 500,
-  mass: 3,
+    stiffness: 1000,
+    damping: 500,
+    mass: 3,
 };
 
 function isIphoneX() {
@@ -37,49 +37,49 @@ function ifIphoneX(iphoneXStyle, regularStyle) {
 }
 
 const SlideFromRightIOS = {
-  transitionSpec: IOSTransitionSpec,
-  screenInterpolator: CardStackStyleInterpolator.forHorizontal,
-  containerStyle: {
-    backgroundColor: '#000',
-      borderBottomWidth:0
-  },
+    transitionSpec: IOSTransitionSpec,
+    screenInterpolator: CardStackStyleInterpolator.forHorizontal,
+    containerStyle: {
+        backgroundColor: '#000',
+        borderBottomWidth:0
+    },
 };
 
 const defaultStackConfig = {
-  headerMode: 'float',
-  headerTransitionPreset: 'uikit',
-  navigationOptions: {
-    headerTintColor: Theme.primaryColor,
-    headerTitleStyle: {
-        flexDirection: 'row',
-        alignItems:'center',
-        justifyContent:'center',
-      color: Theme.headerTitleTextColor,
-      fontSize: pxTodpWidth(48),
+    headerMode: 'float',
+    headerTransitionPreset: 'uikit',
+    navigationOptions: {
+        headerTintColor: Theme.primaryColor,
+        headerTitleStyle: {
+            flexDirection: 'row',
+            alignItems:'center',
+            justifyContent:'center',
+            color: Theme.headerTitleTextColor,
+            fontSize: pxTodpWidth(48),
+        },
+        headerStyle: {
+            //android 往下移动
+            paddingTop:15,
+            elevation:0,
+            backgroundColor: Theme.headerBackgroundColor,
+            borderBottomWidth: 0,
+            /*  ...Platform.select({
+                  ios:ifIphoneX({height: 88}, {}),
+                  android:{paddingTop:20}
+              })*/
+        },
     },
-    headerStyle: {
-        //android 往下移动
-        paddingTop:15,
-      elevation:0,
-      backgroundColor: Theme.headerBackgroundColor,
-      borderBottomWidth: 0,
-      /*  ...Platform.select({
-            ios:ifIphoneX({height: 88}, {}),
-            android:{paddingTop:20}
-        })*/
-    },
-  },
-  transitionConfig: () => SlideFromRightIOS,
+    transitionConfig: () => SlideFromRightIOS,
 };
 
 const StackNavigator = (
-  routeConfigMap: NavigationRouteConfigMap,
-  stackConfig?: StackNavigatorConfig,
+    routeConfigMap: NavigationRouteConfigMap,
+    stackConfig?: StackNavigatorConfig,
 ): NavigationContainer<*, *, *> => {
-  return ReactStackNavigator(
-    routeConfigMap,
-    merge({}, defaultStackConfig, stackConfig),
-  );
+    return ReactStackNavigator(
+        routeConfigMap,
+        merge({}, defaultStackConfig, stackConfig),
+    );
 };
 
 export default StackNavigator;

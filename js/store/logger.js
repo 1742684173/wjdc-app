@@ -1,10 +1,24 @@
 // @flow
-import { createLogger } from 'redux-logger';
+import { applyMiddleware, createStore ,compose} from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
+import { AsyncStorage } from 'react-native';
+import thunk from 'redux-thunk';
+import promise from 'redux-promise';
+import logger from './logger';
+import reducers from '../reducers';
 
-const logger = createLogger({
-  predicate: () => __DEV__,
-  collapsed: true,
-  duration: true,
-});
+const persistedReducer = persistReducer({
+    key: 'root',
+    storage: AsyncStorage,
+    whitelist: ['user'],
+}, reducers);
 
-export default logger;
+const configureStore = () => {
+    const enhancer = applyMiddleware(thunk, promise, logger);
+    const store = createStore(persistedReducer, enhancer);
+
+    const persistor = persistStore(store);
+    return { store, persistor };
+};
+
+export default configureStore;
