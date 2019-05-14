@@ -8,7 +8,7 @@ import {
     TextInput,
     Platform,
 }from "react-native";
-import {pxTodpHeight,pxTodpWidth,ScreenWidth,ScreenHeight} from "./ScreenUtil";
+import {ScreenWidth,ScreenHeight} from "./ScreenUtil";
 import search from "../img/common/search.png";
 import select from "../img/common/search_select.png";
 import add from "../img/common/add.png";
@@ -95,8 +95,8 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         alignItems:"center",
         backgroundColor:"#ffffff",
-        paddingHorizontal:pxTodpWidth(30),
-        paddingVertical:pxTodpHeight(12),
+        paddingHorizontal:15,
+        paddingVertical:6,
         //,
     },
     searchView:{
@@ -105,35 +105,35 @@ const styles = StyleSheet.create({
         backgroundColor:"#f2f2f2",
         justifyContent:"center",
         alignItems:"center",
-        borderRadius:pxTodpWidth(10),
-        height:pxTodpHeight(70),
+        borderRadius:5,
+        height:35,
     },
     inputView:{
         flex:1,
-        height:pxTodpHeight(90),
-        marginHorizontal:pxTodpWidth(20),
-        fontSize:pxTodpWidth(26),
+        height:45,
+        marginHorizontal:10,
+        fontSize:13,
     },
     searchImage:{
-        height:pxTodpHeight(40),
-        width:pxTodpWidth(40),
-        marginRight:pxTodpWidth(10),
-        marginLeft: pxTodpWidth(10),
+        height:20,
+        width:20,
+        marginRight:5,
+        marginLeft: 5,
         resizeMode :"contain",
     },
     addView:{
         alignItems:"center",
         justifyContent:"center",
-        width:pxTodpWidth(88),
-        height:pxTodpHeight(70),
-        borderRadius:pxTodpWidth(10),
+        width:44,
+        height:35,
+        borderRadius:5,
         borderWidth:1,
         borderColor:"#f2f2f2",
-        marginLeft:pxTodpWidth(13),
+        marginLeft:7,
     },
     addImage:{
-        height:pxTodpHeight(30),
-        width:pxTodpWidth(30),
+        height:15,
+        width:15,
         resizeMode :"contain",
     },
 })

@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import{StyleSheet, Text, View, TouchableOpacity, Image,ScrollView}from 'react-native';
-import {pxTodpHeight,pxTodpWidth} from "./ScreenUtil";
 
 export type Props = {
     values:Array,//选项
@@ -66,7 +65,7 @@ export default class Select extends Component{
                 <View key={i}  style={[styles.itemView,styles.optionItem]}>
                     {
                         isShowEdit?(
-                            <TouchableOpacity style={{marginRight: pxTodpWidth(30)}} onPress={()=>editBtn(item)}>
+                            <TouchableOpacity style={{marginRight: 15}} onPress={()=>editBtn(item)}>
                                 <Image source={edit}/>
                             </TouchableOpacity>
                         ):null
@@ -74,7 +73,7 @@ export default class Select extends Component{
 
                     {
                         isShowDelete?(
-                            <TouchableOpacity style={{marginRight: pxTodpWidth(20)}} onPress={()=>deleteBtn(item)}>
+                            <TouchableOpacity style={{marginRight: 10}} onPress={()=>deleteBtn(item)}>
                                 <Image source={del}/>
                             </TouchableOpacity>
                         ):null
@@ -106,24 +105,25 @@ export default class Select extends Component{
                     <Text style={{color:'#eb3232'}}>{isNeed?'*':'  '}</Text>{title}
                 </Text>
 
-                <View style={{marginTop:pxTodpHeight(-20),marginLeft:pxTodpWidth(20),}}>
-                    <View style={[styles.selectView,values.length>6?{height:this.state.isExpand?pxTodpHeight(500):pxTodpHeight(80)}:null]}>
+                <View style={{flex:1,marginTop:-10,marginLeft:10}}>
+                    <View style={[styles.selectView,values.length>6?{height:this.state.isExpand?250:40}:null]}>
                         <View style={[styles.itemView]}>
 
-                            <TouchableOpacity style={{flex:1,flexDirection:'row',alignItems: 'center',justifyContent: 'space-between'}}
-                                              onPress={()=>this.setState({isExpand:!this.state.isExpand})}>
+                            <TouchableOpacity
+                                style={{flex:1,flexDirection:'row',alignItems: 'center',justifyContent: 'space-between'}}
+                                onPress={()=>this.setState({isExpand:!this.state.isExpand})}>
                                 <Text style={styles.inputStyle}>{showText}</Text>
                                 <Image source={this.state.isExpand?upPic:downPic}/>
                             </TouchableOpacity>
                             {
                                 isShowAdd?(
-                                    <TouchableOpacity onPress={addBtn} style={{marginLeft:pxTodpWidth(30)}}>
+                                    <TouchableOpacity onPress={addBtn} style={{marginLeft:15}}>
                                         <Image source={add}/>
                                     </TouchableOpacity>
                                 ):null
                             }
                         </View>
-                        <ScrollView style={[values.length>6?{height:this.state.isExpand?pxTodpHeight(500):pxTodpHeight(80)}:null]}>
+                        <ScrollView style={[values.length>6?{height:this.state.isExpand?250:40}:null]}>
                             {this.state.isExpand? select :null}
                         </ScrollView>
                     </View>
@@ -138,45 +138,33 @@ export default class Select extends Component{
 const styles = StyleSheet.create({
     contain:{
         flexDirection:'row',
-        //alignItems: 'center'
-
     },
     titleStyle:{
-        //marginRight:pxTodpWidth(45),
         backgroundColor:'#ffffff',
-        fontSize:pxTodpWidth(28),
+        fontSize:14,
         color:'#666666',
     },
     selectView:{
-        //flex:1,
+        width:'100%',
         backgroundColor:'#fff',
-        borderRadius:pxTodpWidth(40),
+        borderRadius:20,
         borderWidth:1,
         borderColor:'#dcdcdc',
-        paddingHorizontal:pxTodpWidth(40),
-        //paddingVertical:pxTodpHeight(10),
-        width:pxTodpWidth(540),
-        //height:pxTodpHeight(500),
-        // marginLeft:pxTodpWidth(20),
-        // marginTop:pxTodpHeight(-20),
+        paddingHorizontal:20,
         position:'absolute',
-        //zIndex:1000,
-        // height:pxTodpHeight(72)
     },
     inputStyle:{
-        fontSize:pxTodpWidth(28),
+        fontSize:14,
         color:'#333',
     },
     itemView:{
-        height:pxTodpHeight(72),
+        height:36,
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center'
     },
     optionItem:{
-        //marginHorizontal:pxTodpWidth(10),
-        //paddingLeft:pxTodpWidth(20),
-        marginTop:pxTodpHeight(10),
+        marginTop:5,
         borderBottomColor:'#dcdcdc',
         borderBottomWidth:1,
     }

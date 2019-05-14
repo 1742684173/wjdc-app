@@ -3,7 +3,6 @@ import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from '
 import {connect} from 'react-redux';
 import BaseComponent from "../../base/BaseComponent";
 import {postAction} from "../../../actions";
-import {pxTodpHeight, pxTodpWidth} from "../../../common/ScreenUtil";
 import * as config from "../../../config";
 import moment from "moment";
 
@@ -87,28 +86,27 @@ class BillDetail extends BaseComponent {
 
 const styles = StyleSheet.create({
     contain:{
-        marginTop:pxTodpHeight(30),
+        marginTop:15,
         backgroundColor:'#ffffff',
-        marginHorizontal: pxTodpWidth(30),
-        paddingHorizontal: pxTodpWidth(30),
-        paddingVertical: pxTodpHeight(30),
-        width:pxTodpWidth(690),
-        borderRadius:pxTodpWidth(20)
+        marginHorizontal: 15,
+        paddingHorizontal: 15,
+        paddingVertical: 15,
+        borderRadius:10
     },
     itemView:{
         flexDirection: "row",
         justifyContent: "space-between",
         borderBottomWidth: 1,
         borderBottomColor:"#dcdcdc",
-        paddingBottom: pxTodpHeight(5),
-        marginTop:pxTodpHeight(30)
+        paddingBottom: 3,
+        marginTop:15
     },
     textName:{
-        fontSize:pxTodpWidth(28),
+        fontSize:14,
         color:'#666666',
     },
     textValue:{
-        fontSize:pxTodpWidth(28),
+        fontSize:14,
         color:'#333',
     }
 });

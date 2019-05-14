@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Text, ScrollView,View, StyleSheet, Alert} from 'react-native';
-import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
 import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form';
 import Field from '../../../common/Field';
@@ -84,15 +83,15 @@ class BillMethodForm extends BaseComponent {
         let view = (
             <ScrollView style={styles.contain} keyboardShouldPersistTaps={'handled'}>
 
-                <View style={{height:pxTodpHeight(24)}}/>
+                <View style={{height:12}}/>
 
                 <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
 
-                <View style={{height:pxTodpHeight(24)}}/>
-                <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={pxTodpHeight(200)}/>
+                <View style={{height:12}}/>
+                <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={100}/>
 
-                <View style={{height:pxTodpHeight(100)}}/>
-                <Button style={{height:pxTodpHeight(78)}}
+                <View style={{height:50}}/>
+                <Button style={{height:39}}
                         onPress={this.props.handleSubmit(this._handleSubmit)}>
                     <Text style={styles.btnSubmit}>提交</Text>
                 </Button>
@@ -109,10 +108,10 @@ const styles = StyleSheet.create({
     contain:{
         flex:1,
         backgroundColor:'#fff',
-        paddingHorizontal: pxTodpWidth(30),
+        paddingHorizontal: 15,
     },
     btnSubmit:{
-        fontSize:pxTodpWidth(40),
+        fontSize:20,
         color:'#fff'
     },
 });

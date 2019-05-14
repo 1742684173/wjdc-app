@@ -5,7 +5,7 @@ import {
     Platform,
     StyleSheet
 } from 'react-native';
-import {pxTodpWidth,pxTodpHeight, ScreenHeight,ScreenWidth} from "./ScreenUtil";
+import {ScreenHeight,ScreenWidth} from "./ScreenUtil";
 var iosX =Platform.OS==='ios'?(ScreenHeight>=812 ? true:false) : false;
 
 let bgColor = '#f2f2f2';

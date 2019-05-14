@@ -7,7 +7,7 @@ import {
     StyleSheet,
     ActivityIndicator,
 }from 'react-native';
-import {pxTodpHeight, pxTodpWidth, ScreenWidth} from './ScreenUtil';
+import { ScreenWidth} from './ScreenUtil';
 export type Props = {
     type?:string,//类形: load->加载框 alert->弹出框 others->自定义  默认是load
     visible:boolean,//是否显示
@@ -45,11 +45,11 @@ class MyDialog extends Component{
             case 'alert':
                 view = (
                     <View style={styles.modal}>
-                        <Text style={{color:'#333',fontSize:pxTodpWidth(30),marginVertical:pxTodpHeight(30)}}>
+                        <Text style={{color:'#333',fontSize:15,marginVertical:15}}>
                             {title?title:''}
                         </Text>
-                        <View style={{marginHorizontal: pxTodpWidth(10)}}>
-                            <Text style={{color:'#666',fontSize:pxTodpWidth(30),marginBottom: pxTodpHeight(30)}}>
+                        <View style={{marginHorizontal: 5}}>
+                            <Text style={{color:'#666',fontSize:15,marginBottom: 15}}>
                                 {content?content:''}
                             </Text>
                         </View>
@@ -62,7 +62,7 @@ class MyDialog extends Component{
                                                 key={i}
                                                 style={[styles.btn,{borderRightWidth:i===buttons.length-1?0:1}]}
                                                 onPress={item.onPress}>
-                                                <Text style={{fontSize:pxTodpWidth(30),color:'#666666'}}>
+                                                <Text style={{fontSize:15,color:'#666666'}}>
                                                     {item.text}
                                                 </Text>
                                             </TouchableOpacity>
@@ -72,7 +72,7 @@ class MyDialog extends Component{
                                     <TouchableOpacity style={[styles.btn]} onPress={()=>{
                                         this.setState({visible:false});
                                     }}>
-                                        <Text style={{fontSize:pxTodpWidth(30),color:'#666666'}}>
+                                        <Text style={{fontSize:15,color:'#666666'}}>
                                             确定
                                         </Text>
                                     </TouchableOpacity>
@@ -93,7 +93,7 @@ class MyDialog extends Component{
                 view = (
                     <View style={{alignItems:'center'}}>
                         <ActivityIndicator size={'large'} color={'#fff'}/>
-                        <Text style={{color:'#333',fontSize:pxTodpWidth(30)}}>
+                        <Text style={{color:'#333',fontSize:15}}>
                             {title}
                         </Text>
                     </View>
@@ -103,6 +103,7 @@ class MyDialog extends Component{
 
         return(
             <Modal
+                supportedOrientations={['portrait', 'portrait-upside-down', 'landscape', 'landscape-left', 'landscape-right']}
                 animationType={'none'}
                 transparent={true}
                 visible={this.state.visible}
@@ -127,20 +128,20 @@ const styles = StyleSheet.create({
         backgroundColor:'rgba(0, 0, 0, 0.3)'
     },
     modal:{
-        width:pxTodpWidth(500),
+        width:250,
         backgroundColor:'#ffffff',
-        borderRadius:pxTodpWidth(20),
+        borderRadius:10,
         justifyContent:'center',
         alignItems:'center',
     },
     divider:{
-        width:pxTodpWidth(500),
+        width:250,
         height:1,
         backgroundColor:'#dcdcdc'
     },
     btnView:{
         width:'100%',
-        height:pxTodpHeight(90),
+        height:45,
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',

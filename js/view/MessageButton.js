@@ -4,7 +4,6 @@ import { StyleSheet, Image, Platform } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Button from '../common/Button';
 import menuIcon from '../img/nav/nav_message.png';
-import {pxTodpHeight, pxTodpWidth} from "../common/ScreenUtil";
 
 class MessageButton extends Component {
     shouldComponentUpdate = () => false;
@@ -28,7 +27,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginTop:10,
-        width: pxTodpWidth(70),
+        width: 35,
         height: 28,
         resizeMode:'contain',
 

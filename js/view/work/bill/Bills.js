@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from 'react-native';
-import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
 import BillsFlatList from './BillsFlatList';
 import LoadView from '../../../common/LoadView';
 import Search from '../../../common/Search';
@@ -10,6 +9,7 @@ import * as actions from '../../../actions';
 import BillLabel from './BillLabel';
 import BaseComponent from '../../base/BaseComponent';
 
+
 class Bills extends BaseComponent {
 
     state = {
@@ -18,7 +18,7 @@ class Bills extends BaseComponent {
         data:[],
         selectSort:[],//消费方式
         selectMethod:[],//消费类别
-        selectLabel:{sortName:'dates desc'},//筛选的结果
+        selectLabel:{sortName:'dates desc',type:'all',method:'all',sort:'all'},//筛选的结果
     }
 
     // 构造
@@ -38,7 +38,8 @@ class Bills extends BaseComponent {
     }
 
     //初始化label
-    initLabel(){
+    initLabel = () => {
+        this.type = null;
         this.sortName = 'dates desc';
         this.startTime = null;
         this.endTime = null;
@@ -50,6 +51,7 @@ class Bills extends BaseComponent {
 
     componentDidMount = async () => {
         await this.initBase();
+        this.showActivityIndicator();
         try{
             //分类
             const sortData = await this.props.postAction(config.BILL_SORT_FIND,{},'查询消费类别');
@@ -241,7 +243,7 @@ class Bills extends BaseComponent {
 
     _reset = async () => {
         this.initLabel();
-        await this.setState({selectLabel:{}});
+        await this.setState({selectLabel:{sortName:'dates desc',type:'all',method:'all',sort:'all'}});
         await this._getBillList();
     }
 
@@ -249,6 +251,7 @@ class Bills extends BaseComponent {
     _sumbit = async (obj) => {
         this.currentPage = 1;
 
+        this.type = obj.type === 'all'?null:obj.type;
         this.startTime = obj.startTime;
         this.endTime = obj.endTime;
 
@@ -266,8 +269,8 @@ class Bills extends BaseComponent {
             default:break;
         }
 
-        this.method = obj.method;
-        this.sort = obj.sort;
+        this.method = obj.method === 'all'?null:obj.method;
+        this.sort = obj.sort === 'all'?null:obj.sort;
 
         await this.setState({selectLabel:obj});
 
@@ -279,7 +282,7 @@ class Bills extends BaseComponent {
         let view = (
             <View style={styles.contain}>
 
-                <View style={{backgroundColor:'#ffffff',marginBottom: pxTodpHeight(10)}}>
+                <View style={{backgroundColor:'#ffffff',marginBottom: 5}}>
                     <Search
                         ref={'search'}
                         placeholder={'请转入关健字'}//提示

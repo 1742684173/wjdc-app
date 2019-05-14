@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import{StyleSheet, Text, View, TouchableOpacity, Image,ScrollView}from 'react-native';
-import {pxTodpHeight,pxTodpWidth} from "../../../../common/ScreenUtil";
 
 export type Props = {
     values:Array,//选项
@@ -17,15 +16,12 @@ export type Props = {
 const upPic = require('../../../../img/common/up.png');
 const downPic = require('../../../../img/common/down.png');
 const selectPic = require('../../../../img/common/select.png');
-import add from '../../../../img/common/add.png';
-import edit from '../../../../img/common/edit.png';
-import del from '../../../../img/common/delete1.png';
 import Title from "../../../../common/Title";
-import moment from "moment";
 
 type Props = {
     values:Array,//数据
     title:string,//标题
+    isAll:boolean,//是否有所有选项
 }
 
 export default class MySelect extends Component{
@@ -48,10 +44,12 @@ export default class MySelect extends Component{
             values,
             title,
             value,
+            isAll,
             ...others
         } = this.props;
 
-        let select = values.map((item,i)=>{
+        let flagArray = isAll?[{id:'all',name:'所有'}].concat(values):values;
+        let select = flagArray.map((item,i)=>{
             return(
                 <TouchableOpacity
                     style={[styles.div2,{borderWidth:item.id===value?1:0}]}
@@ -84,29 +82,28 @@ const styles = StyleSheet.create({
     div1:{
         flexDirection: 'row',
         flexWrap:'wrap',
-        width:pxTodpWidth(650),
-        marginVertical: pxTodpWidth(20)
+        width:325,
+        marginVertical: 10
     },
     div2:{
         backgroundColor:'#f8f8f8',
-        height:pxTodpHeight(65),
+        height:33,
         flexDirection:'row',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius:pxTodpWidth(20),
-        paddingVertical: pxTodpHeight(10),
-        paddingHorizontal: pxTodpWidth(20),
-        marginVertical:pxTodpHeight(5),
-        marginLeft: pxTodpWidth(30),
+        borderRadius:10,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        marginVertical:3,
+        marginLeft: 15,
         borderColor:'#21c3fe',
     },
     font1:{
-        fontSize:pxTodpWidth(26),
+        fontSize:13,
         color:'#333'
     },
     title:{
-        marginTop:pxTodpHeight(20),
-        // marginLeft:pxTodpWidth(-5)
+        marginTop:10,
     }
 })
 

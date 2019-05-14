@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import {ImageBackground,Text, View, StyleSheet, TouchableOpacity, Image,} from 'react-native';
-import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
+import {ImageBackground,Text, View, StyleSheet, TouchableOpacity, Image,ScrollView} from 'react-native';
 import {connect} from 'react-redux';
-import Back from "../../../common/Back";
 import Title from "../../../common/Title";
 import * as config from '../../../config';
 import * as actions from '../../../actions';
@@ -45,7 +43,7 @@ class BillInfo extends BaseComponent {
     getBillInfo = async () => {
         await this.showActivityIndicator();
         try{
-            let billParams = await this.props.postAction(config.BILL_FIND,{pageSize:4,currentPage:1,sortName:'dates desc'},'查询账单');
+            let billParams = await this.props.postAction(config.BILL_FIND,{pageSize:5,currentPage:1,sortName:'dates desc'},'查询账单');
             this.dealParam(billParams);
 
             await this.hideActivityIndicator();
@@ -89,12 +87,12 @@ class BillInfo extends BaseComponent {
     render() {
         super.render();
         let view = (
-            <View style={styles.contain}>
+            <ScrollView style={styles.contain}>
 
                 {/*所有 本年 本月 当天 上一周 上一月 上一年*/}
                 {/*总消费 总收入 总支出*/}
                 {/**/}
-                <Title text={'总记录'} style={{marginTop:pxTodpHeight(20),marginBottom:pxTodpHeight(10)}}/>
+                <Title text={'总记录'} style={{marginTop:10,marginBottom:5}}/>
 
                 <View style={styles.div1}>
                     <View style={styles.div2}>
@@ -111,9 +109,9 @@ class BillInfo extends BaseComponent {
                     </View>
                 </View>
 
-                <Title text={'快捷功能'} style={{marginTop:pxTodpHeight(30),marginBottom:pxTodpHeight(10)}}/>
+                <Title text={'快捷功能'} style={{marginTop:15,marginBottom:5}}/>
 
-                <View style={{marginHorizontal:pxTodpWidth(30),flexDirection: 'row'}}>
+                <View style={{marginHorizontal:15,flexDirection: 'row'}}>
                     {/*新增*/}
                     <TouchableOpacity onPress={this._onAddBillBtn}>
                         <ImageBackground style={styles.div3} source={addBillPic}>
@@ -126,37 +124,37 @@ class BillInfo extends BaseComponent {
                     {/*查找历史消费*/}
                     <TouchableOpacity onPress={this._onBillTotalBtn}>
                         <ImageBackground style={styles.div3} source={addBillPic}>
-                            <Text style={styles.font2}>帐单统计</Text>
+                            <Text style={styles.font2}>消费统计</Text>
                         </ImageBackground>
                     </TouchableOpacity>
                 </View>
 
-                <Title text={'消费记录'} style={{marginTop:pxTodpHeight(30),marginBottom:pxTodpHeight(10)}}/>
+                <Title text={'消费记录'} style={{marginTop:15,marginBottom:5}}/>
 
                 {/*当天的消费情况*/}
-                <TouchableOpacity style={{marginHorizontal:pxTodpWidth(30),}} onPress={this._onBillsBtn}>
+                <TouchableOpacity style={{marginHorizontal:15,}} onPress={this._onBillsBtn}>
                     {
                         this.state.billsData.length===0?(
-                            <Image source={nullDataPic} style={{height:pxTodpHeight(210),width:'100%'}} resizeMode={'contain'}/>
+                            <Image source={nullDataPic} style={{height:105,width:'100%'}} resizeMode={'contain'}/>
                         ):this.state.billsData.map((item,i)=>{
                             return(
                                 <View key={i} style={[styles.itemView,{borderTopWidth:i===0?0:1}]}>
                                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                                         {/*分类名称*/}
-                                        <Text style={{fontSize:pxTodpWidth(30)}}>
+                                        <Text style={{fontSize:15}}>
                                             {item.sortName}
                                         </Text>
                                         {/*分类金额*/}
-                                        <Text style={{color:item.sums>0?'#f03':'#00cd00',fontSize:pxTodpWidth(30)}}>
+                                        <Text style={{color:item.sums>0?'#f03':'#00cd00',fontSize:15}}>
                                             {item.sums>0?('+'+item.sums):item.sums}
                                         </Text>
                                     </View>
 
                                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                        <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>
+                                        <Text style={{color:'#999',fontSize:12}}>
                                             来源:{item.methodName}
                                         </Text>
-                                        <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>
+                                        <Text style={{color:'#999',fontSize:12}}>
                                             时间:{moment(item.dates).format("YYYY-MM-DD hh:mm:ss")}
                                         </Text>
                                     </View>
@@ -166,7 +164,7 @@ class BillInfo extends BaseComponent {
                     }
 
                 </TouchableOpacity>
-            </View>
+            </ScrollView>
         )
 
         return super.renderBase(view);
@@ -181,42 +179,42 @@ const styles = StyleSheet.create({
     },
     div1:{
         justifyContent:'space-between',
-        width:pxTodpWidth(690),
-        height:pxTodpHeight(150),
+        height:75,
         backgroundColor:'#21c3ff',
-        marginHorizontal: pxTodpWidth(30),
-        paddingHorizontal:pxTodpWidth(20),
-        paddingVertical:pxTodpHeight(10),
-        borderRadius:pxTodpWidth(20),
+        marginHorizontal: 15,
+        paddingHorizontal:10,
+        paddingVertical:5,
+        borderRadius:10,
     },
     font1:{
         color:'#fff',
-        fontSize:pxTodpWidth(30)
+        fontSize:15
     },
     div2:{
+        width:'100%',
         flexDirection:'row',
         justifyContent: 'space-between'
     },
     div3:{
-        width:pxTodpWidth(333),
-        height:pxTodpHeight(300),
+        width:150,
+        height:150,
         justifyContent:'flex-end',
         alignItems:'center',
-        paddingBottom: pxTodpHeight(20),
-        borderRadius: pxTodpWidth(20)
+        paddingBottom: 10,
+        borderRadius: 10
     },
     font2:{
         color:'#333',
-        fontSize:pxTodpWidth(38)
+        fontSize:19
     },
     itemView:{
         // flexDirection:'row',
         justifyContent:'space-around',
         //alignItems:'center',
         backgroundColor:'#fff',
-        height:pxTodpHeight(80),
-        paddingHorizontal: pxTodpWidth(20),
-        paddingVertical:pxTodpHeight(5),
+        height:50,
+        paddingHorizontal: 10,
+        paddingVertical:2,
         borderTopColor:'#dcdcdc',
     }
 });

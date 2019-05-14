@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import {FlatList,StyleSheet,View,Text,TouchableOpacity,Image} from 'react-native';
-import {pxTodpHeight, pxTodpWidth} from '../../../common/ScreenUtil';
 import PropTypes from 'prop-types';
 import nullDataIcon from "../../../img/common/nullDataIcon.png";
 import moment from "moment";
@@ -57,20 +56,20 @@ export default class BillsFlatList extends Component{
 
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                     {/*分类名称*/}
-                    <Text style={{fontSize:pxTodpWidth(30)}}>
+                    <Text style={{fontSize:15}}>
                         {item.sortName}
                     </Text>
                     {/*分类金额*/}
-                    <Text style={{color:item.sums>0?'#f03':'#00cd00',fontSize:pxTodpWidth(30)}}>
+                    <Text style={{color:item.sums>0?'#f03':'#00cd00',fontSize:15}}>
                         {item.sums>0?('+'+item.sums):item.sums}
                     </Text>
                 </View>
 
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                    <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>
+                    <Text style={{color:'#999',fontSize:12}}>
                         来源:{item.methodName}
                     </Text>
-                    <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>
+                    <Text style={{color:'#999',fontSize:12}}>
                         时间:{moment(item.dates).format("YYYY-MM-DD hh:mm:ss")}
                     </Text>
                 </View>
@@ -82,14 +81,14 @@ export default class BillsFlatList extends Component{
     //行之间的分隔线
     _ItemSeparatorComponent(){
         return(
-            <View style={{height:pxTodpHeight(24),}}/>
+            <View style={{height:12,}}/>
         )
     }
 
     _ListEmptyComponent = () =>{
         let cpt = (
             <View style={styles.emptyView}>
-                <Image source={nullDataIcon} style={{height:pxTodpHeight(210),width:pxTodpWidth(364),resizeMode:'contain',}}/>
+                <Image source={nullDataIcon} style={{height:105,width:182,resizeMode:'contain',}}/>
                 <Text style={{color:'#999'}}>空空如也~</Text>
             </View>
         )
@@ -101,34 +100,34 @@ export default class BillsFlatList extends Component{
 const styles = StyleSheet.create({
     itemView:{
         justifyContent:'space-around',
-        height:pxTodpHeight(100),
-        width:pxTodpWidth(690),
+        height:50,
+        // width:'100%',
         backgroundColor:'#ffffff',
-        borderRadius:pxTodpWidth(20),
-        paddingHorizontal:pxTodpWidth(10),
-        marginHorizontal:pxTodpWidth(30),
+        borderRadius:10,
+        paddingHorizontal:5,
+        marginHorizontal:15,
     },
     emptyView:{
         flex:1,
         alignItems:'center',
-        marginTop:pxTodpHeight(100)
+        marginTop:50
     },
     topView:{
-        height:pxTodpHeight(60),
+        height:30,
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
         borderColor:'#dcdcdc',
     },
     div1:{
-        height:pxTodpHeight(40),
+        height:20,
         alignItems:'center',
         justifyContent:'center',
-        borderWidth:pxTodpHeight(2),
-        borderLeftWidth:pxTodpHeight(0),
-        borderTopRightRadius:pxTodpHeight(30),
-        borderBottomRightRadius:pxTodpHeight(30),
-        paddingLeft:pxTodpWidth(14),
-        paddingRight:pxTodpWidth(14),
+        borderWidth:1,
+        borderLeftWidth:0,
+        borderTopRightRadius:15,
+        borderBottomRightRadius:15,
+        paddingLeft:7,
+        paddingRight:7,
     }
 })

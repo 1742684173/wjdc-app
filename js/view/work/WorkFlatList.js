@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import {FlatList,StyleSheet,View,Text,TouchableOpacity,Image} from 'react-native';
-import {pxTodpHeight, pxTodpWidth} from '../../common/ScreenUtil';
 
 export default class WorkFlatList extends Component{
 
@@ -32,7 +31,7 @@ export default class WorkFlatList extends Component{
 
                 <View style={styles.itemView}>
                     <Image source={item.pic}/>
-                    <Text style={{color:'#666',fontSize:pxTodpWidth(30),marginTop:pxTodpHeight(10)}}>
+                    <Text style={{color:'#666',fontSize:15,marginTop:5}}>
                         {item.title}
                     </Text>
                 </View>
@@ -44,7 +43,7 @@ export default class WorkFlatList extends Component{
     //行之间的分隔线
     _ItemSeparatorComponent(){
         return(
-            <View style={{height:pxTodpHeight(24),}}/>
+            <View style={{height:12,}}/>
         )
     }
 
@@ -52,15 +51,15 @@ export default class WorkFlatList extends Component{
 
 const styles = StyleSheet.create({
     itemView:{
-        width:pxTodpWidth(150),
+        width:75,
         justifyContent:'center',
         alignItems:'center',
         backgroundColor:'#ffffff',
-        paddingVertical:pxTodpHeight(20),
-        paddingHorizontal:pxTodpWidth(20),
-        borderRadius:pxTodpWidth(20),
-        marginLeft:pxTodpWidth(30),
-        marginTop:pxTodpHeight(10),
+        paddingVertical:10,
+        paddingHorizontal:10,
+        borderRadius:10,
+        marginLeft:15,
+        marginTop:5,
     },
 
 })

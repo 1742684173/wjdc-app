@@ -25,7 +25,7 @@
 import React from "react";
 import ViewPager from "./ViewPager";
 import {Dimensions, StyleSheet, View} from "react-native";
-import {pxTodpHeight, pxTodpWidth, ScreenHeight, ScreenWidth} from "../../common/ScreenUtil";
+import { ScreenHeight, ScreenWidth} from "../../common/ScreenUtil";
 
 type Props = {
     count: number,

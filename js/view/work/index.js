@@ -5,6 +5,7 @@ import contactPic from '../../img/work/contact.png';
 
 const func = [
     {pic:contactPic,title:'帐单',navigate:'Bill'},
+    {pic:contactPic,title:'理财',navigate:'Contact'},
     {pic:contactPic,title:'联系人',navigate:'Contact'},
     {pic:contactPic,title:'宴席',navigate:'Contact'},
     {pic:contactPic,title:'族谱',navigate:'Contact'},

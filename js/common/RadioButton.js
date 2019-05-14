@@ -5,9 +5,6 @@ import{
     View,
     TouchableOpacity
 }from 'react-native';
-import Input from './Input';
-import {pxTodpHeight,pxTodpWidth} from "./ScreenUtil";
-import TextField from "./TextField";
 
 export type Props = {
     values:Array,//选项
@@ -51,11 +48,11 @@ const styles = StyleSheet.create({
     contain:{
         flexDirection:'row',
         //alignItems:'center',
-        height:pxTodpHeight(72),
+        height:36,
     },
     titleStyle:{
-        marginRight:pxTodpWidth(45),
-        fontSize:pxTodpWidth(28),
+        marginRight:23,
+        fontSize:14,
         color:'#666666',
     },
     radioStyle:{
@@ -65,21 +62,21 @@ const styles = StyleSheet.create({
     outCircle:{
         justifyContent:'center',
         alignItems:'center',
-        width:pxTodpWidth(40),
-        height:pxTodpWidth(40),
-        borderRadius:pxTodpWidth(40),
-        marginRight:pxTodpWidth(10),
+        width:20,
+        height:20,
+        borderRadius:40,
+        marginRight:5,
         borderWidth:1,
         borderColor:'#dcdcdc',
     },
     inCircle:{
         backgroundColor:'#333',
-        width:pxTodpWidth(20),
-        height:pxTodpWidth(20),
-        borderRadius:pxTodpWidth(20),
+        width:10,
+        height:10,
+        borderRadius:10,
     },
     inputStyle:{
-        fontSize:pxTodpWidth(28),
+        fontSize:14,
         color:'#333',
     }
 })

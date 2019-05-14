@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, View, Text, Button, TouchableHighlight, AsyncStorage} from 'react-native';
 import { connect } from 'react-redux';
-import {pxTodpHeight, pxTodpWidth} from "../common/ScreenUtil";
 import * as actions from "../actions";
 import * as config from "../config";
 
@@ -26,7 +25,7 @@ class DrawerSideBar extends Component<any> {
         return (
             <View style={styles.content}>
 
-                <View style={{marginTop:pxTodpHeight(200)}}>
+                <View style={{marginTop:100}}>
                     <Text onPress={this._exit}>
                         退出
                     </Text>
@@ -39,18 +38,18 @@ class DrawerSideBar extends Component<any> {
 
 const styles = StyleSheet.create({
     content: {
-        paddingTop: pxTodpHeight(30),
-        paddingLeft: pxTodpWidth(15),
+        paddingTop: 15,
+        paddingLeft: 8,
         //backgroundColor: '#6b52ae',
         backgroundColor:"#fff"
     },
     button: {
-        height: pxTodpHeight(50),
-        marginBottom: pxTodpHeight(20),
+        height: 25,
+        marginBottom: 10,
     },
     text: {
         color: '#fff',
-        fontSize: pxTodpWidth(18),
+        fontSize: 9,
     },
 });
 

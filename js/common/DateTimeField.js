@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import {pxTodpHeight, pxTodpWidth} from "./ScreenUtil";
 import moment from "moment";
 import dateIcon from "../img/common/date.png";
 
@@ -72,26 +71,26 @@ const styles = StyleSheet.create({
     contain: {
         flexDirection: 'row',
         alignItems:'center',
-        height: pxTodpHeight(72),
+        height: 36,
     },
     titleStyle: {
-        marginRight: pxTodpWidth(20),
-        fontSize: pxTodpWidth(28),
+        marginRight: 10,
+        fontSize: 14,
         color: '#666666',
     },
     btnView:{
         flex:1,
         flexDirection:'row',
         alignItems:'center',
-        paddingHorizontal:pxTodpWidth(20),
+        paddingHorizontal:10,
         justifyContent:'center',
-        height: pxTodpHeight(72),
+        height: 36,
         borderWidth: 1,
         borderColor:'#dcdcdc',
-        borderRadius:pxTodpWidth(40),
+        borderRadius:20,
     },
     dataIcon:  {
-        width:pxTodpWidth(30),
-        height:pxTodpHeight(40)
+        width:15,
+        height:20
     },
 });

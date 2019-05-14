@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Text, ScrollView,View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from 'react-native';
-import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
+import {ScreenWidth} from '../../../common/ScreenUtil'
 import {connect} from 'react-redux';
 import {formValueSelector, reduxForm} from 'redux-form';
 import Field from '../../../common/Field';
@@ -321,7 +321,7 @@ class BillForm extends BaseComponent {
         let view = (
             <ScrollView style={styles.contain} keyboardShouldPersistTaps={'handled'}>
 
-                <View style={{height:pxTodpHeight(24)}}/>
+                <View style={{height:12}}/>
                 <Field name={'type'} component={RadioButton} title={'消费类型'} isNeed={true}
                        values={selectType} defaultValue={selectType[0].key}
                 />
@@ -331,23 +331,23 @@ class BillForm extends BaseComponent {
                        defaultValue={new Date()}
                 />
 
-                <View style={{height:pxTodpHeight(10)}}/>
+                <View style={{height:5}}/>
 
                 <Field name={'sums'} component={TextField}
                        title={'消费金额'} isNeed={true} keyboardType={'numeric'}
                 />
 
-                <View style={{height:pxTodpHeight(190)}}/>
+                <View style={{height:95}}/>
                 <Field name={'descs'} component={TextArea}
-                       title={'消费描述'} isNeed={false} height={pxTodpHeight(200)}
+                       title={'消费描述'} isNeed={false} height={100}
                 />
 
-                <View style={{height:pxTodpHeight(100)}}/>
-                <Button style={{height:pxTodpHeight(78)}} onPress={this.props.handleSubmit(this._addBill)}>
+                <View style={{height:50}}/>
+                <Button style={{height:39}} onPress={this.props.handleSubmit(this._addBill)}>
                     <Text style={styles.btnSubmit}>提交</Text>
                 </Button>
 
-                <View style={{position:'absolute',top:pxTodpHeight(370)}}>
+                <View style={{width:'100%',position:'absolute',top:185}}>
                     <Field
                         name={'sortId'} component={Select} title={'消费分类'} isNeed={true}
                         values={this.state.selectSort}
@@ -360,7 +360,7 @@ class BillForm extends BaseComponent {
                     />
                 </View>
 
-                <View style={{position:'absolute',top:pxTodpHeight(280)}}>
+                <View style={{width:'100%',position:'absolute',top:140}}>
                     <Field
                         name={'methodId'} component={Select} title={'消费方式'} isNeed={true}
                         values={this.state.selectMethod}
@@ -387,10 +387,10 @@ const styles = StyleSheet.create({
     contain:{
         flex:1,
         backgroundColor:'#fff',
-        paddingHorizontal: pxTodpWidth(30),
+        paddingHorizontal: 15,
     },
     btnSubmit:{
-        fontSize:pxTodpWidth(40),
+        fontSize:20,
         color:'#fff'
     },
 });

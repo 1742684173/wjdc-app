@@ -1,37 +1,169 @@
 import React, { Component } from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from 'react-native';
-import {pxTodpWidth, pxTodpHeight, ScreenWidth} from '../../../common/ScreenUtil'
-import BillsFlatList from './BillsFlatList';
-import LoadView from '../../../common/LoadView';
-import Search from '../../../common/Search';
+import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler, Platform, Image,} from 'react-native';
 import {connect} from 'react-redux';
 import * as config from '../../../config';
 import * as actions from '../../../actions';
-import BillTotalLabel from './BillTotalLabel';
 import BaseComponent from '../../base/BaseComponent';
+import Title from "../../../common/Title";
+import BillTotalLabel from "./BillTotalLabel";
+import Button from "../../../common/Button";
+import FilterTab from "../../../common/FilterTab";
+import select from "../../../img/common/search_select.png";
+import {getLineOption,getPieOption} from "../../../common/Echarts";
 
+const filter = [
+    {id:'lastDay',name:'上日'},
+    {id:'currentWeek',name:'本周'},
+    {id:'lastWeek',name:'上周'},
+    {id:'currentMouth',name:'本月'},
+    {id:'lastMouth',name:'上月'},
+]
 class BillTotal extends BaseComponent {
 
     state = {
+        selectSort:[],
+        selectMethod:[],
+        selectLabel:[],
+        filterValue:'lastDay',
         data:[],
-        selectLabel:{sortName:'dates desc'},//筛选的结果
     }
 
     // 构造
     constructor(props) {
         super(props);
         this.setTitle('消费统计');
+        this.props.navigation.setParams({rightView:this._renderRightView()});
     }
 
-    componentDidMount = async () => {
-        try{
+    initLabel = () => {
+        this.type = null;
+        this.sortName = 'dates desc';
+        this.startTime = null;
+        this.endTime = null;
+        this.minSum = null;
+        this.maxSum = null;
+        this.method = null;
+        this.sort = null;
+    }
 
+    async componentDidMount(){
+        await this.initBase();
+        this.showActivityIndicator();
+        try{
+            //方式
+            //分类
+            const sortData = await this.props.postAction(config.BILL_SORT_FIND,{},'查询消费类别');
+            this._dealParams(sortData);
+
+            //方式
+            const methodData = await this.props.postAction(config.BILL_METHOD_FIND,{},'查询消费方式');
+            this._dealParams(methodData);
+
+            this._dealParams({});
         }catch (e) {
             this.showToast(JSON.stringify(e));
         }
 
     }
 
+    _dealParams = (params:Object) => {
+        let {type,code,msg,data} = params;
+        switch (type) {
+            //消费类别
+            case config.BILL_SORT_FIND:
+                if(code === config.CODE_SUCCESS){
+                    if(data.totalCount >0){
+                        this.setState({selectSort:data.list});
+                    }
+                }else{
+                    this.handleRequestError(code,msg);
+                }
+                break;
+
+            //消费方式
+            case config.BILL_METHOD_FIND:
+                let selectMethod = [];
+                if(code === config.CODE_SUCCESS){
+                    data.list.map((item,i)=>selectMethod.push(item));
+                    if(selectMethod.length >0){
+                        this.setState({selectMethod:selectMethod});
+                    }
+                }else{
+                    this.handleRequestError(code,msg);
+                }
+
+                break;
+
+            default:
+                this.hideActivityIndicator();
+                break;
+
+        }
+    }
+
+
+    _reset = async () => {
+        this.initLabel();
+        await this.setState({selectLabel:{sortName:'dates desc',type:'all',method:'all',sort:'all'}});
+    }
+
+    _submit = async (obj) => {
+        await this.setState({selectLabel:obj});
+    }
+
+    // 筛选
+    _onSelectBtn = async () => {
+
+        await this.setState({
+            dialogType:'others',//load alert others
+            isDialogVisible:true,//是否显示加载框
+            dialogContent:this.renderLabel(),//当dialogType为alert时是字符串，当是others时是相关控件
+            dialogOnRequestClose:()=>{},//modal返回监听
+            dialogOnShowClose:()=>{}//modal显示之前调用
+        });
+    }
+
+    _onFilterItem = (item) => {
+        this.setState({filterValue:item.id});
+    }
+
+    render() {
+        super.render();
+        let view = (
+            <View style={styles.contain}>
+
+                <FilterTab data={filter} value={this.state.filterValue} onFilterItem={this._onFilterItem}
+                           style={{paddingHorizontal: 15}}/>
+
+                <Title text={'消费金额'} style={{marginTop:10,marginBottom:5}}/>
+                {/*折线 x:time  y:金额*/}
+
+
+                <Title text={'消费方式'} style={{marginTop:10,marginBottom:5}}/>
+                {/*饼图*/}
+                <View style={styles.homeCustomPieView}>
+                    {/*<Echarts option={this.state.khsPie} height={pxTodpHeight(286)}/>*/}
+                </View>
+
+                <Title text={'消费分类'} style={{marginTop:10,marginBottom:5}}/>
+                {/*饼图*/}
+            </View>
+        )
+
+        return super.renderBase(view);
+    }
+
+    //右上筛选按钮
+    _renderRightView = () => {
+        return (
+            <Button style={[styles.button, Platform.OS==='android'? {paddingTop:0}: ""]}
+                    onPress={this._onSelectBtn}>
+                <Text style={{fontSize:18,color:'#00c2ff'}} source={select}>高级筛选</Text>
+            </Button>
+        )
+    }
+
+    //筛选条件
     renderLabel(){
         return (
             <BillTotalLabel
@@ -46,124 +178,22 @@ class BillTotal extends BaseComponent {
         )
     }
 
-    _getBillList = async () => {
-        this.showActivityIndicator();
-
-        try{
-            //帐单
-            let params= Object.assign({
-                currentPage:this.currentPage,
-                pageSize:this.pageSize,
-                condition:this.condition,
-                sortName:this.sortName,
-                type:this.type,
-                startTime:this.startTime,
-                endTime:this.endTime,
-                minSum:this.minSum,
-                maxSum:this.maxSum,
-                method:this.method,
-                sort:this.sort,
-            });
-            const {type,code,msg,data} =
-                await this.props.postAction(config.BILL_FIND,params,'查询消费');
-            if(type === config.BILL_FIND){
-                if (code === config.CODE_SUCCESS) {
-                    let myData = this.state.data;
-                    if(this.currentPage === 1){
-                        myData = data.list;
-                    }else{
-                        data.list.map((item,i)=>{
-                            myData.push(item)
-                        })
-                    }
-
-                    //总页数
-                    this.totalPage = data.totalPage;
-
-                    let foot = 0;
-                    //是否有下一页
-                    if(data.currentPage === data.totalPage){
-                        foot = 1;//listView底部显示没有更多数据了
-                    }
-
-                    this.setState({foot:foot,data:myData});
-                    this.hideActivityIndicator();
-                } else {
-                    this.handleRequestError(code,msg);
-                }
-            }
-
-        }catch (e) {
-            this.showToast(e.message || e.note);
-        }
-    }
-
-    _dealParams = (params:Object) => {
-        let {type,code,msg,data} = params;
-        switch (type) {
-            //消费类别
-            case config.BILL_SORT_FIND:
-
-                break;
-
-            default:
-                break;
-
-        }
-    }
-
-    _reset = async () => {
-        this.initLabel();
-        await this.setState({selectLabel:{}});
-        await this._getBillList();
-    }
-
-    //根据条件查询
-    _sumbit = async (obj) => {
-        this.currentPage = 1;
-
-        this.startTime = obj.startTime;
-        this.endTime = obj.endTime;
-
-        switch (obj.type) {
-            case 'in':
-                this.minSum = obj.minSum?obj.minSum:0;
-                this.maxSum = obj.maxSum;
-                break;
-
-            case 'out':
-                this.minSum = obj.maxSum?-1*obj.maxSum:null;
-                this.maxSum = 0;
-                break;
-
-            default:break;
-        }
-
-        this.method = obj.method;
-        this.sort = obj.sort;
-
-        await this.setState({selectLabel:obj});
-
-        await this._getBillList();
-    }
-
-    render() {
-        super.render();
-        let view = (
-            <View style={styles.contain}>
-
-            </View>
-        )
-
-        return super.renderBase(view);
-    }
-
 }
 
 const styles = StyleSheet.create({
     contain:{
         flex:1,
         backgroundColor:'#f2f2f2',
+    },
+    button: {
+        backgroundColor: 'transparent',
+    },
+    icon: {
+        marginTop:10,
+        width: 35,
+        height: 28,
+        resizeMode:'contain',
+
     },
 });
 

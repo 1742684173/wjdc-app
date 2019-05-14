@@ -3,7 +3,6 @@ import React,{Component} from 'react';
 import type { Node } from 'react';
 import {View, TextInput, StyleSheet, TouchableOpacity, Text, Platform, Image} from 'react-native';
 import Divider from './Divider';
-import Theme from './Theme';
 export type Props = {
     value?: string,
     onChange?: Function,

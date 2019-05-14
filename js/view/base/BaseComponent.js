@@ -10,7 +10,6 @@ import {
     TouchableOpacity,
     SafeAreaView,
 } from 'react-native';
-import {pxTodpHeight, pxTodpWidth,md5} from '../../common/ScreenUtil';
 import Toast from 'react-native-root-toast';
 import backImg from '../../img/common/back-icon.png';
 import * as config from '../../config';
@@ -33,15 +32,15 @@ export default class BaseComponent extends Component<any> {
     static navigationOptions = ({navigation}) => {
         const {params} = navigation.state;
         return {
-            headerLeft:(
+            headerLeft:params.leftView?params.leftView:(
                 <TouchableOpacity
                     onPress={params?()=>params.goBack():null}
-                    style={{width:pxTodpWidth(100),paddingLeft:pxTodpWidth(30)}}>
+                    style={{width:50,paddingLeft:15}}>
                     <Image source={backImg}/>
                 </TouchableOpacity>
             ),
             title: params?params.title:'',
-            headerRight:<MessageButton/>,
+            headerRight:params.rightView?params.rightView:<MessageButton/>,
         }
     };
 
@@ -202,11 +201,14 @@ export default class BaseComponent extends Component<any> {
 
     //显示加载
     showActivityIndicator = async (content?:string) => {
-        await this.setState({
-            dialogType:'load',
-            isDialogVisible:true,
-            dialogTitle:content?content:'正在加载中'
-        })
+        if(!this.state.isDialogVisible){
+            await this.setState({
+                dialogType:'load',
+                isDialogVisible:true,
+                dialogTitle:content?content:'正在加载中'
+            })
+        }
+
     }
 
     //隐蔽加载
@@ -249,7 +251,7 @@ export default class BaseComponent extends Component<any> {
     renderDisNet(){
         return this.state.netStatus === 'none' || this.state.netStatus === 'unknown'?(
             <View style={styles.containDisNet}>
-                <Text style={{marginTop:pxTodpHeight(96),fontSize:pxTodpWidth(30),color:'#999'}}>
+                <Text style={{marginTop:48,fontSize:15,color:'#999'}}>
                     {this.state.netStatus === 'none'?'网络己断开':'联网状态异常'}
                 </Text>
             </View>
@@ -278,7 +280,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#00000000'
     },
     containDisNet:{
-        height: pxTodpHeight(80),
+        height: 40,
         alignItems: 'center',
         backgroundColor:'#fcdaa6'
     }

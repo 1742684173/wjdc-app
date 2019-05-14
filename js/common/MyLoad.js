@@ -8,7 +8,6 @@ import {
     TouchableOpacity,
     Alert,
 } from 'react-native';
-import {pxTodpHeight, pxTodpWidth} from "./ScreenUtil";
 import Toast from 'react-native-root-toast';
 
 type Props = {

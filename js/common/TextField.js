@@ -5,7 +5,6 @@ import{
     View
 }from 'react-native';
 import Input from './Input';
-import {pxTodpHeight,pxTodpWidth} from "./ScreenUtil";
 
 export type Props = {
     title:string,
@@ -36,25 +35,25 @@ const styles = StyleSheet.create({
         backgroundColor:'#ffffff',
     },
     title:{
-        fontSize:pxTodpWidth(28),
+        fontSize:14,
         color:'#666666',
     },
     inputViewStyle:{
-        height:pxTodpHeight(72),
+        height:36,
         borderWidth:1,
         borderColor:'#dcdcdc',
-        borderRadius:pxTodpWidth(40),
-        marginLeft:pxTodpWidth(20),
+        borderRadius:20,
+        marginLeft:10,
     },
     inputStyle:{
-        width:pxTodpWidth(20),
-        height:pxTodpHeight(72),
+        width:10,
+        height:36,
         borderWidth:1,
         borderColor:'#dcdcdc',
-        borderRadius:pxTodpWidth(40),
-        fontSize:pxTodpWidth(28),
+        borderRadius:20,
+        fontSize:14,
         color:'#333',
-        marginLeft:pxTodpWidth(20),
+        marginLeft:10,
     }
 })
 

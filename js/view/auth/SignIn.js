@@ -18,7 +18,7 @@ import * as config from '../../config';
 import {postAction} from '../../actions';
 import Input from '../../common/Input';
 import BaseComponent from '../base/BaseComponent';
-import {pxTodpWidth,pxTodpHeight,md5} from '../../common/ScreenUtil';
+import {md5} from '../../common/ScreenUtil';
 
 class SignIn extends BaseComponent {
 
@@ -92,7 +92,7 @@ class SignIn extends BaseComponent {
         super.render();
         const {handleSubmit} = this.props;
         let view = (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
 
                 <Field
                     style={styles.input}
@@ -105,7 +105,7 @@ class SignIn extends BaseComponent {
                 />
 
                 <Field
-                    style={[styles.input,{marginBottom: pxTodpHeight(60),}]}
+                    style={[styles.input,{marginBottom: 30,}]}
                     name={'password'}
                     placeholder={'请输入密码'}
                     disableUnderline={true}
@@ -114,17 +114,17 @@ class SignIn extends BaseComponent {
                     component={Input}
                 />
 
-                <Button style={{height:pxTodpHeight(78)}} onPress={handleSubmit(this._signIn)}>
+                <Button style={{height:39}} onPress={handleSubmit(this._signIn)}>
                     <Text style={styles.btnSignIn}>登录</Text>
                 </Button>
 
-                {/*<View style={styles.bottomView}>*/}
-                {/*<Text style={styles.bottomText} onPress={this._goFindPwd}>找回密码</Text>*/}
+                <View style={styles.bottomView}>
+                    <Text style={styles.bottomText} onPress={this._goFindPwd}>找回密码</Text>
 
-                {/*<Text style={styles.bottomText} onPress={this._goSignUp}>创建用户</Text>*/}
-                {/*</View>*/}
+                    <Text style={styles.bottomText} onPress={this._goSignUp}>创建用户</Text>
+                </View>
 
-            </View>
+            </ScrollView>
         );
         return super.renderBase(view);
     }
@@ -132,25 +132,26 @@ class SignIn extends BaseComponent {
 
 const styles = StyleSheet.create({
     container: {
+        flex:1,
         backgroundColor: '#f2f2f2',
-        paddingHorizontal: pxTodpWidth(30),
-        paddingTop: pxTodpHeight(400),
+        paddingHorizontal: 15,
+        marginTop:100,
     },
     input:{
-        borderRadius:pxTodpWidth(40),
+        borderRadius:20,
         borderWidth: 1,
         borderColor:'#dcdcdc',
         backgroundColor: '#fff',
-        height:pxTodpHeight(80),
-        marginBottom: pxTodpHeight(20),
-        paddingHorizontal: pxTodpWidth(10),
+        height:40,
+        marginBottom: 10,
+        paddingHorizontal: 5,
     },
     btnSignIn:{
-        fontSize:pxTodpWidth(40),
+        fontSize:20,
         color:'#fff'
     },
     bottomText:{
-        fontSize: pxTodpWidth(30),
+        fontSize: 15,
         color:'#666',
         textDecorationLine:'underline'
     },
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop:pxTodpHeight(50)
+        marginTop:25
     }
 });
 

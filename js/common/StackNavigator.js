@@ -10,7 +10,6 @@ import type {
     NavigationContainer,
 } from 'react-navigation';
 import Theme from './Theme';
-import {pxTodpWidth} from "./ScreenUtil";
 
 const IOSTransitionSpec = {
     timing: Animated.spring,
@@ -55,7 +54,7 @@ const defaultStackConfig = {
             alignItems:'center',
             justifyContent:'center',
             color: Theme.headerTitleTextColor,
-            fontSize: pxTodpWidth(48),
+            fontSize: 24,
         },
         headerStyle: {
             //android 往下移动
