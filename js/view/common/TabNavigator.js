@@ -6,7 +6,6 @@ import type {
     TabNavigatorConfig,
     NavigationContainer,
 } from 'react-navigation';
-import Theme from './Theme';
 
 const defaultDrawConfig = {
     tabBarComponent: TabBarBottom,
@@ -15,7 +14,7 @@ const defaultDrawConfig = {
     swipeEnabled: false,
     backBehavior:'none ',
     tabBarOptions: {
-        activeTintColor: Theme.primaryColor,
+        activeTintColor: '#21c3ff',
     },
 };
 

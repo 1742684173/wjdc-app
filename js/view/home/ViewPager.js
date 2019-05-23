@@ -29,7 +29,6 @@ import {
     ViewPagerAndroid,
     Platform
 } from "react-native";
-import {pxTodpHeight, pxTodpWidth, ScreenHeight, ScreenWidth} from "../../common/ScreenUtil";
 
 type Props = {
     count: number,
@@ -69,9 +68,9 @@ class ViewPager extends React.Component {
         let dots = [];
         for(let i=0;i<lenth;i++){
             if(index === i){
-                dots.push(<View key={i} style={[styles.swiperDot,{backgroundColor:'#21c3ff',width:pxTodpWidth(30),height:pxTodpHeight(10)}]}/>);
+                dots.push(<View key={i} style={[styles.swiperDot,{backgroundColor:'#21c3ff',width:15,height:5}]}/>);
             }else{
-                dots.push(<View key={i} style={[styles.swiperDot,{backgroundColor:'#e5e5e5',width:pxTodpWidth(16),height:pxTodpHeight(10)}]}/>)
+                dots.push(<View key={i} style={[styles.swiperDot,{backgroundColor:'#e5e5e5',width:8,height:5}]}/>)
             }
         }
         return dots;
@@ -221,21 +220,21 @@ const styles = StyleSheet.create({
         backgroundColor:'#00000000'
     },
     swiperDot:{
-        borderRadius:pxTodpWidth(10),
-        marginHorizontal:pxTodpWidth(5),
+        borderRadius:5,
+        marginHorizontal:2.5,
     },
     imgBg:{
-        height:ScreenHeight,
-        width:ScreenWidth,
+        height:'100%',
+        width:'100%',
         alignItems:'flex-end',
         justifyContent:'flex-end'
     },
     touch:{
         backgroundColor:'#932D91',
-        height:pxTodpHeight(120),
-        width:pxTodpWidth(258),
-        marginRight:pxTodpWidth(64),
-        marginBottom:pxTodpHeight(160)
+        height:60,
+        width:129,
+        marginRight:32,
+        marginBottom:80
     },
 });
 

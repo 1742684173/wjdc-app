@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { Text, View, StyleSheet, Image, Platform,TextInput, TouchableHighlight,TouchableOpacity,ListView,Modal,PixelRatio,ScrollView,SafeAreaView } from 'react-native';
-import Title from '../../../common/Title';
-import DataBetween from '../../../common/DataBetween';
-import DateTimeField from '../../../common/DateTimeField';
-import Field from '../../../common/Field';
-import TextField from '../../../common/TextField';
+import Title from '../../common/Title';
+import DataBetween from '../../common/DataBetween';
+import DateTimeField from '../../common/DateTimeField';
+import Field from '../../common/Field';
+import TextField from '../../common/TextField';
 import MySelect from './common/MySelect';
 import {reduxForm} from 'redux-form';
 import * as actions from '../../../actions';

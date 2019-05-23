@@ -1,18 +1,8 @@
 import {AsyncStorage,} from 'react-native';
-import * as DeviceInfo from 'react-native-device-info';
-import {md5} from '../common/ScreenUtil';
-import * as config from '../config';
-import FetchUtil from '../common/FetchUtil';
-import {SERVER_ADDRES} from "../config";
+import FetchUtil from '../utils/FetchUtil';
+import {md5} from "../utils/ToolUtil";
+import * as appJson from '../../app.json';
 
-
-// let myparams= {
-//   currentPage:1,
-//   pageSize:10,
-//   sortName:null,
-//   condition:null,
-//   all:null,
-// };
 
 let fetchUtil = new FetchUtil();
 
@@ -29,7 +19,7 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
     console.log((desc?desc:'')+'actionType：'+actionType);
 
     //
-    let token = await AsyncStorage.getItem(config.LOGIN_TOKEN_KEY);
+    let token = await AsyncStorage.getItem(appJson.key.loginToken);
 
     //唯一标识
     const uid = 'uid';//DeviceInfo.getUniqueID();
@@ -37,32 +27,41 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
     console.log((desc?desc:'')+'headerParams信息：'+JSON.stringify(headerParams));
 
     //签名
-    const sign = md5(config.SIGN);
+    const sign = md5(appJson.key.sign);
     console.log((desc?desc:'')+'sign信息：'+JSON.stringify(sign));
 
     //body参数
     const params = Object.assign({},object);
     console.log((desc?desc:'')+'params信息：'+JSON.stringify(params));
 
-    try{
-        const data = await fetchUtil.init()
-            .setUrl(SERVER_ADDRES+actionType)
-            .setMethod('POST')
-            .setHeader(Object.assign({},headerParams,{sign:sign}))
-            .setBodyType(bodyType?bodyType:'json')
-            .setBody(params)
-            .dofetch();
+    return new Promise(async (resolve,reject)=>{
+        try{
+            const data = await fetchUtil.init()
+                .setUrl(appJson.action.url+actionType)
+                .setMethod('POST')
+                .setHeader(Object.assign({},headerParams,{sign:appJson.key.sign}))
+                .setBodyType(bodyType?bodyType:'json')
+                .setBody(params)
+                .dofetch();
 
-        result = Object.assign({},result,data);
-    }catch (e) {
-        console.log((desc?desc:'')+'返回异常：'+JSON.stringify(e));
-        //服务器断开
-        if("server error TypeError: Network request failed" === e){
-            result = Object.assign(result,{code:config.SERVER_DISCONNECT,msg:e});
-        }else{
-            result = Object.assign(result,{code:-1,msg:JSON.stringify(e)});
+            console.log((desc?desc:'')+'返回数据：'+JSON.stringify(Object.assign({},result,data)));
+            if(result.type !== appJson.action.signOut && data.code === appJson.action.sessionError){
+                console.log(11);
+                reject(Object.assign({},result,data));
+            }else{
+                console.log(22);
+                resolve(Object.assign({},result,data));
+            }
+        }catch (e) {
+            console.log((desc?desc:'')+'返回异常：'+JSON.stringify(e));
+            let msg = e;
+            if("server error TypeError: Network request failed" === e){
+                msg = '很报歉，服务器正在维修中，请稍后再使用';
+            }else if('request timeout' === e){
+                msg = '请求超时，请刷新重试';
+            }
+            reject(Object.assign({code:appJson.action.connectServerError,msg:msg},result));
         }
-    }
-    console.log((desc?desc:'')+'返回结果：'+JSON.stringify(result));
-    return result;
+    })
+
 }

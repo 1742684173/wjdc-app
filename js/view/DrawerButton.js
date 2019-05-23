@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Image, Platform } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import Button from '../common/Button';
+import Button from './common/Button';
 import menuIcon from '../img/nav/nav_menu.png';
 
 class DrawerButton extends Component {

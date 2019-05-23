@@ -1,5 +1,4 @@
 import {Component} from 'react';
-import {ScreenWidth,ScreenHeight} from "./ScreenUtil";
 
 const options = {
     // /饼图基本配置

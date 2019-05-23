@@ -1,6 +1,6 @@
 import {websocktUrl} from '../env';
 import * as actionType from './actionType';
-import {encrypt} from "../common/Tool";
+import {encrypt} from "../utils/ToolUtil";
 
 let lockReconnect = false; // 避免重复连接
 let isHandClose = false; //是否手动关闭

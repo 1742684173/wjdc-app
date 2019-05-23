@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import {Text, ScrollView,View, StyleSheet, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form';
-import Field from '../../../common/Field';
-import TextField from '../../../common/TextField';
-import TextArea from '../../../common/TextArea';
-import Button from '../../../common/Button';
-import * as config from '../../../config';
+import Field from '../../common/Field';
+import TextField from '../../common/TextField';
+import TextArea from '../../common/TextArea';
+import Button from '../../common/Button';
+import * as appJson from '../../../../app';
 import * as actions from '../../../actions/index';
 import BaseComponent from "../../base/BaseComponent";
 
@@ -53,9 +53,10 @@ class BillMethodForm extends BaseComponent {
             this.showActivityIndicator();
 
             const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑方式','form');
+            this.hideActivityIndicator();
 
             if(type === this.func){
-                if(code === config.CODE_SUCCESS){
+                if(code === appJson.action.success){
                     this.showAlert({
                         content:(this.item?'编辑':'添加')+'成功,是否继续'+'？',
                         buttons:[
@@ -70,11 +71,12 @@ class BillMethodForm extends BaseComponent {
                         ]
                     });
                 }else{
-                    this.handleRequestError(code,msg);
+                    this.showToast(msg);
                 }
             }
         }catch (e) {
-            this.showToast(e.message||'未知错误');
+            this.handleRequestError(e);
+
         }
     }
 

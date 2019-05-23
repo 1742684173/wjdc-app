@@ -1,7 +1,7 @@
 // @flow
 import { createElement, isValidElement } from 'react';
 import type { ComponentType, Element } from 'react';
-import type { RenderFieldProps } from './Field.types.js.flow';
+import type { RenderFieldProps } from '../../utils/Field.types.js.flow';
 
 type Props = {
     ...$Exact<RenderFieldProps>,

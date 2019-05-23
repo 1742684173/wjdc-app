@@ -5,7 +5,7 @@ import {Slider,SafeAreaView, StatusBar,YellowBox,Platform,View,Text} from 'react
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './store/configureStore';
-import App from './view/App';
+import App from './view';
 const { store, persistor } = configureStore();
 import codePush from "react-native-code-push";
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };

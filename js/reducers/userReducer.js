@@ -1,6 +1,6 @@
 // @flow
 import type { ReduxAction } from '../actions/types.js.flow';
-import * as config from "../config";
+import * as appJson from '../../app.json'
 
 type Action = {
     ...$Exact<ReduxAction>,
@@ -17,7 +17,7 @@ const initialState = {
 };
 
 function userReducer(state: State = initialState, action: Action): State {
-    if (action.type === config.SIGN_IN) {
+    if (action.type === appJson.action.signIn) {
         const { token, userInfo } = action.data?action.data:initialState;
         return {
             token,
@@ -25,7 +25,7 @@ function userReducer(state: State = initialState, action: Action): State {
         };
     }
 
-    if (action.type === config.SIGN_OUT) {
+    if (action.type === appJson.action.signOut) {
         return initialState;
     }
 

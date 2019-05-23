@@ -16,7 +16,7 @@ export type Props = {
 const upPic = require('../../../../img/common/up.png');
 const downPic = require('../../../../img/common/down.png');
 const selectPic = require('../../../../img/common/select.png');
-import Title from "../../../../common/Title";
+import Title from "../../../common/Title";
 
 type Props = {
     values:Array,//数据

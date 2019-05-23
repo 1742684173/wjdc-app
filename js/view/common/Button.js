@@ -8,7 +8,6 @@ import {
     TouchableNativeFeedback,
     TouchableOpacity,
 } from 'react-native';
-import Theme from './Theme';
 
 const Touchable = Platform.OS === 'android' ?
     TouchableNativeFeedback : TouchableOpacity;
@@ -56,8 +55,8 @@ const Button = (props: Props) => {
 const styles = StyleSheet.create({
     button: {
         borderRadius: 22,
-        padding: Theme.spacingSM,
-        backgroundColor: Theme.primaryColor,
+        padding: 8,
+        backgroundColor: '#21c3ff',
         justifyContent: 'center',
         alignItems: 'center',
     },

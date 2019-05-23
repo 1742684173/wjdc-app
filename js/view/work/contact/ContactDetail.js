@@ -1,12 +1,9 @@
 import React,{Component} from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity, Platform} from 'react-native';
-import {pxTodpHeight,pxTodpWidth,ScreenWidth} from "../../../common/ScreenUtil";
-import {phoneCall,sendMessage} from "../../../common/Tool";
+import {phoneCall,sendMessage} from "../../../utils/ToolUtil";
 import {connect} from 'react-redux';
 import * as actions from '../../../actions';
-import MyPhoneFlatList from '../../MyPhoneFlatList';
-import * as toast from "../../../common/MyToast";
-import Back from "../../../common/Back";
+import * as toast from "../../common/MyToast";
 
 class ContactDetail extends Component{
     static navigationOptions = ({navigation}) => ({
@@ -70,9 +67,9 @@ class ContactDetail extends Component{
         return(
             <View style={styles.contain}>
 
-                <View style={[styles.div,{height:pxTodpHeight(328)}]}>
+                <View style={[styles.div,{height:164}]}>
                     <Image source={this.state.ygxq.Ygxq_YGXB} resizeMode={'contain'} style={styles.icon}/>
-                    <Text style={{fontSize:pxTodpWidth(38),color:'#333333'}}>
+                    <Text style={{fontSize:19,color:'#333333'}}>
                         {this.state.ygxq.Ygxq_YGXM}
                     </Text>
                     <View style={{flexDirection:'row',alignItems:'center',}}>
@@ -80,28 +77,28 @@ class ContactDetail extends Component{
                             style={styles.msgAndTel}
                             onPress={()=>this._phone(this.state.ygxq.Ygxq_LXDH,true)}>
                             <Image source={require('../../../img/common/message.png')}
-                                   style={{width:pxTodpWidth(83),height:pxTodpHeight(83)}}/>
-                            <Text style={{fontSize:pxTodpWidth(28),color:'#666666'}}>发短信</Text>
+                                   style={{width:42,height:42}}/>
+                            <Text style={{fontSize:14,color:'#666666'}}>发短信</Text>
                         </TouchableOpacity>
 
-                        <View style={{backgroundColor:'#dcdcdc',width:1,height:pxTodpHeight(70)}}/>
+                        <View style={{backgroundColor:'#dcdcdc',width:1,height:35}}/>
 
                         <TouchableOpacity style={styles.msgAndTel}
                                           onPress={()=>this._phone(this.state.ygxq.Ygxq_LXDH,false)}>
                             <Image source={require('../../../img/common/phone.png')}
-                                   style={{width:pxTodpWidth(83),height:pxTodpHeight(83)}}/>
-                            <Text style={{fontSize:pxTodpWidth(28),color:'#666666'}}>打电话</Text>
+                                   style={{width:42,height:42}}/>
+                            <Text style={{fontSize:14,color:'#666666'}}>打电话</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
-                <View style={[styles.div,{height:pxTodpHeight(242)}]}>
+                <View style={[styles.div,{height:121}]}>
                     {this.renderItem('编   号',this.state.ygxq.Ygxq_YGBH)}
                     {this.renderItem('职   位',this.state.ygxq.Ygxq_GWMC)}
                     {this.renderItem('部   门',this.state.ygxq.Ygxq_BMMC)}
                 </View>
 
-                <View style={[styles.div,{height:pxTodpHeight(390)}]}>
+                <View style={[styles.div,{height:185}]}>
                     {this.renderItem('联系电话',...(''+this.state.ygxq.Ygxq_LXDH).split('/'))}
                     {this.renderItem('电子邮箱',this.state.ygxq.Ygxq_DZYX)}
                     {this.renderItem('入职日期',this.state.ygxq.Ygxq_RZRQ)}
@@ -124,8 +121,8 @@ class ContactDetail extends Component{
             })
         return(
             <View style={[styles.itemDiv]}>
-                <Text style={{fontSize:pxTodpWidth(28),color:'#666666'}}>{title}</Text>
-                <Text style={{fontSize:pxTodpWidth(28),color:'#333333'}}>{value}</Text>
+                <Text style={{fontSize:14,color:'#666666'}}>{title}</Text>
+                <Text style={{fontSize:14,color:'#333333'}}>{value}</Text>
             </View>
         )
     }
@@ -135,37 +132,35 @@ const styles = StyleSheet.create({
     contain:{
         flex:1,
         //backgroundColor:''
-        width:ScreenWidth,
+        width:'100%',
     },
     div:{
-        width:pxTodpWidth(690),
-        marginTop:pxTodpHeight(24),
-        marginHorizontal:pxTodpWidth(30),
+        width:345,
+        marginTop:12,
+        marginHorizontal:15,
         alignItems:'center',
         backgroundColor:'#ffffff',
-        borderRadius:pxTodpWidth(20),
+        borderRadius:10,
     },
     icon:{
-        width:pxTodpWidth(170),
-        height:pxTodpHeight(170),
-        marginTop:pxTodpHeight(15),
-        //borderRadius:pxTodpHeight(170),
-        //resizeMode:'contain',
+        width:43,
+        height:85,
+        marginTop:8,
     },
     msgAndTel:{
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
-        width:pxTodpWidth(344),
-        height:pxTodpHeight(91)
+        width:172,
+        height:45
     },
     itemDiv:{
-        width:pxTodpWidth(630),
-        height:pxTodpHeight(72),
+        width:315,
+        height:36,
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'flex-end',
-        marginHorizontal:pxTodpWidth(30),
+        marginHorizontal:15,
         borderBottomWidth:1,
         borderBottomColor:'#dcdcdc',
     }

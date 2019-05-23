@@ -5,7 +5,6 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
-import {pxTodpHeight,pxTodpWidth} from "../../../common/ScreenUtil";
 
 export type Props = {
     pinYin?:string,
@@ -23,8 +22,8 @@ const PinYinList = (props:Props) => {
             let key = pinYins.substr(i,1)
             pinYinArray.push(
                 <TouchableOpacity key={key} onPress={()=>selectPinYin(key)}
-                                  style={{alignItems:'center',width:pxTodpWidth(50)}}>
-                    <Text style={{color:pinYin===key?'#21c3fe':'#666666',fontSize:pxTodpWidth(23)}}>
+                                  style={{alignItems:'center',width:25}}>
+                    <Text style={{color:pinYin===key?'#21c3fe':'#666666',fontSize:12}}>
                         {key}
                     </Text>
                 </TouchableOpacity>

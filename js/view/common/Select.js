@@ -13,12 +13,12 @@ export type Props = {
     deleteBtn:Function,//删除按钮方法
 }
 
-import upPic from '../img/common/up.png';
-import downPic from '../img/common/down.png';
-import selectPic from '../img/common/select.png';
-import add from '../img/common/add.png';
-import edit from '../img/common/edit.png';
-import del from '../img/common/delete1.png';
+import upPic from '../../img/common/up.png';
+import downPic from '../../img/common/down.png';
+import selectPic from '../../img/common/select.png';
+import add from '../../img/common/add.png';
+import edit from '../../img/common/edit.png';
+import del from '../../img/common/delete1.png';
 
 
 export default class Select extends Component{

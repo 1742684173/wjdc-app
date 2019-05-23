@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {pxTodpWidth} from "../../common/ScreenUtil";
 import {connect} from 'react-redux'
 
 class Mine extends Component {

@@ -2,7 +2,7 @@
 // @flow
 import React from 'react';
 import { Image } from 'react-native';
-import TabNavigator from '../common/TabNavigator';
+import TabNavigator from './common/TabNavigator';
 import DrawerButton from './DrawerButton';
 import MessageButton from './MessageButton';
 import Home from './home';

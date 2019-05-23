@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import backImg from '../../img/common/back-icon.png';
-import * as config from '../../config';
 import MessageButton from '../MessageButton';
-import MyDialog from '../../common/MyDialog';
+import MyDialog from '../common/MyDialog';
+import * as appJson from '../../../app';
 
 export default class BaseComponent extends Component<any> {
 
@@ -74,54 +74,39 @@ export default class BaseComponent extends Component<any> {
         NetInfo.removeEventListener('connectionChange', this.handleConnectivityChange);
     }
 
+    _signOut = async () => {
+        await this.showActivityIndicator();
+        try{
+            await this.props.postAction(appJson.action.signOut,{},'登出');
+        }catch (e) {
+
+        }
+        await this.hideActivityIndicator();
+        this.props.navigation.navigate('SignIn');
+    }
+
     //处理请求的错误
-    handleRequestError = async (code:number,msg?:string) => {
+    handleRequestError = async (obj:Object) => {
+        const {code,msg} = obj;
         switch (code) {
-            //会话正确
-            case config.CODE_SUCCESS:
-                this.hideActivityIndicator();
-                break;
-
             //会话错误
-            case config.SESSION_CODE_ERROR:
+            case appJson.action.sessionError:
                 this.showAlert({
-                    title:'信息提示',
-                    content:msg,
-                    buttons:[
-                        {
-                            text: '确认',
-                            onPress:async ()=>{
-                                await this.props.postAction(config.SIGN_OUT,{},'登出');
-                                await this.hideActivityIndicator();
-                                this.props.navigation.navigate('SignIn');
-                            }
-                        },
-                    ]
+                    title:'信息提示', content:msg,
+                    buttons:[{text: '确认', onPress:this._signOut},]
                 })
                 break;
 
-            //主求参数错误
-            case config.CODE_ERROR:
-                this.showToast(msg);
-                break;
-
-            //服务器断开
-            case config.SERVER_DISCONNECT:
+            //连接错误
+            case appJson.action.connectServerError:
                 this.showAlert({
-                    title:'信息提示',
-                    content:'很报歉，服务器正在维修中，请稍后再使用',
-                    buttons:[
-                        {
-                            text: '确认',
-                            onPress:()=>{
-                                this.hideActivityIndicator();
-                            }
-                        },
-                    ]
-                })
+                    title:'信息提示', content:msg,
+                    buttons:[{text: '确认', onPress:this.hideActivityIndicator}]
+                });
                 break;
 
-            default:this.showToast(msg);
+            default:this.showToast(msg);break;
+
         }
     }
 
@@ -251,7 +236,7 @@ export default class BaseComponent extends Component<any> {
     renderDisNet(){
         return this.state.netStatus === 'none' || this.state.netStatus === 'unknown'?(
             <View style={styles.containDisNet}>
-                <Text style={{marginTop:48,fontSize:15,color:'#999'}}>
+                <Text style={{fontSize:15,color:'#999'}}>
                     {this.state.netStatus === 'none'?'网络己断开':'联网状态异常'}
                 </Text>
             </View>
@@ -281,6 +266,7 @@ const styles = StyleSheet.create({
     },
     containDisNet:{
         height: 40,
+        justifyContent:'center',
         alignItems: 'center',
         backgroundColor:'#fcdaa6'
     }

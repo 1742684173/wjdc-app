@@ -1,12 +1,11 @@
 import React,{Component} from 'react';
 import {SectionList,StyleSheet,View,Text,Image,TouchableOpacity} from 'react-native';
-import {pxTodpHeight, pxTodpWidth} from "../../../common/ScreenUtil";
 import PropTypes from 'prop-types';
 import PinYinList from './PinYinList';
 import nullDataIcon from "../../../img/common/nullDataIcon.png";
 
-const ITEM_HEIGHT = pxTodpHeight(138); //item的高度
-const SECTION_HEIGHT = pxTodpHeight(54);  //分组头部的高度
+const ITEM_HEIGHT = 69; //item的高度
+const SECTION_HEIGHT = 27;  //分组头部的高度
 const SEPARATOR_HEIGHT = 1;  //分割线的高度
 
 class MySectionList extends Component{
@@ -27,7 +26,7 @@ class MySectionList extends Component{
     render(){
         return(
             <View style={styles.contain}>
-                <View style={{width:pxTodpWidth(750)}}>
+                <View style={{width:375}}>
                     {/*联系人列表*/}
                     <SectionList
                         ref='contactList'
@@ -53,7 +52,7 @@ class MySectionList extends Component{
                 </View>
 
                 {/*拼音列表*/}
-                <View style={{zIndex:100,top:pxTodpHeight(80),left:pxTodpWidth(-50)}}>
+                <View style={{zIndex:100,top:40,left:-25}}>
                     <PinYinList pinYin={this.state.pinYin} pinYins={this.props.pinYins} selectPinYin={this._selectPinYin}/>
                 </View>
 
@@ -85,7 +84,7 @@ class MySectionList extends Component{
     _listEmptyComponent = () => {
         return(
             <View style={styles.emptyView}>
-                <Image source={nullDataIcon} style={{height:pxTodpHeight(210),width:pxTodpWidth(364),resizeMode:'contain',}}/>
+                <Image source={nullDataIcon} style={{height:105,width:182,resizeMode:'contain',}}/>
                 <Text style={{color:'#999'}}>空空如也~</Text>
             </View>
         )
@@ -156,13 +155,13 @@ class MySectionList extends Component{
 const styles = StyleSheet.create({
     contain:{
         flexDirection:'row',
-        width:pxTodpWidth(750),
-        height:pxTodpHeight(1150),
+        width:375,
+        height:575,
     },
     emptyView:{
         justifyContent:'center',
         alignItems:'center',
-        margin:pxTodpHeight(100)
+        margin:50
     },
     headerView:{
         backgroundColor: '#25B960',
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
     },
     separatorView:{
         height:SEPARATOR_HEIGHT,
-        paddingHorizontal:pxTodpWidth(30),
+        paddingHorizontal:15,
         backgroundColor:'#f2f2f2',
     },
     listHeader:{
@@ -179,42 +178,40 @@ const styles = StyleSheet.create({
         height: SECTION_HEIGHT,
         textAlignVertical: 'center',
         color: '#333333',
-        fontSize: pxTodpWidth(32),
-        paddingHorizontal:pxTodpWidth(30),
+        fontSize: 16,
+        paddingHorizontal:15,
     },
     listItemContain:{
         flexDirection:'row',
         height: ITEM_HEIGHT,
         //justifyContent:'center',
         alignItems:'center',
-        paddingHorizontal:pxTodpWidth(30)
+        paddingHorizontal:15
     },
     listItemImage:{
-        width:pxTodpHeight(110),
-        height:pxTodpHeight(110),
-        //borderRadius:pxTodpHeight(110),
-        // resize:'',
+        width:55,
+        height:55,
         borderWidth:1,
         borderColor:'#f2f2f2',
     },
     listItemName:{
         textAlignVertical: 'center',
-        marginLeft:pxTodpWidth(24),
+        marginLeft:12,
         color: '#333333',
-        fontSize: pxTodpWidth(36)
+        fontSize: 18
     },
     listItemDept:{
         flex:1,
         textAlign:'right',
-        paddingRight:pxTodpWidth(46),
-        fontSize:pxTodpWidth(26),
+        paddingRight:23,
+        fontSize:13,
         color:'#666666',
     },
     footView:{
         // backgroundColor: '#f2f2f2',
         justifyContent:'center',
         alignItems: 'center',
-        height: pxTodpHeight(138)
+        height:69
     }
 })
 

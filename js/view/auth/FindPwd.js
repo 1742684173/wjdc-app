@@ -12,14 +12,12 @@ import {
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withNavigation } from 'react-navigation';
-import Button from '../../common/Button';
-import {pxTodpHeight, pxTodpWidth, md5} from '../../common/ScreenUtil';
-import Input from '../../common/Input';
-import Field from '../../common/Field';
-import * as config from '../../config';
+import Button from '../common/Button';
+import Input from '../common/Input';
+import Field from '../common/Field';
 import * as actions from '../../actions';
 import VCode from './common/VCode';
-import Back from "../../common/Back";
+import Back from "../common/Back";
 
 class FindPwd extends Component<any> {
     static navigationOptions = ({navigation}) => ({

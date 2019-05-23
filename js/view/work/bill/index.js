@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {ImageBackground,Text, View, StyleSheet, TouchableOpacity, Image,ScrollView} from 'react-native';
 import {connect} from 'react-redux';
-import Title from "../../../common/Title";
-import * as config from '../../../config';
+import Title from "../../common/Title";
+import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
 import addBillPic from '../../../img/work/bill/addBill.png';
 import nullDataPic from '../../../img/common/nullDataIcon.png';
@@ -23,32 +23,31 @@ class BillInfo extends BaseComponent {
     }
 
     componentDidMount = async () => {
+        super.componentDidMount();
         await this.initBase();
         await this.getBillInfo();
-    }
-
-    dealParam = (params) => {
-        const {type,code,msg,data} = params;
-        switch (type) {
-            case config.BILL_FIND:
-                if(code === config.CODE_SUCCESS){
-                    this.setState({billsData:data.list})
-                }else{
-                    this.handleRequestError(code,msg);
-                }
-                break;
-        }
     }
 
     getBillInfo = async () => {
         await this.showActivityIndicator();
         try{
-            let billParams = await this.props.postAction(config.BILL_FIND,{pageSize:5,currentPage:1,sortName:'dates desc'},'查询账单');
+            let billParams = await this.props.postAction(appJson.action.billFind,{pageSize:3,currentPage:1,sortName:'dates desc'},'查询账单');
             this.dealParam(billParams);
 
-            await this.hideActivityIndicator();
+            this.hideActivityIndicator();
         }catch (e) {
-            this.showToast(JSON.stringify(e));
+            this.handleRequestError(e);
+        }
+    }
+
+    dealParam = (params) => {
+        const {type,code,msg,data} = params;
+        switch (type) {
+            case appJson.action.billFind:
+                if(code === appJson.action.success){
+                    this.setState({billsData:data.list});
+                }
+                break;
         }
     }
 
@@ -58,7 +57,8 @@ class BillInfo extends BaseComponent {
             title:'添加帐单',
             callback:(data)=>{
                 this.getBillInfo();
-            }});
+            }
+        });
     }
 
     //去帐单历史记录界面
@@ -81,7 +81,8 @@ class BillInfo extends BaseComponent {
         }
         this.props.navigation.navigate('BillTotal',{
             callback:(data)=>{
-            }});
+            }
+        });
     }
 
     render() {

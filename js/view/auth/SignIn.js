@@ -12,13 +12,13 @@ import {
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withNavigation } from 'react-navigation';
-import Button from '../../common/Button';
-import Field from '../../common/Field';
-import * as config from '../../config';
+import Button from '../common/Button';
+import Field from '../common/Field';
 import {postAction} from '../../actions';
-import Input from '../../common/Input';
+import Input from '../common/Input';
 import BaseComponent from '../base/BaseComponent';
-import {md5} from '../../common/ScreenUtil';
+import {md5} from "../../utils/ToolUtil";
+import * as appJson from '../../../app';
 
 class SignIn extends BaseComponent {
 
@@ -27,18 +27,14 @@ class SignIn extends BaseComponent {
     });
 
     componentDidMount = async () => {
-        this.showActivityIndicator();
+        super.componentDidMount();
+        await this.showActivityIndicator();
 
-        let account = await AsyncStorage.getItem(config.LOGIN_ACCOUNT_KEY);
-        let password = await AsyncStorage.getItem(config.LOGIN_PASSWORD_KEY);
+        let account = await AsyncStorage.getItem(appJson.key.loginAccount);
+        let password = await AsyncStorage.getItem(appJson.key.loginPassword);
         this.props.initialize({account:account,password:password});
 
-        this.hideActivityIndicator();
-    }
-
-    renderDisNet(){
-        super.renderDisNet();
-        return null;
+        await this.hideActivityIndicator();
     }
 
     _signIn = async (object:Object) => {
@@ -60,21 +56,21 @@ class SignIn extends BaseComponent {
         this.showActivityIndicator();
 
         try{
-            const {type,code,msg,data} = await this.props.postAction(config.SIGN_IN,params,'登录');
-            await AsyncStorage.setItem(config.LOGIN_ACCOUNT_KEY,account);
-            await AsyncStorage.setItem(config.LOGIN_PASSWORD_KEY,password);
-            if(type === config.SIGN_IN){
-                if(code === config.CODE_SUCCESS){
-                    await AsyncStorage.setItem(config.LOGIN_TOKEN_KEY,data.token);
+            const {type,code,msg,data} = await this.props.postAction(appJson.action.signIn,params,'登录');
+            if(type === appJson.action.signIn){
+                if(code === appJson.action.success){
+                    await AsyncStorage.setItem(appJson.key.loginAccount,account);
+                    await AsyncStorage.setItem(appJson.key.loginPassword,password);
+                    await AsyncStorage.setItem(appJson.key.loginToken,data.token);
                     await this.hideActivityIndicator();
                     this.props.navigation.navigate('App');
 
                 }else{
-                    this.handleRequestError(code,msg);
+                    this.showToast(msg);
                 }
             }
         }catch (e) {
-            this.showToast(JSON.stringify(e));
+            this.handleRequestError(e);
         }
     }
 

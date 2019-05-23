@@ -9,7 +9,6 @@ import type {
     StackNavigatorConfig,
     NavigationContainer,
 } from 'react-navigation';
-import Theme from './Theme';
 
 const IOSTransitionSpec = {
     timing: Animated.spring,
@@ -48,19 +47,19 @@ const defaultStackConfig = {
     headerMode: 'float',
     headerTransitionPreset: 'uikit',
     navigationOptions: {
-        headerTintColor: Theme.primaryColor,
+        headerTintColor: '#21c3ff',
         headerTitleStyle: {
             flexDirection: 'row',
             alignItems:'center',
             justifyContent:'center',
-            color: Theme.headerTitleTextColor,
+            color: '#333',
             fontSize: 24,
         },
         headerStyle: {
             //android 往下移动
-            paddingTop:15,
+            //paddingTop:15,
             elevation:0,
-            backgroundColor: Theme.headerBackgroundColor,
+            backgroundColor: '#fff',
             borderBottomWidth: 0,
             /*  ...Platform.select({
                   ios:ifIphoneX({height: 88}, {}),

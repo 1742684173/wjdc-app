@@ -1,9 +1,9 @@
 import { SwitchNavigator, DrawerNavigator } from 'react-navigation';
-import StackNavigator from '../common/StackNavigator';
+import StackNavigator from './common/StackNavigator';
 import Main from './Main';
 import SignIn from './auth/SignIn';
-import SignUp from './auth/SignUp';
-import FindPwd from './auth/FindPwd';
+// import SignUp from './auth/SignUp';
+// import FindPwd from './auth/FindPwd';
 import AuthLoading from './auth';
 import Publish from './publish';
 import DrawerSideBar from './DrawerSideBar';
@@ -35,8 +35,8 @@ const AppStack = StackNavigator({
 const AuthStack = StackNavigator(
     {
         SignIn,
-        SignUp,
-        FindPwd,
+        // SignUp,
+        // FindPwd,
     },
 );
 

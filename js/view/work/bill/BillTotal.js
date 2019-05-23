@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler, Platform, Image,} from 'react-native';
 import {connect} from 'react-redux';
-import * as config from '../../../config';
+import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
 import BaseComponent from '../../base/BaseComponent';
-import Title from "../../../common/Title";
+import Title from "../../common/Title";
 import BillTotalLabel from "./BillTotalLabel";
-import Button from "../../../common/Button";
-import FilterTab from "../../../common/FilterTab";
+import Button from "../../common/Button";
+import FilterTab from "../../common/FilterTab";
 import select from "../../../img/common/search_select.png";
-import {getLineOption,getPieOption} from "../../../common/Echarts";
+import {getLineOption,getPieOption} from "../../../utils/Echarts";
 
 const filter = [
     {id:'lastDay',name:'上日'},
@@ -52,11 +52,11 @@ class BillTotal extends BaseComponent {
         try{
             //方式
             //分类
-            const sortData = await this.props.postAction(config.BILL_SORT_FIND,{},'查询消费类别');
+            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询消费类别');
             this._dealParams(sortData);
 
             //方式
-            const methodData = await this.props.postAction(config.BILL_METHOD_FIND,{},'查询消费方式');
+            const methodData = await this.props.postAction(appJson.action.billMethodFind,{},'查询消费方式');
             this._dealParams(methodData);
 
             this._dealParams({});
@@ -70,8 +70,8 @@ class BillTotal extends BaseComponent {
         let {type,code,msg,data} = params;
         switch (type) {
             //消费类别
-            case config.BILL_SORT_FIND:
-                if(code === config.CODE_SUCCESS){
+            case appJson.action.billSortFind:
+                if(code === appJson.action.success){
                     if(data.totalCount >0){
                         this.setState({selectSort:data.list});
                     }
@@ -81,9 +81,9 @@ class BillTotal extends BaseComponent {
                 break;
 
             //消费方式
-            case config.BILL_METHOD_FIND:
+            case appJson.action.billMethodFind:
                 let selectMethod = [];
-                if(code === config.CODE_SUCCESS){
+                if(code === appJson.action.success){
                     data.list.map((item,i)=>selectMethod.push(item));
                     if(selectMethod.length >0){
                         this.setState({selectMethod:selectMethod});

@@ -23,9 +23,9 @@ export default class RadioButton extends Component{
         const {values,title,isNeed,value,onChange} = this.props;
         let radios = values.map((item,i)=>{
             return(
-                <TouchableOpacity key={i} style={styles.radioStyle} onPress={()=>onChange(item.key)}>
+                <TouchableOpacity key={i} style={styles.radioStyle} onPress={()=>onChange(item.id)}>
                     <View style={styles.outCircle}>
-                        {item.key===value?<View style={styles.inCircle}/>:null}
+                        {item.id===value?<View style={styles.inCircle}/>:null}
                     </View>
                     <Text style={styles.inputStyle}>{item.value}</Text>
                 </TouchableOpacity>

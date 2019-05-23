@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from 'react-native';
 import BillsFlatList from './BillsFlatList';
-import LoadView from '../../../common/LoadView';
-import Search from '../../../common/Search';
+import LoadView from '../../common/LoadView';
+import Search from '../../common/Search';
 import {connect} from 'react-redux';
-import * as config from '../../../config';
+import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
 import BillLabel from './BillLabel';
 import BaseComponent from '../../base/BaseComponent';
@@ -54,16 +54,16 @@ class Bills extends BaseComponent {
         this.showActivityIndicator();
         try{
             //分类
-            const sortData = await this.props.postAction(config.BILL_SORT_FIND,{},'查询消费类别');
+            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询消费类别');
             this._dealParams(sortData);
 
             //方式
-            const methodData = await this.props.postAction(config.BILL_METHOD_FIND,{},'查询消费方式');
+            const methodData = await this.props.postAction(appJson.action.billMethodFind,{},'查询消费方式');
             this._dealParams(methodData);
 
             await this._getBillList();
         }catch (e) {
-            this.showToast(JSON.stringify(e));
+            this.handleRequestError(e);
         }
 
     }
@@ -101,9 +101,9 @@ class Bills extends BaseComponent {
                 sort:this.sort,
             });
             const {type,code,msg,data} =
-                await this.props.postAction(config.BILL_FIND,params,'查询消费');
-            if(type === config.BILL_FIND){
-                if (code === config.CODE_SUCCESS) {
+                await this.props.postAction(appJson.action.billFind,params,'查询消费');
+            if(type === appJson.action.billFind){
+                if (code === appJson.action.success) {
                     let myData = this.state.data;
                     if(this.currentPage === 1){
                         myData = data.list;
@@ -123,14 +123,11 @@ class Bills extends BaseComponent {
                     }
 
                     this.setState({foot:foot,data:myData});
-                    this.hideActivityIndicator();
-                } else {
-                    this.handleRequestError(code,msg);
                 }
             }
-
+            this.hideActivityIndicator();
         }catch (e) {
-            this.showToast(e.message || e.note);
+            this.handleRequestError(e);
         }
     }
 
@@ -211,28 +208,22 @@ class Bills extends BaseComponent {
         let {type,code,msg,data} = params;
         switch (type) {
             //消费类别
-            case config.BILL_SORT_FIND:
-                if(code === config.CODE_SUCCESS){
-                    if(data.totalCount >0){
+            case appJson.action.billSortFind:
+                if(code === appJson.action.success){
+                    if(data.totalCount > 0){
                         this.setState({selectSort:data.list});
                     }
-                }else{
-                    this.handleRequestError(code,msg);
                 }
                 break;
 
             //消费方式
-            case config.BILL_METHOD_FIND:
+            case appJson.action.billMethodFind:
                 let selectMethod = [];
-                if(code === config.CODE_SUCCESS){
-                    data.list.map((item,i)=>selectMethod.push(item));
-                    if(selectMethod.length >0){
-                        this.setState({selectMethod:selectMethod});
+                if(code === appJson.action.success){
+                    if(data.totalCount > 0){
+                        this.setState({selectMethod:data.list});
                     }
-                }else{
-                    this.handleRequestError(code,msg);
                 }
-
                 break;
 
             default:
@@ -254,21 +245,9 @@ class Bills extends BaseComponent {
         this.type = obj.type === 'all'?null:obj.type;
         this.startTime = obj.startTime;
         this.endTime = obj.endTime;
-
-        switch (obj.type) {
-            case 'in':
-                this.minSum = obj.minSum?obj.minSum:0;
-                this.maxSum = obj.maxSum;
-                break;
-
-            case 'out':
-                this.minSum = obj.maxSum?-1*obj.maxSum:null;
-                this.maxSum = 0;
-                break;
-
-            default:break;
-        }
-
+        this.sortName = obj.sortName;
+        this.minSum = obj.minSum;
+        this.maxSum = obj.maxSum;
         this.method = obj.method === 'all'?null:obj.method;
         this.sort = obj.sort === 'all'?null:obj.sort;
 

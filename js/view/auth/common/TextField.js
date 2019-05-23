@@ -4,7 +4,7 @@ import {
     StyleSheet,
     Text, TextInput, TouchableOpacity, View,
 } from 'react-native';
-import Input from '../../../common/Input';
+import Input from '../../common/Input';
 import del from "../../../img/common/delete.png";
 
 export type Props = {

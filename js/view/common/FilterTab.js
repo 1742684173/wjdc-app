@@ -5,7 +5,6 @@ import {
     Text, TouchableOpacity,
 } from 'react-native';
 import type { Element } from 'react';
-import { ScreenWidth,ScreenHeight} from './ScreenUtil';
 
 export type Props = {
     style?:style,//

@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Theme from './Theme';
 
 export type Props = {
     inset?: boolean,
@@ -25,10 +24,10 @@ const Divider = (props: Props) => {
 const styles = StyleSheet.create({
     divider: {
         height: StyleSheet.hairlineWidth,
-        backgroundColor: Theme.dividerColor,
+        backgroundColor: '#dcdcdc',
     },
     inset: {
-        marginLeft: Theme.spacingMD,
+        marginLeft: 15,
     },
     absolute: {
         position: 'absolute',

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import renderField from './renderField';
-import type { FieldProps } from './Field.types.js.flow';
+import type { FieldProps } from '../../utils/Field.types.js.flow';
 import { Field as ReduxField } from 'redux-form';
 
 const Field = (props: FieldProps) => {

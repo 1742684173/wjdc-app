@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from "moment";
-import dateIcon from "../img/common/date.png";
+import dateIcon from "../../img/common/date.png";
 
 var curDate = new Date();
 let format = 'YYYY-MM-DD';

@@ -12,14 +12,13 @@ import {
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withNavigation } from 'react-navigation';
-import Button from '../../common/Button';
-import {pxTodpHeight, pxTodpWidth, md5} from '../../common/ScreenUtil';
-import Input from '../../common/Input';
-import Field from '../../common/Field';
-import * as config from '../../config';
+import Button from '../common/Button';
+import {md5} from "../../utils/ToolUtil";
+import Input from '../common/Input';
+import Field from '../common/Field';
 import * as actions from '../../actions';
 import VCode from './common/VCode';
-import Back from "../../common/Back";
+import Back from "../common/Back";
 
 class SignUp extends Component<any> {
     static navigationOptions = ({navigation}) => ({
@@ -132,7 +131,7 @@ class SignUp extends Component<any> {
                             onPress={this._switchView}
                             style={[styles.switchItem, {
                                 backgroundColor:this.state.isTelType?'#21c2fd':'#ffffff',
-                                borderTopLeftRadius:pxTodpWidth(20),
+                                borderTopLeftRadius:10,
                             }]}
                         >
                             <Text style={{fontSize:pxTodpWidth(40), color:this.state.isTelType?'#ffffff':'#21c2fd'}}>

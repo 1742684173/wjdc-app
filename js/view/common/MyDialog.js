@@ -7,7 +7,6 @@ import {
     StyleSheet,
     ActivityIndicator,
 }from 'react-native';
-import { ScreenWidth} from './ScreenUtil';
 export type Props = {
     type?:string,//类形: load->加载框 alert->弹出框 others->自定义  默认是load
     visible:boolean,//是否显示

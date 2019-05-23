@@ -3,8 +3,8 @@ import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from '
 import {connect} from 'react-redux';
 import BaseComponent from "../../base/BaseComponent";
 import {postAction} from "../../../actions";
-import * as config from "../../../config";
 import moment from "moment";
+import * as appJson from '../../../../app';
 
 class BillDetail extends BaseComponent {
 
@@ -30,13 +30,13 @@ class BillDetail extends BaseComponent {
 
             //分类
             const {type,code,msg,data} = await this.props.postAction(
-                config.BILL_FIND,{
+                appJson.action.billFind,{
                     billId:this.props.navigation.state.params.id,
                     all:"all"
                 },"查询消费详情");
 
-            if(type === config.BILL_FIND){
-                if(code === config.CODE_SUCCESS){
+            if(type === appJson.action.billFind){
+                if(code === appJson.action.success){
                     data.totalCount >0 ? this.setState({data:data.list[0]}):null;
                 }
                 this.handleRequestError(code,msg);

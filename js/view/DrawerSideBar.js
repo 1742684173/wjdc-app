@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import {StyleSheet, View, Text, Button, TouchableHighlight, AsyncStorage} from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from "../actions";
-import * as config from "../config";
 
 class DrawerSideBar extends Component<any> {
     constructor(props) {
@@ -14,11 +13,7 @@ class DrawerSideBar extends Component<any> {
     }
 
     _exit = async () => {
-        this.setState({visible:true});
-        const {type,code,msg,data} = await this.props.postAction(config.SIGN_OUT,{},'登出');
-        console.log('=>'+JSON.stringify(data));
-        this.setState({visible:false});
-        this.props.navigation.navigate('SignIn');
+
     }
 
     render() {

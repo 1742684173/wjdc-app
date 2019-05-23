@@ -1,8 +1,8 @@
 import React from "react";
 import {Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from "react-native";
-import dateIcon from "../img/common/date.png";
+import dateIcon from "../../img/common/date.png";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import searchIcon from "../img/common/search.png";
+import searchIcon from "../../img/common/search.png";
 import moment from "moment";
 
 export type Props = {

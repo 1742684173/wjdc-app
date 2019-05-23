@@ -1,7 +1,6 @@
 import React,{Component} from 'react';
 import {View, StyleSheet, Animated,} from 'react-native';
-import {pxTodpHeight,pxTodpWidth} from '../../../common/ScreenUtil';
-import Search from '../../../common/Search';
+import Search from '../../common/Search';
 import * as actions from '../../../actions';
 import {connect} from 'react-redux';
 import MySectionList from './MySectionList';
@@ -119,21 +118,21 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         backgroundColor:'#F2F2F2',
-        marginVertical:pxTodpHeight(12),
-        marginHorizontal:pxTodpWidth(30),
-        borderRadius:pxTodpWidth(5),
-        height:pxTodpHeight(56),
+        marginVertical:6,
+        marginHorizontal:15,
+        borderRadius:3,
+        height:28,
     },
     inputView:{
         flex:1,
-        height:pxTodpHeight(90),
-        marginHorizontal:pxTodpWidth(20),
-        fontSize:pxTodpWidth(26),
+        height:45,
+        marginHorizontal:10,
+        fontSize:13,
     },
     searchImage:{
-        height:pxTodpHeight(40),
-        width:pxTodpWidth(40),
-        marginRight:pxTodpWidth(24),
+        height:20,
+        width:20,
+        marginRight:12,
         resizeMode :'contain',
     },
 

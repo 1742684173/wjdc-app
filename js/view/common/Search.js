@@ -8,10 +8,9 @@ import {
     TextInput,
     Platform,
 }from "react-native";
-import {ScreenWidth,ScreenHeight} from "./ScreenUtil";
-import search from "../img/common/search.png";
-import select from "../img/common/search_select.png";
-import add from "../img/common/add.png";
+import search from "../../img/common/search.png";
+import select from "../../img/common/search_select.png";
+import add from "../../img/common/add.png";
 
 type Props = {
     placeholder?:string,//提示

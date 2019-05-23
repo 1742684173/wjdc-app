@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {TouchableOpacity,Image} from 'react-native';
-import backImg from '../img/common/back-icon.png';
+import backImg from '../../img/common/back-icon.png';
 
 export default class Back extends Component{
 

@@ -5,7 +5,6 @@ import {
     Text,
 }from 'react-native';
 import type { Element } from 'react';
-import {ScreenWidth,ScreenHeight} from './ScreenUtil';
 
 export type Props = {
     text?:String,

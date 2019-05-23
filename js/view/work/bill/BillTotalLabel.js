@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { Text, View, StyleSheet, TouchableOpacity,ScrollView} from 'react-native';
-import Title from '../../../common/Title';
-import DateTimeField from '../../../common/DateTimeField';
-import Field from '../../../common/Field';
+import Title from '../../common/Title';
+import DateTimeField from '../../common/DateTimeField';
+import Field from '../../common/Field';
 import MySelect from './common/MySelect';
 import {reduxForm} from 'redux-form';
 import * as actions from '../../../actions';
