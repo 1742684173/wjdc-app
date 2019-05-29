@@ -11,6 +11,7 @@ import {
 import search from "../../img/common/search.png";
 import select from "../../img/common/search_select.png";
 import add from "../../img/common/add.png";
+import Button from "./Button";
 
 type Props = {
     placeholder?:string,//提示
@@ -56,9 +57,9 @@ export default class Search extends Component<Props>{
             <View style={styles.contain}>
                 <View style={styles.searchView}>
                     {
-                        isShowBeforeBtn?<TouchableOpacity onPress={()=>onBeforeBtn(this.state.value)}>
+                        isShowBeforeBtn?<Button onPress={()=>onBeforeBtn(this.state.value)} style={{backgroundColor:'#00000000'}}>
                             <Image source={beforeImg?beforeImg:search} style={styles.searchImage}/>
-                        </TouchableOpacity>:null
+                        </Button>:null
                     }
 
                     <TextInput
@@ -73,15 +74,15 @@ export default class Search extends Component<Props>{
                     />
                 </View>
                 {
-                    isShowMiddle?<TouchableOpacity  onPress={()=>onMiddleBtn(this.state.value)} style={styles.addView}>
+                    isShowMiddle?<Button  onPress={()=>onMiddleBtn(this.state.value)} style={styles.addView}>
                         <Image source={middleImg?middleImg:add} style={styles.addImage}/>
-                    </TouchableOpacity>:null
+                    </Button>:null
                 }
 
                 {
-                    isShowBehind?<TouchableOpacity  onPress={()=>onBehindBtn(this.state.value)} style={styles.addView}>
+                    isShowBehind?<Button  onPress={()=>onBehindBtn(this.state.value)} style={styles.addView}>
                         <Image source={behindImg?behindImg:select} style={styles.addImage}/>
-                    </TouchableOpacity>:null
+                    </Button>:null
                 }
             </View>
         )
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
         borderWidth:1,
         borderColor:"#f2f2f2",
         marginLeft:7,
+        backgroundColor:'#00000000',
     },
     addImage:{
         height:15,

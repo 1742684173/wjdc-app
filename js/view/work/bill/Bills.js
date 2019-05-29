@@ -18,7 +18,7 @@ class Bills extends BaseComponent {
         data:[],
         selectSort:[],//消费方式
         selectMethod:[],//消费类别
-        selectLabel:{sortName:'dates desc',type:'all',method:'all',sort:'all'},//筛选的结果
+        selectLabel:{sortName:'dates desc',type:'all',methodId:'all',sortId:'all'},//筛选的结果
     }
 
     // 构造
@@ -45,8 +45,8 @@ class Bills extends BaseComponent {
         this.endTime = null;
         this.minSum = null;
         this.maxSum = null;
-        this.method = null;
-        this.sort = null;
+        this.methodId = null;
+        this.sortId = null;
     }
 
     componentDidMount = async () => {
@@ -97,8 +97,8 @@ class Bills extends BaseComponent {
                 endTime:this.endTime,
                 minSum:this.minSum,
                 maxSum:this.maxSum,
-                method:this.method,
-                sort:this.sort,
+                methodId:this.methodId,
+                sortId:this.sortId,
             });
             const {type,code,msg,data} =
                 await this.props.postAction(appJson.action.billFind,params,'查询消费');
@@ -248,8 +248,8 @@ class Bills extends BaseComponent {
         this.sortName = obj.sortName;
         this.minSum = obj.minSum;
         this.maxSum = obj.maxSum;
-        this.method = obj.method === 'all'?null:obj.method;
-        this.sort = obj.sort === 'all'?null:obj.sort;
+        this.methodId = obj.methodId === 'all'?null:obj.methodId;
+        this.sortId = obj.sortId === 'all'?null:obj.sortId;
 
         await this.setState({selectLabel:obj});
 

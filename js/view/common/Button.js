@@ -55,8 +55,9 @@ const Button = (props: Props) => {
 const styles = StyleSheet.create({
     button: {
         borderRadius: 22,
-        padding: 8,
-        backgroundColor: '#21c3ff',
+        // padding: 8,
+        // backgroundColor: '#21c3ff',
+        backgroundColor: '#00000000',
         justifyContent: 'center',
         alignItems: 'center',
     },

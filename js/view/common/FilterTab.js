@@ -5,6 +5,7 @@ import {
     Text, TouchableOpacity,
 } from 'react-native';
 import type { Element } from 'react';
+import Button from "./Button";
 
 export type Props = {
     style?:style,//
@@ -46,9 +47,10 @@ const FilterTab = (props:Props = defaultProps) => {
                 {
                     data.map((item,i)=>{
                         return (
-                            <TouchableOpacity
+                            <Button
+                                key={i}
                                 onPress={()=>onFilterItem(item)}
-                                style={{alignItems:'center'}}>
+                                style={{backgroundColor:'#00000000',alignItems:'center'}}>
 
                                 <View style={{
                                     width:64,
@@ -64,7 +66,7 @@ const FilterTab = (props:Props = defaultProps) => {
                                     </Text>
                                 </View>
                                 <View style={[styles.toggle,{borderTopColor:item.id===value?selectBgColor:'#00000000'}]}/>
-                            </TouchableOpacity>
+                            </Button>
                         )
                     })
                 }

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     smallTitleView:{
         flexDirection:'row',
         alignItems:'center',
-        marginLeft:15,
+        marginVertical:15,
     },
     //分类标题前面的图片
     smallTitleImage:{

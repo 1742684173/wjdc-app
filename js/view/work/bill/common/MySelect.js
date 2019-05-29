@@ -66,7 +66,7 @@ export default class MySelect extends Component{
 
         return(
             <View>
-                <Title text={title} style={styles.title}/>
+                <Title text={title}/>
 
                 <View style={styles.div1}>
                     {select}
@@ -82,8 +82,6 @@ const styles = StyleSheet.create({
     div1:{
         flexDirection: 'row',
         flexWrap:'wrap',
-        width:325,
-        marginVertical: 10
     },
     div2:{
         backgroundColor:'#f8f8f8',

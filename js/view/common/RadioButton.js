@@ -5,6 +5,7 @@ import{
     View,
     TouchableOpacity
 }from 'react-native';
+import Button from "./Button";
 
 export type Props = {
     values:Array,//选项
@@ -23,12 +24,12 @@ export default class RadioButton extends Component{
         const {values,title,isNeed,value,onChange} = this.props;
         let radios = values.map((item,i)=>{
             return(
-                <TouchableOpacity key={i} style={styles.radioStyle} onPress={()=>onChange(item.id)}>
+                <Button key={i} style={styles.radioStyle} onPress={()=>onChange(item.id)}>
                     <View style={styles.outCircle}>
                         {item.id===value?<View style={styles.inCircle}/>:null}
                     </View>
                     <Text style={styles.inputStyle}>{item.value}</Text>
-                </TouchableOpacity>
+                </Button>
             )
         })
 
@@ -57,7 +58,8 @@ const styles = StyleSheet.create({
     },
     radioStyle:{
         flex:1,
-        flexDirection:'row'
+        flexDirection:'row',
+        backgroundColor: '#00000000'
     },
     outCircle:{
         justifyContent:'center',

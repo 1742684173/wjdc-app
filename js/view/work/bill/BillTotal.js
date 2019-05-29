@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler, Platform, Image,} from 'react-native';
+import {ScrollView, Text, View, StyleSheet, Platform,} from 'react-native';
 import {connect} from 'react-redux';
 import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
@@ -8,8 +8,9 @@ import Title from "../../common/Title";
 import BillTotalLabel from "./BillTotalLabel";
 import Button from "../../common/Button";
 import FilterTab from "../../common/FilterTab";
+import DataBetween from "../../common/DataBetween";
 import select from "../../../img/common/search_select.png";
-import {getLineOption,getPieOption} from "../../../utils/Echarts";
+import Echarts from 'native-echarts';
 
 const filter = [
     {id:'lastDay',name:'上日'},
@@ -31,8 +32,10 @@ class BillTotal extends BaseComponent {
     // 构造
     constructor(props) {
         super(props);
-        this.setTitle('消费统计');
+        // this.setTitle('消费统计');
         this.props.navigation.setParams({rightView:this._renderRightView()});
+        this.initOption();
+
     }
 
     initLabel = () => {
@@ -42,12 +45,143 @@ class BillTotal extends BaseComponent {
         this.endTime = null;
         this.minSum = null;
         this.maxSum = null;
-        this.method = null;
-        this.sort = null;
+        this.methodId = null;
+        this.sortId = null;
+    }
+
+    initOption = () => {
+
+        this.xfjeLine = {
+            title: {
+                text: '世界人口总量',
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                left:'right',
+                data: ['2011年', '2012年']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: [0, 0.01],
+                axisTick:{
+                    show:false,
+                },
+                data: [
+                    '08/1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月',
+                    '09/1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月',
+                    '10/月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月',
+                ]
+            },
+            yAxis: {
+                type: 'value',
+                axisTick:{
+                    show:false,
+                },
+
+            },
+            dataZoom: [
+                // {
+                //     type: 'slider',
+                //     show: true,
+                //     xAxisIndex: [0],
+                //     start: 0,
+                //     end: 100
+                // },
+                // {
+                //     type: 'slider',
+                //     show: true,
+                //     yAxisIndex: [0],
+                //     left: '93%',
+                //     startValue: 0,
+                //     end: 24
+                // },
+                {
+                    type: 'inside',
+                    xAxisIndex: [0],
+                    start: 0,
+                    end: 12
+                },
+                // {
+                //     type: 'inside',
+                //     yAxisIndex: [0],
+                //     startValue: 0,
+                //     end: 24
+                // }
+            ],
+            series: [
+                {
+                    name: '2011年',
+                    type: 'bar',
+                    barWidth:10,
+                    data: [
+                        182, 234, 290, 104, 131, 630,182, 234, 290, 104, 131, 630,
+                        182, 234, 290, 104, 131, 630,182, 234, 290, 104, 131, 630,
+                        182, 234, 290, 104, 131, 630,182, 234, 290, 104, 131, 630,
+                    ]
+                },
+                {
+                    name: '2012年',
+                    type: 'bar',
+                    barWidth:10,
+                    data: [
+                        193, 234, 310, 121, 141, 607,193, 234, 310, 121, 141, 607,
+                        193, 234, 310, 121, 141, 607,193, 234, 310, 121, 141, 607,
+                        193, 234, 310, 121, 141, 607,193, 234, 310, 121, 141, 607,
+                    ]
+                }
+            ]
+        };
+
+        this.xfjePie = {
+            title : {
+                text: '某站点用户访问来源',
+                // subtext: '纯属虚构',
+                // x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            series : [
+                {
+                    name: '访问来源',
+                    type: 'pie',
+                    radius : '80%',
+                    center: ['50%', '60%'],
+                    data:[
+                        {value:335, name:'直接访问'},
+                        {value:310, name:'邮件营销'},
+                        {value:234, name:'联盟广告'},
+                        {value:135, name:'视频广告'},
+                        {value:1548, name:'搜索引擎'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
     }
 
     async componentDidMount(){
+        super.componentDidMount();
         await this.initBase();
+        this.setLockToLandscape();
         this.showActivityIndicator();
         try{
             //方式
@@ -59,9 +193,9 @@ class BillTotal extends BaseComponent {
             const methodData = await this.props.postAction(appJson.action.billMethodFind,{},'查询消费方式');
             this._dealParams(methodData);
 
-            this._dealParams({});
+            this.hideActivityIndicator();
         }catch (e) {
-            this.showToast(JSON.stringify(e));
+            this.handleRequestError(e);
         }
 
     }
@@ -101,10 +235,9 @@ class BillTotal extends BaseComponent {
         }
     }
 
-
     _reset = async () => {
         this.initLabel();
-        await this.setState({selectLabel:{sortName:'dates desc',type:'all',method:'all',sort:'all'}});
+        await this.setState({selectLabel:{sortName:'dates desc',type:'all',methodId在:'all',sortId:'all'}});
     }
 
     _submit = async (obj) => {
@@ -130,24 +263,40 @@ class BillTotal extends BaseComponent {
     render() {
         super.render();
         let view = (
-            <View style={styles.contain}>
+            <ScrollView
+                stickyHeaderIndices={[0]}
+                style={styles.contain}
+                keyboardShouldPersistTaps={'handled'}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+            >
 
-                <FilterTab data={filter} value={this.state.filterValue} onFilterItem={this._onFilterItem}
-                           style={{paddingHorizontal: 15}}/>
+                <View style={styles.dates}>
+                    <DataBetween searchDate={()=>{}}/>
 
-                <Title text={'消费金额'} style={{marginTop:10,marginBottom:5}}/>
-                {/*折线 x:time  y:金额*/}
-
-
-                <Title text={'消费方式'} style={{marginTop:10,marginBottom:5}}/>
-                {/*饼图*/}
-                <View style={styles.homeCustomPieView}>
-                    {/*<Echarts option={this.state.khsPie} height={pxTodpHeight(286)}/>*/}
+                    <FilterTab
+                        data={filter}
+                        value={this.state.filterValue}
+                        onFilterItem={this._onFilterItem}
+                    />
                 </View>
 
-                <Title text={'消费分类'} style={{marginTop:10,marginBottom:5}}/>
-                {/*饼图*/}
-            </View>
+                <View style={{marginHorizontal: 15,marginBottom: 15}}>
+                    {/*折线 x:time  y:金额*/}
+                    <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
+                        <Echarts height={180} option={this.xfjeLine}/>
+                    </View>
+
+                    {/*饼图*/}
+                    <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
+                    <Echarts height={150} option={this.xfjePie}/>
+                    </View>
+
+                    <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
+                    <Echarts height={150} option={this.xfjePie}/>
+                    </View>
+                </View>
+            </ScrollView>
         )
 
         return super.renderBase(view);
@@ -183,10 +332,17 @@ class BillTotal extends BaseComponent {
 const styles = StyleSheet.create({
     contain:{
         flex:1,
-        backgroundColor:'#f2f2f2',
     },
     button: {
         backgroundColor: 'transparent',
+    },
+    dates:{
+        width:undefined,
+        height:85,
+        backgroundColor:'#fff',
+        paddingHorizontal: 15,
+        paddingVertical:5,
+        borderRadius:10,
     },
     icon: {
         marginTop:10,

@@ -7,6 +7,7 @@ import Field from '../../common/Field';
 import MySelect from './common/MySelect';
 import {reduxForm} from 'redux-form';
 import * as actions from '../../../actions';
+import Button from "../../common/Button";
 
 type Props = {
     modalVisible?:boolean,//是否显示
@@ -42,37 +43,26 @@ class BillTotalLabel extends Component<Props> {
         const {hideModal,method,sort,selectLabel,handleSubmit} = this.props;
         return (
             <View style={{width:'100%',height:'100%',flexDirection:'row'}}>
-                <TouchableOpacity style={styles.leftView} onPress={hideModal}/>
+                <Button style={styles.leftView} onPress={hideModal}/>
 
                 <View style={{backgroundColor:'#fff', width:'80%', height:'100%', position: 'absolute', right: 0}}>
 
                     <ScrollView
-                        contentContainerStyle={{marginTop:25}}
+                        contentContainerStyle={{margin:15,marginTop:25}}
                         keyboardShouldPersistTaps={'handled'}
                     >
 
                         <Field name={'type'} component={MySelect} title={'类形'}
                                values={type} isAll={true} defaultValue={selectLabel.type}/>
 
-                        <Title text={'时间范围'} style={styles.title}/>
-                        <View style={{paddingHorizontal: 10}}>
-                            <Field name={'startTime'} component={DateTimeField} title={'开始时间'}
-                                   defaultValue={selectLabel.startTime}/>
-
-                            <View style={{height:5}}/>
-
-                            <Field name={'endTime'} component={DateTimeField} title={'结束时间'}
-                                   defaultValue={selectLabel.endTime}/>
-                        </View>
-
-                        <Field name={'method'} component={MySelect} title={'时间段'}
+                        <Field name={'methodId'} component={MySelect} title={'时间段'}
                                values={timeUnit} defaultValue={selectLabel.timeUnit}/>
 
-                        <Field name={'method'} component={MySelect} title={'方式'}
-                               values={method}  isAll={true} defaultValue={selectLabel.method}/>
+                        <Field name={'methodId'} component={MySelect} title={'方式'}
+                               values={method}  isAll={true} defaultValue={selectLabel.methodId}/>
 
-                        <Field name={'sort'} component={MySelect} title={'分类'}
-                               values={sort}  isAll={true} defaultValue={selectLabel.sort}/>
+                        <Field name={'sortId'} component={MySelect} title={'分类'}
+                               values={sort}  isAll={true} defaultValue={selectLabel.sortId}/>
 
                         <View style={{height:200}}/>
                     </ScrollView>
@@ -122,6 +112,7 @@ const styles = StyleSheet.create({
     leftView:{
         flex:1,
         backgroundColor:'rgba(0, 0, 0, 0.5)',
+        borderRadius:0,
     },
     div1:{
         flexDirection: 'row',

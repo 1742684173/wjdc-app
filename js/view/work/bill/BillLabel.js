@@ -9,6 +9,7 @@ import TextField from '../../common/TextField';
 import MySelect from './common/MySelect';
 import {reduxForm} from 'redux-form';
 import * as actions from '../../../actions';
+import Button from "../../common/Button";
 
 type Props = {
     modalVisible?:boolean,//是否显示
@@ -18,10 +19,10 @@ type Props = {
 
 //按方式查，按种类查 按时间 金额大小 支出/收入
 const sortName = [
-    {id:'method',name:'按消费方式升序'},
-    {id:'method desc',name:'按消费方式降序'},
-    {id:'sort',name:'按消费类别升序'},
-    {id:'sort desc',name:'按消费类别降序'},
+    {id:'methodName',name:'按消费方式升序'},
+    {id:'methodName desc',name:'按消费方式降序'},
+    {id:'sortName',name:'按消费类别升序'},
+    {id:'sortName desc',name:'按消费类别降序'},
     {id:'dates',name:'按消费时间升序'},
     {id:'dates desc',name:'按消费时间降序'},
     {id:'sums',name:'按消费金额升序'},
@@ -48,7 +49,7 @@ class BillLabel extends Component<Props> {
         const {hideModal,method,sort,selectLabel,handleSubmit} = this.props;
         return (
             <View style={{width:'100%',height:'100%',flexDirection:'row'}}>
-                <TouchableOpacity
+                <Button
                     style={styles.leftView}
                     onPress={hideModal}
                 />
@@ -88,11 +89,11 @@ class BillLabel extends Component<Props> {
                         <Field name={'sortName'} component={MySelect} title={'排序'}
                                values={sortName} defaultValue={selectLabel.sortName}/>
 
-                        <Field name={'method'} component={MySelect} title={'方式'}
-                               values={method} isAll={true} defaultValue={selectLabel.method}/>
+                        <Field name={'methodId'} component={MySelect} title={'方式'}
+                               values={method} isAll={true} defaultValue={selectLabel.methodId}/>
 
-                        <Field name={'sort'} component={MySelect} title={'分类'}
-                               values={sort} isAll={true} defaultValue={selectLabel.sort}/>
+                        <Field name={'sortId'} component={MySelect} title={'分类'}
+                               values={sort} isAll={true} defaultValue={selectLabel.sortId}/>
 
                         <View style={{height:200}}/>
                     </ScrollView>
@@ -142,6 +143,7 @@ const styles = StyleSheet.create({
     leftView:{
         flex:1,
         backgroundColor:'rgba(0, 0, 0, 0.5)',
+        borderRadius:0,
     },
     div1:{
         flexDirection: 'row',

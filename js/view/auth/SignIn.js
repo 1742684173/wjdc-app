@@ -110,7 +110,7 @@ class SignIn extends BaseComponent {
                     component={Input}
                 />
 
-                <Button style={{height:39}} onPress={handleSubmit(this._signIn)}>
+                <Button style={{height:39,backgroundColor:'#21c3ff'}} onPress={handleSubmit(this._signIn)}>
                     <Text style={styles.btnSignIn}>登录</Text>
                 </Button>
 

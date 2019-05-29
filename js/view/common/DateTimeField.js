@@ -3,6 +3,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from "moment";
 import dateIcon from "../../img/common/date.png";
+import Button from "./Button";
 
 var curDate = new Date();
 let format = 'YYYY-MM-DD';
@@ -45,9 +46,9 @@ export default class DateTimeField extends Component {
                 </Text>
                 <View style={styles.btnView}>
                     <Text style={{flex:1}}>{value}</Text>
-                    <TouchableOpacity onPress={this._showDateTimePicker}>
+                    <Button onPress={this._showDateTimePicker} style={{backgroundColor:'#00000000'}}>
                         <Image source={dateIcon}  mode='stretch'  style={styles.dataIcon} />
-                    </TouchableOpacity>
+                    </Button>
                 </View>
                 <DateTimePicker
                     //date={new Date(value)}

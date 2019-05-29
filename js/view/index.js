@@ -7,7 +7,7 @@ import SignIn from './auth/SignIn';
 import AuthLoading from './auth';
 import Publish from './publish';
 import DrawerSideBar from './DrawerSideBar';
-import BillInfo from './work/bill';
+import Bill from './work/bill';
 import Bills from './work/bill/Bills';
 import BillTotal from './work/bill/BillTotal';
 import BillForm from './work/bill/BillForm';
@@ -18,10 +18,11 @@ import Contact from './work/contact';
 import ContactDetail from './work/contact/ContactDetail'
 
 const AppStack = StackNavigator({
-    Main,
-    BillInfo,
-    Bills,
+    // Main,
     BillTotal,
+    Bill,
+    Bills,
+    // BillTotal,
     BillForm,
     BillDetail,
     BillMethodForm,

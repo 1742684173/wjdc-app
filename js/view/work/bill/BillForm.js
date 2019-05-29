@@ -324,7 +324,7 @@ class BillForm extends BaseComponent {
                 />
 
                 <View style={{height:50}}/>
-                <Button style={{height:39}} onPress={this.props.handleSubmit(this._addBill)}>
+                <Button style={{height:39,backgroundColor:'#21c3ff',}} onPress={this.props.handleSubmit(this._addBill)}>
                     <Text style={styles.btnSubmit}>提交</Text>
                 </Button>
 

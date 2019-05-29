@@ -7,6 +7,7 @@ import {
     StyleSheet,
     ActivityIndicator,
 }from 'react-native';
+import Button from "./Button";
 export type Props = {
     type?:string,//类形: load->加载框 alert->弹出框 others->自定义  默认是load
     visible:boolean,//是否显示
@@ -68,13 +69,13 @@ class MyDialog extends Component{
                                         )
                                     })
                                 ):(
-                                    <TouchableOpacity style={[styles.btn]} onPress={()=>{
+                                    <Button style={[styles.btn]} onPress={()=>{
                                         this.setState({visible:false});
                                     }}>
                                         <Text style={{fontSize:15,color:'#666666'}}>
                                             确定
                                         </Text>
-                                    </TouchableOpacity>
+                                    </Button>
                                 )
 
                             }

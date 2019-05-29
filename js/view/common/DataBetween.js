@@ -4,6 +4,7 @@ import dateIcon from "../../img/common/date.png";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import searchIcon from "../../img/common/search.png";
 import moment from "moment";
+import Button from "./Button";
 
 export type Props = {
     searchDate:Function,//通过时间搜索，两个参数：开始日期 结束日期
@@ -65,9 +66,9 @@ export default class DataBetween extends React.Component {
             <View style={[styles.chooseData,this.props.style]}>
                 <View style={[styles.input]}>
                     <Text style={{fontSize:13,color:'#333333',width:90}}>{this.state.dataStartText}</Text>
-                    <TouchableOpacity onPress={()=>this._setDateTimePickerVisible('start')} >
+                    <Button onPress={()=>this._setDateTimePickerVisible('start')} style={{backgroundColor:'#00000000',}} >
                         <Image source={dateIcon}  mode='stretch'  style={styles.dataIcon} />
-                    </TouchableOpacity>
+                    </Button>
 
                     <DateTimePicker
                         isVisible={this.state.isVisibleStart}
@@ -83,9 +84,9 @@ export default class DataBetween extends React.Component {
 
                 <View style={styles.input}>
                     <Text style={{fontSize:13,color:'#333333',width:90}}>{this.state.dataEndText}</Text>
-                    <TouchableOpacity onPress={()=>this._setDateTimePickerVisible('end')} style={{marginRight:5}}  >
+                    <Button onPress={()=>this._setDateTimePickerVisible('end')} style={{backgroundColor:'#00000000',marginRight:5}}  >
                         <Image source={dateIcon}  mode='stretch'  style={styles.dataIcon} />
-                    </TouchableOpacity>
+                    </Button>
 
                     <DateTimePicker
                         isVisible={this.state.isVisibleEnd}
@@ -97,13 +98,13 @@ export default class DataBetween extends React.Component {
                     />
                 </View>
 
-                <TouchableHighlight style={{ marginLeft: 10,justifyContent:'center'}} onPress={this._searchDate}>
+                <Button style={{backgroundColor:'#00000000',marginLeft: 10,justifyContent:'center'}} onPress={this._searchDate}>
                     <Image
                         style={styles.searchIcon}
                         mode='stretch'
                         source={searchIcon}
                     />
-                </TouchableHighlight>
+                </Button>
 
             </View>
         );
@@ -124,9 +125,9 @@ const styles = StyleSheet.create({
         justifyContent:'space-between',
         height: 28,
         alignItems: 'center',
-        borderColor: '#21c3d5',
+        borderColor: '#00c2ff',
         borderRadius: 5,
-        borderWidth:2,
+        borderWidth:1,
         paddingHorizontal:5,
     },
     dataIcon:  {

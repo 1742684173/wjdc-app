@@ -60,8 +60,8 @@ export default class BillsFlatList extends Component{
                         {item.sortName}
                     </Text>
                     {/*分类金额*/}
-                    <Text style={{color:item.sums>0?'#f03':'#00cd00',fontSize:15}}>
-                        {item.sums>0?('+'+item.sums):item.sums}
+                    <Text style={{color:item.type === -1?'#00cd00':'#f03',fontSize:15}}>
+                        {item.type === -1?'-':'+'}{item.sums}
                     </Text>
                 </View>
 
@@ -70,7 +70,7 @@ export default class BillsFlatList extends Component{
                         来源:{item.methodName}
                     </Text>
                     <Text style={{color:'#999',fontSize:12}}>
-                        时间:{moment(item.dates).format("YYYY-MM-DD hh:mm:ss")}
+                        时间:{moment(item.dates).format("YYYY-MM-DD HH:mm:ss")}
                     </Text>
                 </View>
 

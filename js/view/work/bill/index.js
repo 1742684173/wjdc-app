@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {ImageBackground,Text, View, StyleSheet, TouchableOpacity, Image,ScrollView} from 'react-native';
+import {RefreshControl,ImageBackground,Text, View, StyleSheet, TouchableOpacity, Image,ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import Title from "../../common/Title";
 import * as appJson from '../../../../app';
@@ -8,12 +8,14 @@ import addBillPic from '../../../img/work/bill/addBill.png';
 import nullDataPic from '../../../img/common/nullDataIcon.png';
 import moment from "moment";
 import BaseComponent from '../../base/BaseComponent'
+import Button from "../../common/Button";
 
 
 class BillInfo extends BaseComponent {
 
     state = {
         billsData:[],
+        refreshing:false
     }
 
     // 构造
@@ -85,55 +87,58 @@ class BillInfo extends BaseComponent {
         });
     }
 
+    _refresh = async () => {
+        this.setState({refreshing:true});
+        await this.getBillInfo();
+        this.setState({refreshing:false});
+    }
+
     render() {
         super.render();
         let view = (
-            <ScrollView style={styles.contain}>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._refresh}
+                    />
+                }
+                style={{flex:1, margin:15}}
+            >
 
-                {/*所有 本年 本月 当天 上一周 上一月 上一年*/}
-                {/*总消费 总收入 总支出*/}
-                {/**/}
-                <Title text={'总记录'} style={{marginTop:10,marginBottom:5}}/>
+                <Title text={'快捷功能'} style={{marginTop:0}}/>
 
-                <View style={styles.div1}>
-                    <View style={styles.div2}>
-                        <Text style={styles.font1}>总消费:</Text>
-                        <Text style={styles.font1}>1000</Text>
-                    </View>
-                    <View style={styles.div2}>
-                        <Text style={styles.font1}>总收入:</Text>
-                        <Text style={styles.font1}>500</Text>
-                    </View>
-                    <View style={styles.div2}>
-                        <Text style={styles.font1}>总支出:</Text>
-                        <Text style={styles.font1}>500</Text>
-                    </View>
-                </View>
-
-                <Title text={'快捷功能'} style={{marginTop:15,marginBottom:5}}/>
-
-                <View style={{marginHorizontal:15,flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row'}}>
                     {/*新增*/}
-                    <TouchableOpacity onPress={this._onAddBillBtn}>
-                        <ImageBackground style={styles.div3} source={addBillPic}>
+                    <Button onPress={this._onAddBillBtn}>
+                        <ImageBackground style={styles.imgBg} source={addBillPic}>
                             <Text style={styles.font2}>新增一笔</Text>
                         </ImageBackground>
-                    </TouchableOpacity>
+                    </Button>
 
                     <View style={{flex:1}}/>
 
                     {/*查找历史消费*/}
-                    <TouchableOpacity onPress={this._onBillTotalBtn}>
-                        <ImageBackground style={styles.div3} source={addBillPic}>
+                    <Button onPress={this._onBillTotalBtn}>
+                        <ImageBackground style={styles.imgBg} source={addBillPic}>
                             <Text style={styles.font2}>消费统计</Text>
                         </ImageBackground>
-                    </TouchableOpacity>
+                    </Button>
                 </View>
 
-                <Title text={'消费记录'} style={{marginTop:15,marginBottom:5}}/>
+                {/*所有 本年 本月 当天 上一周 上一月 上一年*/}
+                {/*总消费 总收入 总支出 平均值 最大 最小 */}
+                {/**/}
+                <Title text={'统计'}/>
 
-                {/*当天的消费情况*/}
-                <TouchableOpacity style={{marginHorizontal:15,}} onPress={this._onBillsBtn}>
+                <View style={styles.info}>
+
+                </View>
+
+                <Title text={'消费记录'}/>
+
+                {/*最近的记录*/}
+                <Button onPress={this._onBillsBtn}>
                     {
                         this.state.billsData.length===0?(
                             <Image source={nullDataPic} style={{height:105,width:'100%'}} resizeMode={'contain'}/>
@@ -164,7 +169,7 @@ class BillInfo extends BaseComponent {
                         })
                     }
 
-                </TouchableOpacity>
+                </Button>
             </ScrollView>
         )
 
@@ -176,27 +181,17 @@ class BillInfo extends BaseComponent {
 const styles = StyleSheet.create({
     contain:{
         flex:1,
-        backgroundColor:'#f2f2f2',
+        margin:15
     },
-    div1:{
+    info:{
         justifyContent:'space-between',
         height:75,
         backgroundColor:'#21c3ff',
-        marginHorizontal: 15,
         paddingHorizontal:10,
         paddingVertical:5,
         borderRadius:10,
     },
-    font1:{
-        color:'#fff',
-        fontSize:15
-    },
-    div2:{
-        width:'100%',
-        flexDirection:'row',
-        justifyContent: 'space-between'
-    },
-    div3:{
+    imgBg:{
         width:150,
         height:150,
         justifyContent:'flex-end',
@@ -214,6 +209,7 @@ const styles = StyleSheet.create({
         //alignItems:'center',
         backgroundColor:'#fff',
         height:50,
+        width:'100%',
         paddingHorizontal: 10,
         paddingVertical:2,
         borderTopColor:'#dcdcdc',

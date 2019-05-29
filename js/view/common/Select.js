@@ -19,6 +19,7 @@ import selectPic from '../../img/common/select.png';
 import add from '../../img/common/add.png';
 import edit from '../../img/common/edit.png';
 import del from '../../img/common/delete1.png';
+import Button from "./Button";
 
 
 export default class Select extends Component{
@@ -65,27 +66,27 @@ export default class Select extends Component{
                 <View key={i}  style={[styles.itemView,styles.optionItem]}>
                     {
                         isShowEdit?(
-                            <TouchableOpacity style={{marginRight: 15}} onPress={()=>editBtn(item)}>
+                            <Button style={{marginRight: 15,backgroundColor:'#00000000'}} onPress={()=>editBtn(item)}>
                                 <Image source={edit}/>
-                            </TouchableOpacity>
+                            </Button>
                         ):null
                     }
 
                     {
                         isShowDelete?(
-                            <TouchableOpacity style={{marginRight: 10}} onPress={()=>deleteBtn(item)}>
+                            <Button style={{marginRight: 10,backgroundColor:'#00000000'}} onPress={()=>deleteBtn(item)}>
                                 <Image source={del}/>
-                            </TouchableOpacity>
+                            </Button>
                         ):null
                     }
 
-                    <TouchableOpacity style={{flex:1,flexDirection:'row',justifyContent:'space-between'}} onPress={()=>{
+                    <Button style={{flex:1,flexDirection:'row',justifyContent:'space-between',backgroundColor:'#00000000'}} onPress={()=>{
                         onChange(item.id);
                         this.setState({isExpand:false})
                     }}>
                         <Text style={styles.inputStyle}>{item.name}</Text>
                         {item.id===value?<Image source={selectPic}/>:null}
-                    </TouchableOpacity>
+                    </Button>
 
                 </View>
             )
@@ -109,17 +110,17 @@ export default class Select extends Component{
                     <View style={[styles.selectView,values.length>6?{height:this.state.isExpand?250:40}:null]}>
                         <View style={[styles.itemView]}>
 
-                            <TouchableOpacity
-                                style={{flex:1,flexDirection:'row',alignItems: 'center',justifyContent: 'space-between'}}
+                            <Button
+                                style={{flex:1,flexDirection:'row',alignItems: 'center',justifyContent: 'space-between',backgroundColor:'#00000000'}}
                                 onPress={()=>this.setState({isExpand:!this.state.isExpand})}>
                                 <Text style={styles.inputStyle}>{showText}</Text>
                                 <Image source={this.state.isExpand?upPic:downPic}/>
-                            </TouchableOpacity>
+                            </Button>
                             {
                                 isShowAdd?(
-                                    <TouchableOpacity onPress={addBtn} style={{marginLeft:15}}>
+                                    <Button onPress={addBtn} style={{marginLeft:15,backgroundColor:'#00000000'}}>
                                         <Image source={add}/>
-                                    </TouchableOpacity>
+                                    </Button>
                                 ):null
                             }
                         </View>

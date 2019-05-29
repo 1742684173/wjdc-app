@@ -15,10 +15,12 @@ import backImg from '../../img/common/back-icon.png';
 import MessageButton from '../MessageButton';
 import MyDialog from '../common/MyDialog';
 import * as appJson from '../../../app';
+import Orientation from 'react-native-orientation';
 
 export default class BaseComponent extends Component<any> {
 
     state = {
+        orientation:'portrait',//landscape：竖屏 portrait：横屏
         netStatus:0,//none：离线状态 cellular:通过蜂窝数据流量联网 wifi:通过wifi联网 unknown:联网状态异常
         dialogType:'load',//load alert others
         isDialogVisible:false,//是否显示加载框
@@ -32,7 +34,7 @@ export default class BaseComponent extends Component<any> {
     static navigationOptions = ({navigation}) => {
         const {params} = navigation.state;
         return {
-            headerLeft:params.leftView?params.leftView:(
+            headerLeft:params && params.leftView?params.leftView:(
                 <TouchableOpacity
                     onPress={params?()=>params.goBack():null}
                     style={{width:50,paddingLeft:15}}>
@@ -40,7 +42,7 @@ export default class BaseComponent extends Component<any> {
                 </TouchableOpacity>
             ),
             title: params?params.title:'',
-            headerRight:params.rightView?params.rightView:<MessageButton/>,
+            headerRight:params && params.rightView?params.rightView:<MessageButton/>,
         }
     };
 
@@ -48,10 +50,12 @@ export default class BaseComponent extends Component<any> {
         super(props);
         this.toast = null;
         this.props.navigation.setParams({goBack:this._goBack});
+
     }
 
     initBase = async () => {
         await this.setState({
+            orientation:'portrait',
             netStatus:0,//none：离线状态 cellular:通过蜂窝数据流量联网 wifi:通过wifi联网 unknown:联网状态异常
             dialogType:'load',//load alert others
             isDialogVisible:false,//是否显示加载框
@@ -68,10 +72,13 @@ export default class BaseComponent extends Component<any> {
         NetInfo.getConnectionInfo().done(status=> this.setState({netStatus:status}));
         //监听网络状态改变
         NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
+        //监听横竖屏
+        Orientation.addOrientationListener(this._orientationDidChange);
     }
 
     componentWillUnMount(){
         NetInfo.removeEventListener('connectionChange', this.handleConnectivityChange);
+        Orientation.removeOrientationListener(this._orientationDidChange);
     }
 
     _signOut = async () => {
@@ -114,11 +121,7 @@ export default class BaseComponent extends Component<any> {
 
         return (
             <SafeAreaView style={{flex:1}}>
-                <View
-                    style={styles.contain}
-                    keyboardShouldPersistTaps={'handled'}
-                    stickyHeaderIndices={[0]}
-                >
+                <View style={styles.contain}>
                     <MyDialog
                         type={this.state.dialogType}
                         visible={this.state.isDialogVisible}
@@ -249,6 +252,29 @@ export default class BaseComponent extends Component<any> {
 
     showTopView(){
         this.setState({isShowSearch:true});
+    }
+
+    _orientationDidChange = (orientation) => {
+        console.log('----'+orientation);
+        if (orientation === 'LANDSCAPE') {
+            this.setState({orientation:'portrait'});
+        } else if (orientation === 'PORTRAIT') {
+            this.setState({orientation:'portrait'});
+        } else if (orientation === 'PORTRAITUPSIDEDOWN') {
+            this.setState({orientation:'portrait_up_side_down'});
+        }else{
+            this.setState({orientation:'UNKNOWN'});
+        }
+    }
+
+    //竖屏
+    setLockToPortrait(){
+        Orientation.lockToPortrait();
+    }
+
+    //横屏
+    setLockToLandscape(){
+        Orientation.lockToLandscape();
     }
 }
 
