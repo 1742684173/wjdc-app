@@ -1,4 +1,45 @@
 {
   "name": "app",
-  "displayName": "app"
+  "displayName": "app",
+  "key":{
+    "sign":"1as2jfa3jkfda.jkakk",
+    "loginAccount":"login_account",
+    "loginPassword":"login_password",
+    "loginToken":"login_token",
+  },
+  "websocket":{
+    "connectSuccess":"connect_success",
+    "connectFail":"connect_fail",
+    "connectFail":"connect_fail"
+  },
+  "action":{
+    "url":"http://localhost:8080/wjdc",
+    //    "url":"http://192.168.101.88:8080/wjdc",
+
+    "connectServerError":-1,
+    "success":200,
+    "error":400,
+    "sessionError":401,
+
+    "signIn":"/user/signIn.do",
+    "signOut":"/user/signOut.do",
+
+    "billAdd":"/bill/add.do",
+    "billFind":"/bill/find.do",
+    "billFindById":"/bill/findById.do",
+    "totalBillByDates":"/bill/totalBillByDates.do",
+    "totalBillByMethod":"/bill/totalBillByMethod.do",
+    "totalBillBySort":"/bill/totalBillBySort.do",
+    "totalBillByType":"/bill/totalBillByType.do",
+
+    "billMethodAdd":"/billMethod/add.do",
+    "billMethodDeleteById":"/billMethod/deleteById.do",
+    "billMethodUpdateById":"/billMethod/updateById.do",
+    "billMethodFind":"/billMethod/find.do",
+
+    "billSortAdd":"/billSort/add.do",
+    "billSortDeleteById":"/billSort/deleteById.do",
+    "billSortUpdateById":"/billSort/updateById.do",
+    "billSortFind":"/billSort/find.do"
+  }
 }

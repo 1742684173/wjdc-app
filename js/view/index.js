@@ -18,7 +18,7 @@ import Contact from './work/contact';
 import ContactDetail from './work/contact/ContactDetail'
 
 const AppStack = StackNavigator({
-    // Main,
+    Main,
     BillTotal,
     Bill,
     Bills,

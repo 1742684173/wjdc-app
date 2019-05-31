@@ -11,22 +11,37 @@ import FilterTab from "../../common/FilterTab";
 import DataBetween from "../../common/DataBetween";
 import select from "../../../img/common/search_select.png";
 import Echarts from 'native-echarts';
+import EchartsUtil from '../../../utils/EchartsUtil';
+
+let echartsUtil = new EchartsUtil();
 
 const filter = [
+    {id:'currenDay',name:'当日'},
     {id:'lastDay',name:'上日'},
     {id:'currentWeek',name:'本周'},
     {id:'lastWeek',name:'上周'},
     {id:'currentMouth',name:'本月'},
     {id:'lastMouth',name:'上月'},
-]
+    {id:'currentYear',name:'本年'},
+    {id:'lastYear',name:'上一年'},
+];
+
 class BillTotal extends BaseComponent {
 
     state = {
         selectSort:[],
         selectMethod:[],
-        selectLabel:[],
+        selectLabel: {
+            type:'all',
+            methodId:'all',
+            sortId:'all',
+            dateformat:'%Y-%m-%d',
+        },
         filterValue:'lastDay',
-        data:[],
+        dataByDates:echartsUtil.init().getOption(),
+        dataByMethod:echartsUtil.init().getOption(),
+        dataBySort:echartsUtil.init().getOption(),
+        dataByType:echartsUtil.init().getOption(),
     }
 
     // 构造
@@ -34,157 +49,24 @@ class BillTotal extends BaseComponent {
         super(props);
         // this.setTitle('消费统计');
         this.props.navigation.setParams({rightView:this._renderRightView()});
-        this.initOption();
 
     }
 
     initLabel = () => {
         this.type = null;
-        this.sortName = 'dates desc';
         this.startTime = null;
         this.endTime = null;
-        this.minSum = null;
-        this.maxSum = null;
         this.methodId = null;
         this.sortId = null;
-    }
-
-    initOption = () => {
-
-        this.xfjeLine = {
-            title: {
-                text: '世界人口总量',
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            legend: {
-                left:'right',
-                data: ['2011年', '2012年']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: [0, 0.01],
-                axisTick:{
-                    show:false,
-                },
-                data: [
-                    '08/1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月',
-                    '09/1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月',
-                    '10/月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月',
-                ]
-            },
-            yAxis: {
-                type: 'value',
-                axisTick:{
-                    show:false,
-                },
-
-            },
-            dataZoom: [
-                // {
-                //     type: 'slider',
-                //     show: true,
-                //     xAxisIndex: [0],
-                //     start: 0,
-                //     end: 100
-                // },
-                // {
-                //     type: 'slider',
-                //     show: true,
-                //     yAxisIndex: [0],
-                //     left: '93%',
-                //     startValue: 0,
-                //     end: 24
-                // },
-                {
-                    type: 'inside',
-                    xAxisIndex: [0],
-                    start: 0,
-                    end: 12
-                },
-                // {
-                //     type: 'inside',
-                //     yAxisIndex: [0],
-                //     startValue: 0,
-                //     end: 24
-                // }
-            ],
-            series: [
-                {
-                    name: '2011年',
-                    type: 'bar',
-                    barWidth:10,
-                    data: [
-                        182, 234, 290, 104, 131, 630,182, 234, 290, 104, 131, 630,
-                        182, 234, 290, 104, 131, 630,182, 234, 290, 104, 131, 630,
-                        182, 234, 290, 104, 131, 630,182, 234, 290, 104, 131, 630,
-                    ]
-                },
-                {
-                    name: '2012年',
-                    type: 'bar',
-                    barWidth:10,
-                    data: [
-                        193, 234, 310, 121, 141, 607,193, 234, 310, 121, 141, 607,
-                        193, 234, 310, 121, 141, 607,193, 234, 310, 121, 141, 607,
-                        193, 234, 310, 121, 141, 607,193, 234, 310, 121, 141, 607,
-                    ]
-                }
-            ]
-        };
-
-        this.xfjePie = {
-            title : {
-                text: '某站点用户访问来源',
-                // subtext: '纯属虚构',
-                // x:'center'
-            },
-            tooltip : {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
-            },
-            series : [
-                {
-                    name: '访问来源',
-                    type: 'pie',
-                    radius : '80%',
-                    center: ['50%', '60%'],
-                    data:[
-                        {value:335, name:'直接访问'},
-                        {value:310, name:'邮件营销'},
-                        {value:234, name:'联盟广告'},
-                        {value:135, name:'视频广告'},
-                        {value:1548, name:'搜索引擎'}
-                    ],
-                    itemStyle: {
-                        emphasis: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }
-            ]
-        };
+        this.dateformat = '%Y-%m-%d';
     }
 
     async componentDidMount(){
         super.componentDidMount();
         await this.initBase();
-        this.setLockToLandscape();
+        await this.initLabel();
         this.showActivityIndicator();
         try{
-            //方式
             //分类
             const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询消费类别');
             this._dealParams(sortData);
@@ -193,11 +75,46 @@ class BillTotal extends BaseComponent {
             const methodData = await this.props.postAction(appJson.action.billMethodFind,{},'查询消费方式');
             this._dealParams(methodData);
 
+            await this._totalData();
+
             this.hideActivityIndicator();
         }catch (e) {
             this.handleRequestError(e);
         }
 
+    }
+
+    _totalData = async () => {
+        this.showActivityIndicator();
+        let obj = {
+            type:this.type,
+            startTime:this.startTime,
+            endTime:this.endTime,
+            methodId:this.methodId,
+            sortId:this.sortId,
+            dateformat:this.dateformat,
+        };
+        try{
+            //通过时间统计
+            const billDataByDates = await this.props.postAction(appJson.action.totalBillByDates,obj,'通过时间统计帐单');
+            this._dealParams(billDataByDates);
+
+            //通过方式统计
+            const billDataByMethod = await this.props.postAction(appJson.action.totalBillByMethod,obj,'通过方式统计');
+            this._dealParams(billDataByMethod);
+
+            //通过分类统计
+            const billDataBySort = await this.props.postAction(appJson.action.totalBillBySort,obj,'通过分类统计');
+            this._dealParams(billDataBySort);
+
+            //通过类型统计
+            const billDataByType = await this.props.postAction(appJson.action.totalBillByType,obj,'通过类型统计');
+            this._dealParams(billDataByType);
+            this.hideActivityIndicator();
+        }catch (e) {
+            console.log(e);
+            this.handleRequestError(e);
+        }
     }
 
     _dealParams = (params:Object) => {
@@ -209,8 +126,6 @@ class BillTotal extends BaseComponent {
                     if(data.totalCount >0){
                         this.setState({selectSort:data.list});
                     }
-                }else{
-                    this.handleRequestError(code,msg);
                 }
                 break;
 
@@ -222,10 +137,136 @@ class BillTotal extends BaseComponent {
                     if(selectMethod.length >0){
                         this.setState({selectMethod:selectMethod});
                     }
-                }else{
-                    this.handleRequestError(code,msg);
                 }
 
+                break;
+
+            //通过时间统计帐单
+            case appJson.action.totalBillByDates:
+
+                let billByDateSR = [],billByDateZC=[],X=[];
+                if(code === appJson.action.success){
+                    data.list.map((item,i)=>{
+                        item.type === -1 ?billByDateZC.push(item.sums):billByDateSR.push(item.sums);
+                        X.push(item.dates)
+                    });
+                    let dataByDates = echartsUtil.init().setTitle('金额')
+                        .setLegendData(['支出(元)','收入(元)'])
+                        .setXAxisData(X).setSeries([
+                            {
+                                name: '支出(元)',
+                                type: 'bar',
+                                barWidth:10,
+                                data: billByDateZC
+                            },
+                            {
+                                name: '收入(元)',
+                                type: 'bar',
+                                barWidth:10,
+                                data: billByDateSR
+                            }
+                        ]).getOption();
+                    this.setState({dataByDates:dataByDates});
+                }
+                break;
+
+            //通过方式统计帐单
+            case appJson.action.totalBillByMethod:
+                if(code === appJson.action.success){
+                    let dataByMethod = echartsUtil.init().setTitle('方式比例')
+                        .setTooltip({trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)"})
+                        .setDataZoom(null)
+                        .setXAxis(null)
+                        .setYAxis(null)
+                        .setSeries([
+                            {
+                                name:'方式',
+                                type: 'pie',
+                                radius : '70%',
+                                center: ['50%', '60%'],
+                                data:data.list,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                },
+                                label: {
+                                    normal: {
+                                        formatter: '{b}:{d}%',
+                                    }
+                                },
+                            }
+                        ]).getOption();
+                    this.setState({dataByMethod:dataByMethod})
+                }
+                break;
+
+            //通过分类统计帐单
+            case appJson.action.totalBillBySort:
+                if(code === appJson.action.success){
+                    let dataBySort = echartsUtil.init().setTitle('分类比例')
+                        .setTooltip({trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)"})
+                        .setDataZoom(null)
+                        .setXAxis(null)
+                        .setYAxis(null)
+                        .setSeries([
+                            {
+                                name:'分类',
+                                type: 'pie',
+                                radius : '70%',
+                                center: ['50%', '60%'],
+                                data:data.list,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                },
+                                label: {
+                                    normal: {
+                                        formatter: '{b}:{d}%',
+                                    }
+                                },
+                            }
+                        ]).getOption();
+                    this.setState({dataBySort:dataBySort})
+                }
+                break;
+
+            //通过类型统计帐单
+            case appJson.action.totalBillByType:
+                if(code === appJson.action.success){
+                    let dataByType = echartsUtil.init().setTitle('收入与支出比例')
+                        .setTooltip({trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)"})
+                        .setDataZoom(null)
+                        .setXAxis(null)
+                        .setYAxis(null)
+                        .setSeries([
+                            {
+                                name:'收入与支出',
+                                type: 'pie',
+                                radius : '70%',
+                                center: ['50%', '60%'],
+                                data:data.list,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                },
+                                label: {
+                                    normal: {
+                                        formatter: '{b}:{d}%',
+                                    }
+                                },
+                            }
+                        ]).getOption();
+                    this.setState({dataByType:dataByType})
+                }
                 break;
 
             default:
@@ -237,11 +278,25 @@ class BillTotal extends BaseComponent {
 
     _reset = async () => {
         this.initLabel();
-        await this.setState({selectLabel:{sortName:'dates desc',type:'all',methodId在:'all',sortId:'all'}});
+        await this.setState({
+            selectLabel: {
+                type:'all',
+                methodId:'all',
+                sortId:'all',
+                dateformat:'%Y-%m-%d'
+            }
+        });
     }
 
-    _submit = async (obj) => {
+    _sumbit = async (obj) => {
+
+        this.type = obj.type === 'all'?null:obj.type;
+        this.methodId = obj.methodId === 'all'?null:obj.methodId;
+        this.sortId = obj.sortId === 'all'?null:obj.sortId;
+        this.dateformat = obj.dateformat;
+
         await this.setState({selectLabel:obj});
+        await this._totalData();
     }
 
     // 筛选
@@ -258,6 +313,16 @@ class BillTotal extends BaseComponent {
 
     _onFilterItem = (item) => {
         this.setState({filterValue:item.id});
+        switch (item.id) {
+            case 'currenDay':break;
+            case 'lastDay':break;
+            case 'currentWeek':break;
+            case 'lastWeek':break;
+            case 'currentMouth':break;
+            case 'lastMouth':break;
+            case 'currentYear':break;
+            case 'lastYear':break;
+        }
     }
 
     render() {
@@ -284,16 +349,20 @@ class BillTotal extends BaseComponent {
                 <View style={{marginHorizontal: 15,marginBottom: 15}}>
                     {/*折线 x:time  y:金额*/}
                     <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
-                        <Echarts height={180} option={this.xfjeLine}/>
+                        <Echarts height={180} option={this.state.dataByDates}/>
                     </View>
 
                     {/*饼图*/}
                     <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
-                    <Echarts height={150} option={this.xfjePie}/>
+                        <Echarts height={180} option={this.state.dataByMethod}/>
                     </View>
 
                     <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
-                    <Echarts height={150} option={this.xfjePie}/>
+                        <Echarts height={180} option={this.state.dataBySort}/>
+                    </View>
+
+                    <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
+                        <Echarts height={180} option={this.state.dataByType}/>
                     </View>
                 </View>
             </ScrollView>
@@ -319,8 +388,8 @@ class BillTotal extends BaseComponent {
                 method={this.state.selectMethod}
                 sort={this.state.selectSort}
                 hideModal={()=>this.initBase()}
-                onSubmit={this._sumbit}
-                onReset={this._reset}
+                submit={this._sumbit}
+                reset={this._reset}
                 onRequestClose={()=>this.initBase()}
                 selectLabel={this.state.selectLabel}
             />

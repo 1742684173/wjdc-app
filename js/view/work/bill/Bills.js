@@ -74,8 +74,8 @@ class Bills extends BaseComponent {
                 method={this.state.selectMethod}
                 sort={this.state.selectSort}
                 hideModal={()=>this.initBase()}
-                onSubmit={this._sumbit}
-                onReset={this._reset}
+                submit={this._sumbit}
+                reset={this._reset}
                 onRequestClose={()=>this.initBase()}
                 selectLabel={this.state.selectLabel}
             />

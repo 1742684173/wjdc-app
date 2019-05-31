@@ -37,12 +37,12 @@ const type = [
 class BillLabel extends Component<Props> {
 
     _onReset = async () => {
-        this.props.onReset();
+        this.props.reset();
     }
 
     _onSubmit = async (object:Object) => {
         await this.setState(object);
-        this.props.onSubmit(object)
+        this.props.submit(object)
     }
 
     render(){

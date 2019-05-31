@@ -112,7 +112,9 @@ export default class BaseComponent extends Component<any> {
                 });
                 break;
 
-            default:this.showToast(msg);break;
+            default:
+                this.showToast(JSON.stringify(obj));
+                break;
 
         }
     }

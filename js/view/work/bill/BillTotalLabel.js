@@ -20,23 +20,23 @@ const type = [
     {id:'out',name:'支出'},
 ];
 
-const timeUnit = [
-    {id:'day',name:'天'},
-    {id:'week',name:'周'},
-    {id:'mouth',name:'月'},
-    {id:'season',name:'季'},
-    {id:'year',name:'年'},
+const dateformats = [
+    {id:'%Y-%m-%d',name:'日'},
+    {id:'%Y-%u',name:'周'},
+    {id:'%Y-%m',name:'月'},
+    // {id:'season',name:'季'},
+    {id:'%Y',name:'年'},
 ]
 
 class BillTotalLabel extends Component<Props> {
 
     _onReset = async () => {
-        this.props.onReset();
+        this.props.reset();
     }
 
     _onSubmit = async (object:Object) => {
         await this.setState(object);
-        this.props.onSubmit(object)
+        this.props.submit(object)
     }
 
     render(){
@@ -55,8 +55,8 @@ class BillTotalLabel extends Component<Props> {
                         <Field name={'type'} component={MySelect} title={'类形'}
                                values={type} isAll={true} defaultValue={selectLabel.type}/>
 
-                        <Field name={'methodId'} component={MySelect} title={'时间段'}
-                               values={timeUnit} defaultValue={selectLabel.timeUnit}/>
+                        <Field name={'dateformat'} component={MySelect} title={'时间段'}
+                               values={dateformats} defaultValue={selectLabel.dateformat}/>
 
                         <Field name={'methodId'} component={MySelect} title={'方式'}
                                values={method}  isAll={true} defaultValue={selectLabel.methodId}/>

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    ScrollView,
     StyleSheet,
     View,
     Text, TouchableOpacity,
@@ -42,7 +43,12 @@ const FilterTab = (props:Props = defaultProps) => {
     } = Object.assign(defaultProps,props);
 
     return(
-        <View style={[styles.contain,style]}>
+        <ScrollView
+            style={[styles.contain,style]}
+            keyboardShouldPersistTaps={'handled'}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+        >
             <View style={{flexDirection: 'row', alignItems: 'center',}}>
                 {
                     data.map((item,i)=>{
@@ -71,10 +77,7 @@ const FilterTab = (props:Props = defaultProps) => {
                     })
                 }
             </View>
-
-            <View style={{justifyContent: 'center',}}>
-            </View>
-        </View>
+        </ScrollView>
     )
 };
 
@@ -82,8 +85,8 @@ const styles = StyleSheet.create({
     contain:{
         width:'100%',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        // justifyContent: 'space-between',
+        // alignItems: 'center',
         backgroundColor: '#fff'
     },
     toggle:{
