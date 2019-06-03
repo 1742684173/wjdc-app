@@ -14,7 +14,9 @@ import Button from "../../common/Button";
 class BillInfo extends BaseComponent {
 
     state = {
+        billsHistory:[],
         billsData:[],
+
         refreshing:false
     }
 
@@ -47,7 +49,7 @@ class BillInfo extends BaseComponent {
         switch (type) {
             case appJson.action.billFind:
                 if(code === appJson.action.success){
-                    this.setState({billsData:data.list});
+                    this.setState({billsHistory:data.list});
                 }
                 break;
         }
@@ -65,7 +67,7 @@ class BillInfo extends BaseComponent {
 
     //去帐单历史记录界面
     _onBillsBtn = () => {
-        if(this.state.billsData.length === 0){
+        if(this.state.billsHistory.length === 0){
             this.showToast('还没有记录哦');
             return;
         }
@@ -77,7 +79,7 @@ class BillInfo extends BaseComponent {
 
     //去帐单历史记录界面
     _onBillTotalBtn = () => {
-        if(this.state.billsData.length === 0){
+        if(this.state.billsHistory.length === 0){
             this.showToast('还没有记录哦');
             return;
         }
@@ -121,28 +123,19 @@ class BillInfo extends BaseComponent {
                     {/*查找历史消费*/}
                     <Button onPress={this._onBillTotalBtn}>
                         <ImageBackground style={styles.imgBg} source={addBillPic}>
-                            <Text style={styles.font2}>消费统计</Text>
+                            <Text style={styles.font2}>帐单统计</Text>
                         </ImageBackground>
                     </Button>
                 </View>
 
-                {/*所有 本年 本月 当天 上一周 上一月 上一年*/}
-                {/*总消费 总收入 总支出 平均值 最大 最小 */}
-                {/**/}
-                <Title text={'统计'}/>
-
-                <View style={styles.info}>
-
-                </View>
-
-                <Title text={'消费记录'}/>
+                <Title text={'历史记录'}/>
 
                 {/*最近的记录*/}
                 <Button onPress={this._onBillsBtn}>
                     {
-                        this.state.billsData.length===0?(
+                        this.state.billsHistory.length===0?(
                             <Image source={nullDataPic} style={{height:105,width:'100%'}} resizeMode={'contain'}/>
-                        ):this.state.billsData.map((item,i)=>{
+                        ):this.state.billsHistory.map((item,i)=>{
                             return(
                                 <View key={i} style={[styles.itemView,{borderTopWidth:i===0?0:1}]}>
                                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
@@ -151,8 +144,8 @@ class BillInfo extends BaseComponent {
                                             {item.sortName}
                                         </Text>
                                         {/*分类金额*/}
-                                        <Text style={{color:item.sums>0?'#f03':'#00cd00',fontSize:15}}>
-                                            {item.sums>0?('+'+item.sums):item.sums}
+                                        <Text style={{color:item.type === 1?'#f03':'#00cd00',fontSize:15}}>
+                                            {item.type === 1?('+'+item.sums):('-'+item.sums)}
                                         </Text>
                                     </View>
 
@@ -170,6 +163,15 @@ class BillInfo extends BaseComponent {
                     }
 
                 </Button>
+
+                {/*所有 本年 本月 当天 上一周 上一月 上一年*/}
+                {/*总消费 总收入 总支出 平均值 最大 最小 */}
+                {/**/}
+                <Title text={'数据'}/>
+
+                <View style={styles.info}>
+
+                </View>
             </ScrollView>
         )
 
@@ -186,7 +188,7 @@ const styles = StyleSheet.create({
     info:{
         justifyContent:'space-between',
         height:75,
-        backgroundColor:'#21c3ff',
+        backgroundColor:'#fff',
         paddingHorizontal:10,
         paddingVertical:5,
         borderRadius:10,

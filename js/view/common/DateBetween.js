@@ -16,7 +16,7 @@ export type Props = {
 
 var curDate = new Date();
 let format = 'YYYY-MM-DD';
-export default class DataBetween extends React.Component {
+export default class DateBetween extends React.Component {
     props:Props
 
     constructor(props) {
@@ -33,6 +33,13 @@ export default class DataBetween extends React.Component {
             dataStartText:props.startDefaultValue?moment(props.startDefaultValue).format(format):null,
             dataEndText:props.endDefaultValue?moment(props.endDefaultValue).format(format):null,
         };
+    }
+
+    clear = async () => {
+        await this.setState({
+            dataStartText:null,
+            dataEndText:null,
+        })
     }
 
     //显示隐藏日期控件
@@ -56,8 +63,8 @@ export default class DataBetween extends React.Component {
     };
 
     _searchDate = () => {
-        let startData = moment(this.state.dataStartText).format(format);
-        let endData = moment(this.state.dataEndText).format(format);
+        let startData = this.state.dataStartText?moment(this.state.dataStartText).format(format):null;
+        let endData = this.state.dataEndText?moment(this.state.dataEndText).format(format):null;
         this.props.searchDate(startData,endData);
     }
 

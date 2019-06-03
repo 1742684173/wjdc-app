@@ -92,7 +92,7 @@ class BillSortForm extends BaseComponent {
                 <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={100}/>
 
                 <View style={{height:50}}/>
-                <Button style={{height:39}}
+                <Button style={{height:39,backgroundColor:'#21c3ff',}}
                         onPress={this.props.handleSubmit(this._handleSubmit)}>
                     <Text style={styles.btnSubmit}>提交</Text>
                 </Button>

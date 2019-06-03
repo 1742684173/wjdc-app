@@ -11,8 +11,8 @@ import Button from "../../common/Button";
 
 type Props = {
     modalVisible?:boolean,//是否显示
-    reset?:Function,//重置
-    submit?:Function,//提交
+    onReset?:Function,//重置
+    onSubmit?:Function,//提交
 };
 
 const type = [
@@ -31,12 +31,12 @@ const dateformats = [
 class BillTotalLabel extends Component<Props> {
 
     _onReset = async () => {
-        this.props.reset();
+        this.props.onReset();
     }
 
     _onSubmit = async (object:Object) => {
         await this.setState(object);
-        this.props.submit(object)
+        this.props.onSubmit(object)
     }
 
     render(){

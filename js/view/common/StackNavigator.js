@@ -47,6 +47,7 @@ const defaultStackConfig = {
     headerMode: 'float',
     headerTransitionPreset: 'uikit',
     navigationOptions: {
+        gesturesEnabled: false,
         headerTintColor: '#21c3ff',
         headerTitleStyle: {
             flexDirection: 'row',

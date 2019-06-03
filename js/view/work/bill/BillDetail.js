@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler, ScrollView,} from 'react-native';
 import {connect} from 'react-redux';
 import BaseComponent from "../../base/BaseComponent";
 import {postAction} from "../../../actions";
 import moment from "moment";
 import * as appJson from '../../../../app';
+import Button from "../../common/Button";
 
 class BillDetail extends BaseComponent {
 
@@ -35,16 +36,27 @@ class BillDetail extends BaseComponent {
                     all:"all"
                 },"查询消费详情");
 
+            this.hideActivityIndicator();
+
             if(type === appJson.action.billFind){
                 if(code === appJson.action.success){
                     data.totalCount >0 ? this.setState({data:data.list[0]}):null;
                 }
-                this.handleRequestError(code,msg);
             }
         }catch (e) {
-            this.showToast(e.message || e.note);
+            this.handleRequestError(e.message || e.note);
         }
-        this.hideActivityIndicator();
+
+    }
+
+    //去编辑帐单界面
+    _editBill = () => {
+        this.props.navigation.navigate('BillForm',{
+            title:'编辑帐单',
+            data:this.state.data,
+            callback:(data)=>{
+                this._getBill();
+            }});
     }
 
     render() {
@@ -56,6 +68,11 @@ class BillDetail extends BaseComponent {
                     <Text style={styles.textValue}>{
                         moment(this.state.data.dates).format("YYYY-MM-DD hh:mm:ss")
                     }</Text>
+                </View>
+
+                <View style={styles.itemView}>
+                    <Text style={styles.textName}>消费类型：</Text>
+                    <Text style={styles.textValue}>{this.state.data.type === -1?'支出':'收入'}</Text>
                 </View>
 
                 <View style={styles.itemView}>
@@ -77,6 +94,11 @@ class BillDetail extends BaseComponent {
                     <Text style={styles.textName}>描述：</Text>
                     <Text style={styles.textValue}>{this.state.data.descs}</Text>
                 </View>
+
+                <View style={{height:50}}/>
+                <Button style={{height:39,backgroundColor:'#21c3ff',}} onPress={this._editBill}>
+                    <Text style={styles.btnSubmit}>编辑</Text>
+                </Button>
             </View>
         );
         return super.renderBase(view);
@@ -108,7 +130,11 @@ const styles = StyleSheet.create({
     textValue:{
         fontSize:14,
         color:'#333',
-    }
+    },
+    btnSubmit:{
+        fontSize:20,
+        color:'#fff'
+    },
 });
 
 export default connect(null,{postAction})(BillDetail);

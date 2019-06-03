@@ -1,14 +1,17 @@
 import React,{Component} from 'react';
-import {FlatList,StyleSheet,View,Text,TouchableOpacity,Image} from 'react-native';
+import {PanResponder,Animated,FlatList,StyleSheet,View,Text,ScrollView,Image} from 'react-native';
 import PropTypes from 'prop-types';
 import nullDataIcon from "../../../img/common/nullDataIcon.png";
 import moment from "moment";
+import Button from "../../common/Button";
+import SwipeRow from "../../common/SwipeRow";
 
 export default class BillsFlatList extends Component{
     static propTypes = {
         data:PropTypes.any,//传入的数据
         onRefresh:PropTypes.func,//刷新数据
         onItemClick:PropTypes.func,//点击item事件
+        onDeleteItem:PropTypes.func,//删除
     }
 
     constructor(props){
@@ -52,29 +55,57 @@ export default class BillsFlatList extends Component{
     _renderItem = ({item}) => {
 
         return (
-            <TouchableOpacity style={styles.itemView} onPress={()=>this._goDetail(item)}>
+            <SwipeRow style={styles.itemView}>
+                <Button
+                    style={{
+                        width:40,
+                        height:50,
+                        backgroundColor: '#f03',
+                        borderRadius: 0,
+                        justifyContent:'center',
+                        alignItems:'center',
+                    }}
+                    onPress={()=>this.props.onDeleteItem(item)}
+                >
+                    <Text style={{color:'#fff',fontSize:12}}>删除</Text>
+                </Button>
 
-                <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                    {/*分类名称*/}
-                    <Text style={{fontSize:15}}>
-                        {item.sortName}
-                    </Text>
-                    {/*分类金额*/}
-                    <Text style={{color:item.type === -1?'#00cd00':'#f03',fontSize:15}}>
-                        {item.type === -1?'-':'+'}{item.sums}
-                    </Text>
-                </View>
+                <Button
+                    style={{
+                        borderRadius:0,
+                        // borderBottomLeftRadius:5,
+                        // borderTopLeftRadius:5,
+                        width:'100%',
+                        height:'100%',
+                        justifyContent:'space-around',
+                        backgroundColor:'#fff',
+                        paddingHorizontal: 5
+                    }}
+                    onPress={()=>this._goDetail(item)}
+                >
 
-                <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                    <Text style={{color:'#999',fontSize:12}}>
-                        来源:{item.methodName}
-                    </Text>
-                    <Text style={{color:'#999',fontSize:12}}>
-                        时间:{moment(item.dates).format("YYYY-MM-DD HH:mm:ss")}
-                    </Text>
-                </View>
+                    <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
+                        {/*分类名称*/}
+                        <Text style={{fontSize:15}}>
+                            {item.sortName}
+                        </Text>
+                        {/*分类金额*/}
+                        <Text style={{color:item.type === -1?'#00cd00':'#f03',fontSize:15}}>
+                            {item.type === -1?'-':'+'}{item.sums}
+                        </Text>
+                    </View>
 
-            </TouchableOpacity>
+                    <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
+                        <Text style={{color:'#999',fontSize:12}}>
+                            来源:{item.methodName}
+                        </Text>
+                        <Text style={{color:'#999',fontSize:12}}>
+                            时间:{moment(item.dates).format("YYYY-MM-DD HH:mm:ss")}
+                        </Text>
+                    </View>
+
+                </Button>
+            </SwipeRow>
         );
     }
 
@@ -99,13 +130,11 @@ export default class BillsFlatList extends Component{
 
 const styles = StyleSheet.create({
     itemView:{
-        justifyContent:'space-around',
+        //alignItems:'center',
         height:50,
-        // width:'100%',
-        backgroundColor:'#ffffff',
-        borderRadius:10,
-        paddingHorizontal:5,
-        marginHorizontal:15,
+        width:undefined,
+        backgroundColor:'#fff',
+        marginHorizontal: 15,
     },
     emptyView:{
         flex:1,

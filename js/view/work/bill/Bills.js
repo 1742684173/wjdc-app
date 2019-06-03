@@ -74,8 +74,8 @@ class Bills extends BaseComponent {
                 method={this.state.selectMethod}
                 sort={this.state.selectSort}
                 hideModal={()=>this.initBase()}
-                submit={this._sumbit}
-                reset={this._reset}
+                onSubmit={this._onSumbit}
+                onReset={this._onReset}
                 onRequestClose={()=>this.initBase()}
                 selectLabel={this.state.selectLabel}
             />
@@ -204,6 +204,45 @@ class Bills extends BaseComponent {
         });
     }
 
+    _onDeleteItem = async (item) => {
+        this.showAlert({
+            content:'确认删除?',
+            buttons:[
+                {
+                    text:'确认',
+                    onPress:()=>this._confirmDeleteBill(item.id)
+                },
+                {
+                    text:'取消',
+                    onPress:this._cancelDelete
+                }
+            ]
+        });
+    }
+
+    //确认删除消费类别
+    _confirmDeleteBill = async (id:number) => {
+        this.showActivityIndicator();
+        try{
+            //方式
+            const {code,type,msg} = await this.props.postAction(appJson.action.billDeleteById,{id:id},'通过id删除帐单');
+            this.hideActivityIndicator();
+            if(type === appJson.action.billDeleteById){
+                if(code === appJson.action.success){
+                    this._onRefresh();
+                }else{
+                    this.showToast(msg);
+                }
+            }
+        }catch (e) {
+            this.handleRequestError(e);
+        }
+    }
+
+    _cancelDelete = () => {
+        this.hideActivityIndicator();
+    }
+
     _dealParams = (params:Object) => {
         let {type,code,msg,data} = params;
         switch (type) {
@@ -232,14 +271,15 @@ class Bills extends BaseComponent {
         }
     }
 
-    _reset = async () => {
+    _onReset = async () => {
         this.initLabel();
         await this.setState({selectLabel:{sortName:'dates desc',type:'all',method:'all',sort:'all'}});
         await this._getBillList();
     }
 
     //根据条件查询
-    _sumbit = async (obj) => {
+    _onSumbit = async (obj) => {
+        console.log('---------'+JSON.stringify(obj));
         this.currentPage = 1;
 
         this.type = obj.type === 'all'?null:obj.type;
@@ -283,6 +323,7 @@ class Bills extends BaseComponent {
                     onEndReached={this._onEndReached}
                     onRefresh={this._onRefresh}
                     onItemClick={this._onItemClick}
+                    onDeleteItem={this._onDeleteItem}
                 />
 
             </View>

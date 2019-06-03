@@ -29,6 +29,9 @@ export default class Select extends Component{
         this.state = {
             isExpand:false,
         }
+
+        const {onChange,defaultValue} = this.props;
+        // defaultValue?onChange(defaultValue):null;
     }
 
     hide = () => {
@@ -42,7 +45,8 @@ export default class Select extends Component{
 
     componentWillReceiveProps(nextProps){
         if(nextProps.values !== this.props.values){
-            nextProps.values.length > 0?this.props.onChange(nextProps.values[0].id):null;
+            nextProps.values.length > 0?
+                this.props.onChange(nextProps.defaultValue?nextProps.defaultValue:nextProps.values[0].id):null;
         }
     }
 

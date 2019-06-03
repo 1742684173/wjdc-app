@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { Text, View, StyleSheet, Image, Platform,TextInput, TouchableHighlight,TouchableOpacity,ListView,Modal,PixelRatio,ScrollView,SafeAreaView } from 'react-native';
 import Title from '../../common/Title';
-import DataBetween from '../../common/DataBetween';
+import DateBetween from '../../common/DateBetween';
 import DateTimeField from '../../common/DateTimeField';
 import Field from '../../common/Field';
 import TextField from '../../common/TextField';
@@ -13,8 +13,8 @@ import Button from "../../common/Button";
 
 type Props = {
     modalVisible?:boolean,//是否显示
-    reset?:Function,//重置
-    submit?:Function,//提交
+    onReset?:Function,//重置
+    onSubmit?:Function,//提交
 };
 
 //按方式查，按种类查 按时间 金额大小 支出/收入
@@ -37,12 +37,12 @@ const type = [
 class BillLabel extends Component<Props> {
 
     _onReset = async () => {
-        this.props.reset();
+        this.props.onReset();
     }
 
     _onSubmit = async (object:Object) => {
-        await this.setState(object);
-        this.props.submit(object)
+        // await this.setState(object);
+        this.props.onSubmit(object)
     }
 
     render(){

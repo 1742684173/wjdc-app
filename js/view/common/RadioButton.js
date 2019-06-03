@@ -17,7 +17,7 @@ export default class RadioButton extends Component{
     constructor(props){
         super(props);
         const {onChange,defaultValue} = this.props;
-        onChange(defaultValue);
+        defaultValue?onChange(defaultValue):null;
     }
 
     render(){
@@ -48,7 +48,7 @@ export default class RadioButton extends Component{
 const styles = StyleSheet.create({
     contain:{
         flexDirection:'row',
-        //alignItems:'center',
+        alignItems:'center',
         height:36,
     },
     titleStyle:{
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
     radioStyle:{
         flex:1,
         flexDirection:'row',
-        backgroundColor: '#00000000'
+        backgroundColor: '#00000000',
+        alignItems: 'center',
     },
     outCircle:{
         justifyContent:'center',

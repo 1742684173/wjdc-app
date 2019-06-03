@@ -25,8 +25,20 @@ class BillForm extends BaseComponent {
     // 构造
     constructor(props) {
         super(props);
-        this.id = this.props.navigation.state.params.id;
-        this.setTitle(this.id?'修改帐单':'增加帐单');
+        this.title = this.props.navigation.state.params.title;
+        this.data = this.props.navigation.state.params.data;
+        this.setTitle(this.title);
+
+        this.data?this.props.initialize({
+            id:this.data.id+'',
+            sums:this.data.sums+'',
+            type:this.data.type+'',
+            dates:this.data.dates+'',
+            methodId:this.data.methodId+'',
+            sortId:this.data.sortId+'',
+            descs:this.data.descs+'',
+        }):null
+
     }
 
     componentDidMount = async () => {
@@ -195,6 +207,55 @@ class BillForm extends BaseComponent {
         }
     }
 
+    //编辑
+    _editBill = async (object:Object) => {
+
+        const {methodId,dates,sums,sortId,type} = object;
+        if(sums === undefined || sums === null || sums.length === 0){
+            this.showToast('请输入消费金额');
+            return;
+        }
+
+        if(methodId === undefined || methodId === null || methodId.length === 0){
+            this.showToast('请选择消费方式');
+            return;
+        }
+
+        if(sortId === undefined || sortId === null || sortId.length === 0){
+            this.showToast('请选择消费分类');
+            return;
+        }
+
+        this.showActivityIndicator();
+        try{
+            const {type,code,msg} =
+                await this.props.postAction(appJson.action.billUpdateById,object,'编辑帐单','form');
+            this.hideActivityIndicator();
+
+            if(type === appJson.action.billUpdateById){
+                if(code === appJson.action.success){
+                    this.showAlert({
+                        content:'编辑成功',
+                        buttons:[
+                            {
+                                text:'是',
+                                onPress:()=>{
+                                    this.props.navigation.state.params.callback({});
+                                    this.props.navigation.goBack();
+                                }
+                            }
+                        ]
+                    });
+
+                }else{
+                    this.toast(msg);
+                }
+            }
+        }catch (e) {
+            this.handleRequestError(e);
+        }
+    }
+
     //增加分类
     _addSortBtn = () => {
         this.props.navigation.navigate('BillSortForm',{
@@ -304,12 +365,12 @@ class BillForm extends BaseComponent {
 
                 <View style={{height:12}}/>
                 <Field name={'type'} component={RadioButton} title={'消费类型'} isNeed={true}
-                       values={selectType} defaultValue={selectType[0].id}
+                       values={selectType} defaultValue={this.data?this.data.type:selectType[0].id}
                 />
 
                 <Field name={'dates'} component={DateTimeField}
                        mode={'datetime'} title={'消费时间'} isNeed={true}
-                       defaultValue={new Date()}
+                       defaultValue={this.data?this.data.dates:new Date()}
                 />
 
                 <View style={{height:5}}/>
@@ -324,7 +385,10 @@ class BillForm extends BaseComponent {
                 />
 
                 <View style={{height:50}}/>
-                <Button style={{height:39,backgroundColor:'#21c3ff',}} onPress={this.props.handleSubmit(this._addBill)}>
+                <Button
+                    style={{height:39,backgroundColor:'#21c3ff',}}
+                    onPress={this.props.handleSubmit(this.data?this._editBill:this._addBill)}
+                >
                     <Text style={styles.btnSubmit}>提交</Text>
                 </Button>
 
@@ -338,6 +402,7 @@ class BillForm extends BaseComponent {
                         editBtn={this._editSortBtn}
                         isShowDelete={true}
                         deleteBtn={this._deleteSortBtn}
+                        defaultValue={this.data?this.data.sortId:null}
                     />
                 </View>
 
@@ -351,6 +416,7 @@ class BillForm extends BaseComponent {
                         editBtn={this._editMethodBtn}
                         isShowDelete={true}
                         deleteBtn={this._deleteMethodBtn}
+                        defaultValue={this.data?this.data.methodId:null}
                     />
                 </View>
 

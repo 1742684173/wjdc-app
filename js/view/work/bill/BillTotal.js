@@ -8,10 +8,11 @@ import Title from "../../common/Title";
 import BillTotalLabel from "./BillTotalLabel";
 import Button from "../../common/Button";
 import FilterTab from "../../common/FilterTab";
-import DataBetween from "../../common/DataBetween";
+import DateBetween from "../../common/DateBetween";
 import select from "../../../img/common/search_select.png";
 import Echarts from 'native-echarts';
 import EchartsUtil from '../../../utils/EchartsUtil';
+import moment from "moment";
 
 let echartsUtil = new EchartsUtil();
 
@@ -22,9 +23,12 @@ const filter = [
     {id:'lastWeek',name:'上周'},
     {id:'currentMouth',name:'本月'},
     {id:'lastMouth',name:'上月'},
+    {id:'currentQuarter',name:'本季度'},
+    {id:'lastQuarter',name:'上季度'},
     {id:'currentYear',name:'本年'},
     {id:'lastYear',name:'上一年'},
 ];
+
 
 class BillTotal extends BaseComponent {
 
@@ -37,7 +41,9 @@ class BillTotal extends BaseComponent {
             sortId:'all',
             dateformat:'%Y-%m-%d',
         },
-        filterValue:'lastDay',
+        filterValue:'currenDay',
+        //starDate:moment(new Date()).format('YYYY-MM-DD')+' 00:00:00',//开始时间
+        //endDate:moment(new Date()).format('YYYY-MM-DD')+' 24:00:00',//结束时间
         dataByDates:echartsUtil.init().getOption(),
         dataByMethod:echartsUtil.init().getOption(),
         dataBySort:echartsUtil.init().getOption(),
@@ -56,6 +62,7 @@ class BillTotal extends BaseComponent {
         this.type = null;
         this.startTime = null;
         this.endTime = null;
+        this.filteTime = 'currenDay';
         this.methodId = null;
         this.sortId = null;
         this.dateformat = '%Y-%m-%d';
@@ -90,6 +97,7 @@ class BillTotal extends BaseComponent {
             type:this.type,
             startTime:this.startTime,
             endTime:this.endTime,
+            filteTime:this.filteTime,
             methodId:this.methodId,
             sortId:this.sortId,
             dateformat:this.dateformat,
@@ -148,8 +156,11 @@ class BillTotal extends BaseComponent {
                 if(code === appJson.action.success){
                     data.list.map((item,i)=>{
                         item.type === -1 ?billByDateZC.push(item.sums):billByDateSR.push(item.sums);
-                        X.push(item.dates)
+                        if(!X.includes(item.dates)){
+                            X.push(item.dates);
+                        }
                     });
+                    console.log('X--->'+JSON.stringify(X));
                     let dataByDates = echartsUtil.init().setTitle('金额')
                         .setLegendData(['支出(元)','收入(元)'])
                         .setXAxisData(X).setSeries([
@@ -276,7 +287,7 @@ class BillTotal extends BaseComponent {
         }
     }
 
-    _reset = async () => {
+    _onReset = async () => {
         this.initLabel();
         await this.setState({
             selectLabel: {
@@ -288,7 +299,7 @@ class BillTotal extends BaseComponent {
         });
     }
 
-    _sumbit = async (obj) => {
+    _onSumbit = async (obj) => {
 
         this.type = obj.type === 'all'?null:obj.type;
         this.methodId = obj.methodId === 'all'?null:obj.methodId;
@@ -311,18 +322,22 @@ class BillTotal extends BaseComponent {
         });
     }
 
-    _onFilterItem = (item) => {
-        this.setState({filterValue:item.id});
-        switch (item.id) {
-            case 'currenDay':break;
-            case 'lastDay':break;
-            case 'currentWeek':break;
-            case 'lastWeek':break;
-            case 'currentMouth':break;
-            case 'lastMouth':break;
-            case 'currentYear':break;
-            case 'lastYear':break;
-        }
+    _onFilterItem = async (item) => {
+        this.refs.dateBetween.clear();
+        await this.setState({filterValue:item.id});
+        this.filteTime = item.id;
+
+        await this._totalData();
+    }
+
+    //搜索
+    _onSearchDate = async (startTime,endTime) => {
+        await this.setState({filterValue:null});
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.filteTime = null;
+
+        await this._totalData();
     }
 
     render() {
@@ -337,7 +352,7 @@ class BillTotal extends BaseComponent {
             >
 
                 <View style={styles.dates}>
-                    <DataBetween searchDate={()=>{}}/>
+                    <DateBetween ref={'dateBetween'} searchDate={this._onSearchDate}/>
 
                     <FilterTab
                         data={filter}
@@ -388,8 +403,8 @@ class BillTotal extends BaseComponent {
                 method={this.state.selectMethod}
                 sort={this.state.selectSort}
                 hideModal={()=>this.initBase()}
-                submit={this._sumbit}
-                reset={this._reset}
+                onSubmit={this._onSumbit}
+                onReset={this._onReset}
                 onRequestClose={()=>this.initBase()}
                 selectLabel={this.state.selectLabel}
             />
