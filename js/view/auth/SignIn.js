@@ -19,6 +19,7 @@ import Input from '../common/Input';
 import BaseComponent from '../base/BaseComponent';
 import {md5} from "../../utils/ToolUtil";
 import * as appJson from '../../../app';
+import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 class SignIn extends BaseComponent {
 
@@ -110,7 +111,7 @@ class SignIn extends BaseComponent {
                     component={Input}
                 />
 
-                <Button style={{height:39,backgroundColor:'#21c3ff'}} onPress={handleSubmit(this._signIn)}>
+                <Button style={{height:pxTodpHeight(78),backgroundColor:'#21c3ff'}} onPress={handleSubmit(this._signIn)}>
                     <Text style={styles.btnSignIn}>登录</Text>
                 </Button>
 
@@ -130,24 +131,24 @@ const styles = StyleSheet.create({
     container: {
         flex:1,
         backgroundColor: '#f2f2f2',
-        paddingHorizontal: 15,
-        marginTop:100,
+        paddingHorizontal: pxTodpWidth(30),
+        marginTop:pxTodpHeight(200),
     },
     input:{
-        borderRadius:20,
+        borderRadius:pxTodpWidth(40),
         borderWidth: 1,
         borderColor:'#dcdcdc',
         backgroundColor: '#fff',
-        height:40,
-        marginBottom: 10,
-        paddingHorizontal: 5,
+        height:pxTodpHeight(80),
+        marginBottom: pxTodpHeight(20),
+        paddingHorizontal: pxTodpWidth(10),
     },
     btnSignIn:{
-        fontSize:20,
+        fontSize:pxTodpWidth(40),
         color:'#fff'
     },
     bottomText:{
-        fontSize: 15,
+        fontSize: pxTodpWidth(30),
         color:'#666',
         textDecorationLine:'underline'
     },
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop:25
+        marginTop:pxTodpHeight(50)
     }
 });
 

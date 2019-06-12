@@ -20,6 +20,7 @@ import add from '../../img/common/add.png';
 import edit from '../../img/common/edit.png';
 import del from '../../img/common/delete1.png';
 import Button from "./Button";
+import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 
 export default class Select extends Component{
@@ -70,7 +71,7 @@ export default class Select extends Component{
                 <View key={i}  style={[styles.itemView,styles.optionItem]}>
                     {
                         isShowEdit?(
-                            <Button style={{marginRight: 15,backgroundColor:'#00000000'}} onPress={()=>editBtn(item)}>
+                            <Button style={{marginRight: pxTodpWidth(30),backgroundColor:'#00000000'}} onPress={()=>editBtn(item)}>
                                 <Image source={edit}/>
                             </Button>
                         ):null
@@ -78,7 +79,7 @@ export default class Select extends Component{
 
                     {
                         isShowDelete?(
-                            <Button style={{marginRight: 10,backgroundColor:'#00000000'}} onPress={()=>deleteBtn(item)}>
+                            <Button style={{marginRight: pxTodpWidth(20),backgroundColor:'#00000000'}} onPress={()=>deleteBtn(item)}>
                                 <Image source={del}/>
                             </Button>
                         ):null
@@ -110,8 +111,11 @@ export default class Select extends Component{
                     <Text style={{color:'#eb3232'}}>{isNeed?'*':'  '}</Text>{title}
                 </Text>
 
-                <View style={{flex:1,marginTop:-10,marginLeft:10}}>
-                    <View style={[styles.selectView,values.length>6?{height:this.state.isExpand?250:40}:null]}>
+                <View style={{flex:1,marginTop:-pxTodpHeight(20),marginLeft:pxTodpWidth(20)}}>
+                    <View
+                        style={[
+                            styles.selectView,
+                            values.length>6?{height:this.state.isExpand?pxTodpHeight(500):pxTodpHeight(80)}:null]}>
                         <View style={[styles.itemView]}>
 
                             <Button
@@ -122,13 +126,16 @@ export default class Select extends Component{
                             </Button>
                             {
                                 isShowAdd?(
-                                    <Button onPress={addBtn} style={{marginLeft:15,backgroundColor:'#00000000'}}>
+                                    <Button
+                                        onPress={addBtn}
+                                        style={{marginLeft:pxTodpWidth(30),backgroundColor:'#00000000'}}
+                                    >
                                         <Image source={add}/>
                                     </Button>
                                 ):null
                             }
                         </View>
-                        <ScrollView style={[values.length>6?{height:this.state.isExpand?250:40}:null]}>
+                        <ScrollView style={[values.length>6?{height:this.state.isExpand?pxTodpHeight(500):pxTodpHeight(80)}:null]}>
                             {this.state.isExpand? select :null}
                         </ScrollView>
                     </View>
@@ -146,30 +153,30 @@ const styles = StyleSheet.create({
     },
     titleStyle:{
         backgroundColor:'#ffffff',
-        fontSize:14,
+        fontSize:pxTodpWidth(28),
         color:'#666666',
     },
     selectView:{
         width:'100%',
         backgroundColor:'#fff',
-        borderRadius:20,
+        borderRadius:pxTodpWidth(40),
         borderWidth:1,
         borderColor:'#dcdcdc',
-        paddingHorizontal:20,
+        paddingHorizontal:pxTodpWidth(40),
         position:'absolute',
     },
     inputStyle:{
-        fontSize:14,
+        fontSize:pxTodpWidth(28),
         color:'#333',
     },
     itemView:{
-        height:36,
+        height:pxTodpHeight(72),
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center'
     },
     optionItem:{
-        marginTop:5,
+        marginTop:pxTodpHeight(10),
         borderBottomColor:'#dcdcdc',
         borderBottomWidth:1,
     }

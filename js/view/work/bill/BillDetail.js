@@ -6,6 +6,7 @@ import {postAction} from "../../../actions";
 import moment from "moment";
 import * as appJson from '../../../../app';
 import Button from "../../common/Button";
+import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 
 class BillDetail extends BaseComponent {
 
@@ -108,31 +109,31 @@ class BillDetail extends BaseComponent {
 
 const styles = StyleSheet.create({
     contain:{
-        marginTop:15,
+        marginTop:pxTodpHeight(30),
         backgroundColor:'#ffffff',
-        marginHorizontal: 15,
-        paddingHorizontal: 15,
-        paddingVertical: 15,
-        borderRadius:10
+        marginHorizontal: pxTodpWidth(30),
+        paddingHorizontal: pxTodpWidth(30),
+        paddingVertical: pxTodpHeight(30),
+        borderRadius:pxTodpWidth(20)
     },
     itemView:{
         flexDirection: "row",
         justifyContent: "space-between",
         borderBottomWidth: 1,
         borderBottomColor:"#dcdcdc",
-        paddingBottom: 3,
-        marginTop:15
+        paddingBottom: pxTodpHeight(6),
+        marginTop:pxTodpHeight(30)
     },
     textName:{
-        fontSize:14,
+        fontSize:pxTodpWidth(28),
         color:'#666666',
     },
     textValue:{
-        fontSize:14,
+        fontSize:pxTodpWidth(28),
         color:'#333',
     },
     btnSubmit:{
-        fontSize:20,
+        fontSize:pxTodpWidth(40),
         color:'#fff'
     },
 });

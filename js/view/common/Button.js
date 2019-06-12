@@ -8,6 +8,7 @@ import {
     TouchableNativeFeedback,
     TouchableOpacity,
 } from 'react-native';
+import {pxTodpWidth} from "../../utils/ScreenUtil";
 
 const Touchable = Platform.OS === 'android' ?
     TouchableNativeFeedback : TouchableOpacity;
@@ -54,7 +55,7 @@ const Button = (props: Props) => {
 
 const styles = StyleSheet.create({
     button: {
-        borderRadius: 22,
+        borderRadius: pxTodpWidth(44),
         // padding: 8,
         // backgroundColor: '#21c3ff',
         backgroundColor: '#00000000',

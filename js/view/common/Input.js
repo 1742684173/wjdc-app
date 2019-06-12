@@ -3,6 +3,7 @@ import React,{Component} from 'react';
 import type { Node } from 'react';
 import {View, TextInput, StyleSheet, TouchableOpacity, Text, Platform, Image} from 'react-native';
 import Divider from './Divider';
+import {pxTodpWidth} from "../../utils/ScreenUtil";
 export type Props = {
     value?: string,
     onChange?: Function,
@@ -70,8 +71,8 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         paddingVertical: 0,
-        paddingHorizontal: 15,
-        fontSize: 16,
+        paddingHorizontal: pxTodpWidth(30),
+        fontSize: pxTodpWidth(32),
     },
 });
 export default Input;

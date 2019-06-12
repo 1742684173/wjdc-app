@@ -4,6 +4,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from "moment";
 import dateIcon from "../../img/common/date.png";
 import Button from "./Button";
+import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 var curDate = new Date();
 let format = 'YYYY-MM-DD';
@@ -72,26 +73,26 @@ const styles = StyleSheet.create({
     contain: {
         flexDirection: 'row',
         alignItems:'center',
-        height: 36,
+        height: pxTodpHeight(72),
     },
     titleStyle: {
-        marginRight: 10,
-        fontSize: 14,
+        marginRight: pxTodpWidth(20),
+        fontSize: pxTodpWidth(28),
         color: '#666666',
     },
     btnView:{
         flex:1,
         flexDirection:'row',
         alignItems:'center',
-        paddingHorizontal:10,
+        paddingHorizontal:pxTodpWidth(20),
         justifyContent:'center',
-        height: 36,
+        height: pxTodpHeight(72),
         borderWidth: 1,
         borderColor:'#dcdcdc',
-        borderRadius:20,
+        borderRadius:pxTodpWidth(40),
     },
     dataIcon:  {
-        width:15,
-        height:20
+        width:pxTodpWidth(30),
+        height:pxTodpHeight(40)
     },
 });

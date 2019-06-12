@@ -8,6 +8,7 @@ import {
     ActivityIndicator,
 }from 'react-native';
 import Button from "./Button";
+import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 export type Props = {
     type?:string,//类形: load->加载框 alert->弹出框 others->自定义  默认是load
     visible:boolean,//是否显示
@@ -45,11 +46,11 @@ class MyDialog extends Component{
             case 'alert':
                 view = (
                     <View style={styles.modal}>
-                        <Text style={{color:'#333',fontSize:15,marginVertical:15}}>
+                        <Text style={{color:'#333',fontSize:pxTodpWidth(30),marginVertical:pxTodpHeight(30)}}>
                             {title?title:''}
                         </Text>
-                        <View style={{marginHorizontal: 5}}>
-                            <Text style={{color:'#666',fontSize:15,marginBottom: 15}}>
+                        <View style={{marginHorizontal: pxTodpWidth(10)}}>
+                            <Text style={{color:'#666',fontSize:pxTodpWidth(30),marginBottom: pxTodpHeight(30)}}>
                                 {content?content:''}
                             </Text>
                         </View>
@@ -62,7 +63,7 @@ class MyDialog extends Component{
                                                 key={i}
                                                 style={[styles.btn,{borderRightWidth:i===buttons.length-1?0:1}]}
                                                 onPress={item.onPress}>
-                                                <Text style={{fontSize:15,color:'#666666'}}>
+                                                <Text style={{fontSize:pxTodpWidth(30),color:'#666666'}}>
                                                     {item.text}
                                                 </Text>
                                             </TouchableOpacity>
@@ -72,7 +73,7 @@ class MyDialog extends Component{
                                     <Button style={[styles.btn]} onPress={()=>{
                                         this.setState({visible:false});
                                     }}>
-                                        <Text style={{fontSize:15,color:'#666666'}}>
+                                        <Text style={{fontSize:pxTodpWidth(30),color:'#666666'}}>
                                             确定
                                         </Text>
                                     </Button>
@@ -93,7 +94,7 @@ class MyDialog extends Component{
                 view = (
                     <View style={{alignItems:'center'}}>
                         <ActivityIndicator size={'large'} color={'#fff'}/>
-                        <Text style={{color:'#333',fontSize:15}}>
+                        <Text style={{color:'#333',fontSize:pxTodpWidth(30)}}>
                             {title}
                         </Text>
                     </View>
@@ -128,20 +129,20 @@ const styles = StyleSheet.create({
         backgroundColor:'rgba(0, 0, 0, 0.3)'
     },
     modal:{
-        width:250,
+        width:pxTodpWidth(500),
         backgroundColor:'#ffffff',
-        borderRadius:10,
+        borderRadius:pxTodpWidth(20),
         justifyContent:'center',
         alignItems:'center',
     },
     divider:{
-        width:250,
+        width:pxTodpWidth(500),
         height:1,
         backgroundColor:'#dcdcdc'
     },
     btnView:{
         width:'100%',
-        height:45,
+        height:pxTodpHeight(90),
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',

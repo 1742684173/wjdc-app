@@ -13,8 +13,8 @@
     "connectFail":"connect_fail"
   },
   "action":{
-    "url":"http://localhost:8080/wjdc",
-    //    "url":"http://192.168.101.88:8080/wjdc",
+//    "url":"http://localhost:8080/wjdc",
+        "url":"http://192.168.101.88:8080/wjdc",
 
     "connectServerError":-1,
     "success":200,
@@ -25,21 +25,23 @@
     "signOut":"/user/signOut.do",
 
     "billAdd":"/bill/add.do",
+    "billDeleteById":"/bill/deleteById.do",
+    "billUpdateById":"/bill/updateById.do",
     "billFind":"/bill/find.do",
     "billFindById":"/bill/findById.do",
     "totalBillByDates":"/bill/totalBillByDates.do",
-    "totalBillByMethod":"/bill/totalBillByMethod.do",
     "totalBillBySort":"/bill/totalBillBySort.do",
     "totalBillByType":"/bill/totalBillByType.do",
-
-    "billMethodAdd":"/billMethod/add.do",
-    "billMethodDeleteById":"/billMethod/deleteById.do",
-    "billMethodUpdateById":"/billMethod/updateById.do",
-    "billMethodFind":"/billMethod/find.do",
+    "totalBillByLabel":"/bill/totalBillByLabel.do",
 
     "billSortAdd":"/billSort/add.do",
     "billSortDeleteById":"/billSort/deleteById.do",
     "billSortUpdateById":"/billSort/updateById.do",
-    "billSortFind":"/billSort/find.do"
+    "billSortFind":"/billSort/find.do",
+
+    "billLabelAdd":"/billLabel/add.do",
+    "billLabelDeleteById":"/billLabel/deleteById.do",
+    "billLabelUpdateById":"/billLabel/updateById.do",
+    "billLabelFind":"/billLabel/find.do"
   }
 }

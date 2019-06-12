@@ -5,7 +5,7 @@ import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
 import BaseComponent from '../../base/BaseComponent';
 import Title from "../../common/Title";
-import BillTotalLabel from "./BillTotalLabel";
+import BillTotalLabel from "./common/BillTotalLabel";
 import Button from "../../common/Button";
 import FilterTab from "../../common/FilterTab";
 import DateBetween from "../../common/DateBetween";
@@ -13,6 +13,7 @@ import select from "../../../img/common/search_select.png";
 import Echarts from 'native-echarts';
 import EchartsUtil from '../../../utils/EchartsUtil';
 import moment from "moment";
+import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 
 let echartsUtil = new EchartsUtil();
 
@@ -34,10 +35,10 @@ class BillTotal extends BaseComponent {
 
     state = {
         selectSort:[],
-        selectMethod:[],
+        selectLabels:[],
         selectLabel: {
             type:'all',
-            methodId:'all',
+            labelId:'all',
             sortId:'all',
             dateformat:'%Y-%m-%d',
         },
@@ -45,7 +46,6 @@ class BillTotal extends BaseComponent {
         //starDate:moment(new Date()).format('YYYY-MM-DD')+' 00:00:00',//开始时间
         //endDate:moment(new Date()).format('YYYY-MM-DD')+' 24:00:00',//结束时间
         dataByDates:echartsUtil.init().getOption(),
-        dataByMethod:echartsUtil.init().getOption(),
         dataBySort:echartsUtil.init().getOption(),
         dataByType:echartsUtil.init().getOption(),
     }
@@ -63,7 +63,7 @@ class BillTotal extends BaseComponent {
         this.startTime = null;
         this.endTime = null;
         this.filteTime = 'currenDay';
-        this.methodId = null;
+        this.labelId = null;
         this.sortId = null;
         this.dateformat = '%Y-%m-%d';
     }
@@ -79,8 +79,8 @@ class BillTotal extends BaseComponent {
             this._dealParams(sortData);
 
             //方式
-            const methodData = await this.props.postAction(appJson.action.billMethodFind,{},'查询消费方式');
-            this._dealParams(methodData);
+            const labelData = await this.props.postAction(appJson.action.billLabelFind,{},'查询消费方式');
+            this._dealParams(labelData);
 
             await this._totalData();
 
@@ -98,7 +98,7 @@ class BillTotal extends BaseComponent {
             startTime:this.startTime,
             endTime:this.endTime,
             filteTime:this.filteTime,
-            methodId:this.methodId,
+            labelId:this.labelId,
             sortId:this.sortId,
             dateformat:this.dateformat,
         };
@@ -106,10 +106,6 @@ class BillTotal extends BaseComponent {
             //通过时间统计
             const billDataByDates = await this.props.postAction(appJson.action.totalBillByDates,obj,'通过时间统计帐单');
             this._dealParams(billDataByDates);
-
-            //通过方式统计
-            const billDataByMethod = await this.props.postAction(appJson.action.totalBillByMethod,obj,'通过方式统计');
-            this._dealParams(billDataByMethod);
 
             //通过分类统计
             const billDataBySort = await this.props.postAction(appJson.action.totalBillBySort,obj,'通过分类统计');
@@ -138,12 +134,12 @@ class BillTotal extends BaseComponent {
                 break;
 
             //消费方式
-            case appJson.action.billMethodFind:
-                let selectMethod = [];
+            case appJson.action.billLabelFind:
+                let selectLabel = [];
                 if(code === appJson.action.success){
-                    data.list.map((item,i)=>selectMethod.push(item));
-                    if(selectMethod.length >0){
-                        this.setState({selectMethod:selectMethod});
+                    data.list.map((item,i)=>selectLabel.push(item));
+                    if(selectLabel.length >0){
+                        this.setState({selectLabel:selectLabel});
                     }
                 }
 
@@ -178,39 +174,6 @@ class BillTotal extends BaseComponent {
                             }
                         ]).getOption();
                     this.setState({dataByDates:dataByDates});
-                }
-                break;
-
-            //通过方式统计帐单
-            case appJson.action.totalBillByMethod:
-                if(code === appJson.action.success){
-                    let dataByMethod = echartsUtil.init().setTitle('方式比例')
-                        .setTooltip({trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)"})
-                        .setDataZoom(null)
-                        .setXAxis(null)
-                        .setYAxis(null)
-                        .setSeries([
-                            {
-                                name:'方式',
-                                type: 'pie',
-                                radius : '70%',
-                                center: ['50%', '60%'],
-                                data:data.list,
-                                itemStyle: {
-                                    emphasis: {
-                                        shadowBlur: 10,
-                                        shadowOffsetX: 0,
-                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                    }
-                                },
-                                label: {
-                                    normal: {
-                                        formatter: '{b}:{d}%',
-                                    }
-                                },
-                            }
-                        ]).getOption();
-                    this.setState({dataByMethod:dataByMethod})
                 }
                 break;
 
@@ -292,7 +255,7 @@ class BillTotal extends BaseComponent {
         await this.setState({
             selectLabel: {
                 type:'all',
-                methodId:'all',
+                labelId:'all',
                 sortId:'all',
                 dateformat:'%Y-%m-%d'
             }
@@ -302,7 +265,7 @@ class BillTotal extends BaseComponent {
     _onSumbit = async (obj) => {
 
         this.type = obj.type === 'all'?null:obj.type;
-        this.methodId = obj.methodId === 'all'?null:obj.methodId;
+        this.labelId = obj.labelId === 'all'?null:obj.labelId;
         this.sortId = obj.sortId === 'all'?null:obj.sortId;
         this.dateformat = obj.dateformat;
 
@@ -361,23 +324,19 @@ class BillTotal extends BaseComponent {
                     />
                 </View>
 
-                <View style={{marginHorizontal: 15,marginBottom: 15}}>
+                <View style={{marginHorizontal: pxTodpWidth(30),marginBottom: pxTodpHeight(30)}}>
                     {/*折线 x:time  y:金额*/}
-                    <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
-                        <Echarts height={180} option={this.state.dataByDates}/>
+                    <View style={styles.echartSty}>
+                        <Echarts height={pxTodpHeight(320)} option={this.state.dataByDates}/>
                     </View>
 
                     {/*饼图*/}
-                    <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
-                        <Echarts height={180} option={this.state.dataByMethod}/>
+                    <View style={styles.echartSty}>
+                        <Echarts height={pxTodpHeight(320)} option={this.state.dataBySort}/>
                     </View>
 
-                    <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
-                        <Echarts height={180} option={this.state.dataBySort}/>
-                    </View>
-
-                    <View style={{backgroundColor:'#fff',padding: 5,marginTop:15,borderRadius: 10}}>
-                        <Echarts height={180} option={this.state.dataByType}/>
+                    <View style={styles.echartSty}>
+                        <Echarts height={pxTodpHeight(320)} option={this.state.dataByType}/>
                     </View>
                 </View>
             </ScrollView>
@@ -391,7 +350,7 @@ class BillTotal extends BaseComponent {
         return (
             <Button style={[styles.button, Platform.OS==='android'? {paddingTop:0}: ""]}
                     onPress={this._onSelectBtn}>
-                <Text style={{fontSize:18,color:'#00c2ff'}} source={select}>高级筛选</Text>
+                <Text style={{fontSize:pxTodpWidth(36),color:'#00c2ff'}} source={select}>高级筛选</Text>
             </Button>
         )
     }
@@ -400,7 +359,7 @@ class BillTotal extends BaseComponent {
     renderLabel(){
         return (
             <BillTotalLabel
-                method={this.state.selectMethod}
+                label={this.state.selectLabel}
                 sort={this.state.selectSort}
                 hideModal={()=>this.initBase()}
                 onSubmit={this._onSumbit}
@@ -422,19 +381,26 @@ const styles = StyleSheet.create({
     },
     dates:{
         width:undefined,
-        height:85,
+        height:pxTodpHeight(170),
         backgroundColor:'#fff',
-        paddingHorizontal: 15,
-        paddingVertical:5,
-        borderRadius:10,
+        paddingHorizontal: pxTodpWidth(30),
+        paddingVertical:pxTodpHeight(10),
+        borderRadius:pxTodpWidth(20),
     },
     icon: {
-        marginTop:10,
-        width: 35,
-        height: 28,
+        marginTop:pxTodpHeight(20),
+        width: pxTodpWidth(70),
+        height: pxTodpHeight(58),
         resizeMode:'contain',
 
     },
+    echartSty:{
+        backgroundColor:'#fff',
+        paddingVertical:pxTodpHeight(10),
+        paddingHorizontal:pxTodpWidth(10),
+        marginTop:pxTodpHeight(16),
+        borderRadius: pxTodpWidth(20)
+    }
 });
 
 export default connect(null,actions)(BillTotal);

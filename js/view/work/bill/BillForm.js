@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, ScrollView,View, StyleSheet, TouchableOpacity, ListView, BackHandler,} from 'react-native';
+import {Text, ScrollView,View, StyleSheet, } from 'react-native';
 import {connect} from 'react-redux';
 import {formValueSelector, reduxForm} from 'redux-form';
 import Field from '../../common/Field';
@@ -13,13 +13,14 @@ import * as appJson from '../../../../app';
 import * as actions from '../../../actions/index';
 import moment from "moment";
 import BaseComponent from "../../base/BaseComponent";
+import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 
 const selectType = [{id:-1,value:'支出'},{id:1,value:'收入'}];
 class BillForm extends BaseComponent {
 
     state = {
         selectSort:[],
-        selectMethod:[],
+        selectLabel:[],
     }
 
     // 构造
@@ -34,7 +35,7 @@ class BillForm extends BaseComponent {
             sums:this.data.sums+'',
             type:this.data.type+'',
             dates:this.data.dates+'',
-            methodId:this.data.methodId+'',
+            LabelId:this.data.LabelId+'',
             sortId:this.data.sortId+'',
             descs:this.data.descs+'',
         }):null
@@ -53,15 +54,15 @@ class BillForm extends BaseComponent {
         try{
 
             //分类
-            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询消费类别');
+            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询类别');
             this._dealParams(sortData);
 
             //方式
-            const methodData = await this.props.postAction(appJson.action.billMethodFind,{},'查询消费方式');
-            this._dealParams(methodData);
+            const LabelData = await this.props.postAction(appJson.action.billLabelFind,{},'查询方式');
+            this._dealParams(LabelData);
 
             //帐单
-            const billData = !!!this.id?null:await this.props.postAction(appJson.action.billFind,{id:this.id},'查询消费');
+            const billData = !!!this.id?null:await this.props.postAction(appJson.action.billFind,{id:this.id},'查询');
             billData===null?null:this._dealParams(billData);
 
             this.hideActivityIndicator()
@@ -70,12 +71,12 @@ class BillForm extends BaseComponent {
         }
     }
 
-    //刷新消费分类
+    //刷新分类
     _onRefreshSort = async () => {
         this.showActivityIndicator();
         try{
             //分类
-            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询消费类别');
+            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询类别');
             this.hideActivityIndicator();
             this._dealParams(sortData);
         }catch (e) {
@@ -83,14 +84,14 @@ class BillForm extends BaseComponent {
         }
     }
 
-    //消费消费方式
-    _onRefreshMethod = async () => {
+    //方式
+    _onRefreshLabel = async () => {
         this.showActivityIndicator();
         try{
             //方式
-            const methodData = await this.props.postAction(appJson.action.billMethodFind,{},'查询消费方式');
+            const LabelData = await this.props.postAction(appJson.action.billLabelFind,{},'查询方式');
             this.hideActivityIndicator();
-            this._dealParams(methodData);
+            this._dealParams(LabelData);
         }catch (e) {
             this.handleRequestError(e);
         }
@@ -100,7 +101,7 @@ class BillForm extends BaseComponent {
     _dealParams = (params:Object,isHideActivityIndicator?:boolean) => {
         let {type,code,msg,data} = params;
         switch (type) {
-            //消费类别
+            //类别
             case appJson.action.billSortFind:
                 if(code === appJson.action.success){
                     if(data.totalCount > 0){
@@ -109,11 +110,11 @@ class BillForm extends BaseComponent {
                 }
                 break;
 
-            //消费方式
-            case appJson.action.billMethodFind:
+            //方式
+            case appJson.action.billLabelFind:
                 if(code === appJson.action.success){
                     if(data.totalCount > 0){
-                        this.setState({selectMethod:data.list});
+                        this.setState({selectLabel:data.list});
                     }
                 }
                 break;
@@ -127,15 +128,15 @@ class BillForm extends BaseComponent {
                 }
                 break;
 
-            //通过id删除消费方式
-            case appJson.action.billMethodDeleteById:
+            //通过id删除方式
+            case appJson.action.billLabelDeleteById:
                 if(code === appJson.action.success){
                     this.showToast(msg);
-                    this._onRefreshMethod();
+                    this._onRefreshLabel();
                 }
                 break;
 
-            //通过id删除消费方式
+            //通过id删除方式
             case appJson.action.billSortDeleteById:
                 if(code === appJson.action.success){
                     this.showToast(msg);
@@ -149,19 +150,14 @@ class BillForm extends BaseComponent {
     //添加
     _addBill = async (object:Object) => {
 
-        const {methodId,dates,sums,sortId,type} = object;
+        const {LabelId,dates,sums,sortId,type} = object;
         if(sums === undefined || sums === null || sums.length === 0){
-            this.showToast('请输入消费金额');
-            return;
-        }
-
-        if(methodId === undefined || methodId === null || methodId.length === 0){
-            this.showToast('请选择消费方式');
+            this.showToast('请输入金额');
             return;
         }
 
         if(sortId === undefined || sortId === null || sortId.length === 0){
-            this.showToast('请选择消费分类');
+            this.showToast('请选择分类');
             return;
         }
 
@@ -181,7 +177,7 @@ class BillForm extends BaseComponent {
                                 onPress:()=>{
                                     this.hideActivityIndicator();
                                     this.props.initialize({
-                                        methodId:this.state.selectMethod.length>0?this.state.selectMethod[0].id:null,
+                                        LabelId:this.state.selectLabel.length>0?this.state.selectLabel[0].id:null,
                                         sortId:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
                                         dates:moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
                                         type:selectType[0].id
@@ -210,19 +206,14 @@ class BillForm extends BaseComponent {
     //编辑
     _editBill = async (object:Object) => {
 
-        const {methodId,dates,sums,sortId,type} = object;
+        const {LabelId,dates,sums,sortId,type} = object;
         if(sums === undefined || sums === null || sums.length === 0){
-            this.showToast('请输入消费金额');
-            return;
-        }
-
-        if(methodId === undefined || methodId === null || methodId.length === 0){
-            this.showToast('请选择消费方式');
+            this.showToast('请输入金额');
             return;
         }
 
         if(sortId === undefined || sortId === null || sortId.length === 0){
-            this.showToast('请选择消费分类');
+            this.showToast('请选择分类');
             return;
         }
 
@@ -259,35 +250,35 @@ class BillForm extends BaseComponent {
     //增加分类
     _addSortBtn = () => {
         this.props.navigation.navigate('BillSortForm',{
-            title:'添加消费分类',
+            title:'添加分类',
             func:appJson.action.billSortAdd,
             callback:this._onRefreshSort
         });
     }
 
     //增加方式
-    _addMethodBtn = () => {
-        this.props.navigation.navigate('BillMethodForm',{
-            title:'添加消费方式',
-            func:appJson.action.billMethodAdd,
-            callback:this._onRefreshMethod
+    _addLabelBtn = () => {
+        this.props.navigation.navigate('BillLabelForm',{
+            title:'添加方式',
+            func:appJson.action.billLabelAdd,
+            callback:this._onRefreshLabel
         });
     }
 
     //编辑方式
-    _editMethodBtn = (item) =>{
-        this.props.navigation.navigate('BillMethodForm',{
-            title:'编辑消费方式',
+    _editLabelBtn = (item) =>{
+        this.props.navigation.navigate('BillLabelForm',{
+            title:'编辑方式',
             item,
-            func:appJson.action.billMethodUpdateById,
-            callback:this._onRefreshMethod
+            func:appJson.action.billLabelUpdateById,
+            callback:this._onRefreshLabel
         });
     }
 
     //编辑分类
     _editSortBtn = (item) =>{
         this.props.navigation.navigate('BillSortForm',{
-            title:'编辑消费分类',
+            title:'编辑分类',
             item,
             func:appJson.action.billSortUpdateById,
             callback:this._onRefreshSort
@@ -298,14 +289,14 @@ class BillForm extends BaseComponent {
         this.hideActivityIndicator();
     }
 
-    //提示是否通过id删除消费方式
-    _deleteMethodBtn = (item) => {
+    //提示是否通过id删除方式
+    _deleteLabelBtn = (item) => {
         this.showAlert({
             content:'确认删除【'+item.name+'】?',
             buttons:[
                 {
                     text:'确认',
-                    onPress:()=>this._confirmDeleteMethod(item.id)
+                    onPress:()=>this._confirmDeleteLabel(item.id)
                 },
                 {
                     text:'取消',
@@ -315,20 +306,20 @@ class BillForm extends BaseComponent {
         });
     }
 
-    //确认删除消费方式
-    _confirmDeleteMethod = async (id:number) => {
+    //确认删除方式
+    _confirmDeleteLabel = async (id:number) => {
         this.showActivityIndicator();
         try{
             //方式
-            const methodData = await this.props.postAction(appJson.action.billMethodDeleteById,{id:id},'通过id删除消费方式');
+            const data = await this.props.postAction(appJson.action.billLabelDeleteById,{id:id},'通过id删除方式');
             this.hideActivityIndicator();
-            this._dealParams(methodData);
+            this._dealParams(data);
         }catch (e) {
             this.handleRequestError(e);
         }
     }
 
-    //提示是否通过id删除消费类别
+    //提示是否通过id删除类别
     _deleteSortBtn = (item) => {
         this.showAlert({
             content:'确认删除【'+item.name+'】?',
@@ -345,14 +336,14 @@ class BillForm extends BaseComponent {
         });
     }
 
-    //确认删除消费类别
+    //确认删除类别
     _confirmDeleteSort = async (id:number) => {
         this.showActivityIndicator();
         try{
             //方式
-            const methodData = await this.props.postAction(appJson.action.billSortDeleteById,{id:id},'通过id删除消费方式');
+            const data = await this.props.postAction(appJson.action.billSortDeleteById,{id:id},'通过id删除方式');
             this.hideActivityIndicator();
-            this._dealParams(methodData);
+            this._dealParams(data);
         }catch (e) {
             this.handleRequestError(e);
         }
@@ -364,37 +355,37 @@ class BillForm extends BaseComponent {
             <ScrollView style={styles.contain} keyboardShouldPersistTaps={'handled'}>
 
                 <View style={{height:12}}/>
-                <Field name={'type'} component={RadioButton} title={'消费类型'} isNeed={true}
+                <Field name={'type'} component={RadioButton} title={'类型'} isNeed={true}
                        values={selectType} defaultValue={this.data?this.data.type:selectType[0].id}
                 />
 
                 <Field name={'dates'} component={DateTimeField}
-                       mode={'datetime'} title={'消费时间'} isNeed={true}
+                       mode={'datetime'} title={'时间'} isNeed={true}
                        defaultValue={this.data?this.data.dates:new Date()}
                 />
 
                 <View style={{height:5}}/>
 
                 <Field name={'sums'} component={TextField}
-                       title={'消费金额'} isNeed={true} keyboardType={'numeric'}
+                       title={'金额'} isNeed={true} keyboardType={'numeric'}
                 />
 
-                <View style={{height:95}}/>
+                <View style={{height:pxTodpHeight(200)}}/>
                 <Field name={'descs'} component={TextArea}
-                       title={'消费描述'} isNeed={false} height={100}
+                       title={'描述'} isNeed={false} height={100}
                 />
 
-                <View style={{height:50}}/>
+                <View style={{height:pxTodpHeight(100)}}/>
                 <Button
-                    style={{height:39,backgroundColor:'#21c3ff',}}
+                    style={{height:pxTodpHeight(78),backgroundColor:'#21c3ff',}}
                     onPress={this.props.handleSubmit(this.data?this._editBill:this._addBill)}
                 >
                     <Text style={styles.btnSubmit}>提交</Text>
                 </Button>
 
-                <View style={{width:'100%',position:'absolute',top:185}}>
+                <View style={{width:'100%',position:'absolute',top:pxTodpHeight(370)}}>
                     <Field
-                        name={'sortId'} component={Select} title={'消费分类'} isNeed={true}
+                        name={'sortId'} component={Select} title={'分类'} isNeed={true}
                         values={this.state.selectSort}
                         isShowAdd={true}
                         addBtn={this._addSortBtn}
@@ -406,17 +397,17 @@ class BillForm extends BaseComponent {
                     />
                 </View>
 
-                <View style={{width:'100%',position:'absolute',top:140}}>
+                <View style={{width:'100%',position:'absolute',top:pxTodpHeight(280)}}>
                     <Field
-                        name={'methodId'} component={Select} title={'消费方式'} isNeed={true}
-                        values={this.state.selectMethod}
+                        name={'labelId'} component={Select} title={'标签'}
+                        values={this.state.selectLabel}
                         isShowAdd={true}
-                        addBtn={this._addMethodBtn}
+                        addBtn={this._addLabelBtn}
                         isShowEdit={true}
-                        editBtn={this._editMethodBtn}
+                        editBtn={this._editLabelBtn}
                         isShowDelete={true}
-                        deleteBtn={this._deleteMethodBtn}
-                        defaultValue={this.data?this.data.methodId:null}
+                        deleteBtn={this._deleteLabelBtn}
+                        defaultValue={this.data?this.data.labelId:null}
                     />
                 </View>
 
@@ -434,10 +425,10 @@ const styles = StyleSheet.create({
     contain:{
         flex:1,
         backgroundColor:'#fff',
-        paddingHorizontal: 15,
+        paddingHorizontal: pxTodpHeight(30),
     },
     btnSubmit:{
-        fontSize:20,
+        fontSize:pxTodpWidth(40),
         color:'#fff'
     },
 });

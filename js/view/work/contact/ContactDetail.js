@@ -3,7 +3,6 @@ import {View, Text, Image, StyleSheet, TouchableOpacity, Platform} from 'react-n
 import {phoneCall,sendMessage} from "../../../utils/ToolUtil";
 import {connect} from 'react-redux';
 import * as actions from '../../../actions';
-import * as toast from "../../common/MyToast";
 
 class ContactDetail extends Component{
     static navigationOptions = ({navigation}) => ({
@@ -47,7 +46,7 @@ class ContactDetail extends Component{
 
         this.setState({isLoad:false,});
         if(error.length > 0){
-            toast.toastLong(error);
+            // toast.toastLong(error);
         }
     }
 

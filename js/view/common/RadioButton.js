@@ -6,6 +6,7 @@ import{
     TouchableOpacity
 }from 'react-native';
 import Button from "./Button";
+import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 export type Props = {
     values:Array,//选项
@@ -49,11 +50,11 @@ const styles = StyleSheet.create({
     contain:{
         flexDirection:'row',
         alignItems:'center',
-        height:36,
+        height:pxTodpHeight(72),
     },
     titleStyle:{
-        marginRight:23,
-        fontSize:14,
+        marginRight:pxTodpWidth(46),
+        fontSize:pxTodpWidth(28),
         color:'#666666',
     },
     radioStyle:{
@@ -65,21 +66,21 @@ const styles = StyleSheet.create({
     outCircle:{
         justifyContent:'center',
         alignItems:'center',
-        width:20,
-        height:20,
-        borderRadius:40,
-        marginRight:5,
+        width:pxTodpWidth(40),
+        height:pxTodpHeight(40),
+        borderRadius:pxTodpWidth(80),
+        marginRight:pxTodpWidth(10),
         borderWidth:1,
         borderColor:'#dcdcdc',
     },
     inCircle:{
         backgroundColor:'#333',
-        width:10,
-        height:10,
-        borderRadius:10,
+        width:pxTodpWidth(20),
+        height:pxTodpHeight(20),
+        borderRadius:pxTodpWidth(20),
     },
     inputStyle:{
-        fontSize:14,
+        fontSize:pxTodpWidth(28),
         color:'#333',
     }
 })

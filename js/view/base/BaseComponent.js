@@ -16,6 +16,7 @@ import MessageButton from '../MessageButton';
 import MyDialog from '../common/MyDialog';
 import * as appJson from '../../../app';
 import Orientation from 'react-native-orientation';
+import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 export default class BaseComponent extends Component<any> {
 
@@ -37,7 +38,7 @@ export default class BaseComponent extends Component<any> {
             headerLeft:params && params.leftView?params.leftView:(
                 <TouchableOpacity
                     onPress={params?()=>params.goBack():null}
-                    style={{width:50,paddingLeft:15}}>
+                    style={{width:pxTodpWidth(100),paddingLeft:pxTodpWidth(30)}}>
                     <Image source={backImg}/>
                 </TouchableOpacity>
             ),
@@ -241,7 +242,7 @@ export default class BaseComponent extends Component<any> {
     renderDisNet(){
         return this.state.netStatus === 'none' || this.state.netStatus === 'unknown'?(
             <View style={styles.containDisNet}>
-                <Text style={{fontSize:15,color:'#999'}}>
+                <Text style={{fontSize:pxTodpWidth(30),color:'#999'}}>
                     {this.state.netStatus === 'none'?'网络己断开':'联网状态异常'}
                 </Text>
             </View>
@@ -287,13 +288,13 @@ const styles = StyleSheet.create({
     },
     containActivityIndicator:{
         position:'absolute',
-        top:-30,left:0,right:0,bottom:0,
+        top:-pxTodpHeight(60),left:0,right:0,bottom:0,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor:'#00000000'
     },
     containDisNet:{
-        height: 40,
+        height: pxTodpHeight(80),
         justifyContent:'center',
         alignItems: 'center',
         backgroundColor:'#fcdaa6'

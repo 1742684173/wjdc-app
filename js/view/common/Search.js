@@ -12,6 +12,7 @@ import search from "../../img/common/search.png";
 import select from "../../img/common/search_select.png";
 import add from "../../img/common/add.png";
 import Button from "./Button";
+import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 type Props = {
     placeholder?:string,//提示
@@ -95,8 +96,8 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         alignItems:"center",
         backgroundColor:"#ffffff",
-        paddingHorizontal:15,
-        paddingVertical:6,
+        paddingHorizontal:pxTodpWidth(30),
+        paddingVertical:pxTodpHeight(12),
         //,
     },
     searchView:{
@@ -105,36 +106,36 @@ const styles = StyleSheet.create({
         backgroundColor:"#f2f2f2",
         justifyContent:"center",
         alignItems:"center",
-        borderRadius:5,
-        height:35,
+        borderRadius:pxTodpWidth(10),
+        height:pxTodpHeight(70),
     },
     inputView:{
         flex:1,
-        height:45,
-        marginHorizontal:10,
-        fontSize:13,
+        height:pxTodpHeight(90),
+        marginHorizontal:pxTodpWidth(20),
+        fontSize:pxTodpWidth(26),
     },
     searchImage:{
-        height:20,
-        width:20,
-        marginRight:5,
-        marginLeft: 5,
+        height:pxTodpHeight(40),
+        width:pxTodpWidth(40),
+        marginRight:pxTodpWidth(10),
+        marginLeft: pxTodpWidth(10),
         resizeMode :"contain",
     },
     addView:{
         alignItems:"center",
         justifyContent:"center",
-        width:44,
-        height:35,
-        borderRadius:5,
+        width:pxTodpWidth(88),
+        height:pxTodpHeight(70),
+        borderRadius:pxTodpWidth(10),
         borderWidth:1,
         borderColor:"#f2f2f2",
-        marginLeft:7,
+        marginLeft:pxTodpWidth(14),
         backgroundColor:'#00000000',
     },
     addImage:{
-        height:15,
-        width:15,
+        height:pxTodpHeight(30),
+        width:pxTodpWidth(30),
         resizeMode :"contain",
     },
 })

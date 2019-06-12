@@ -1,8 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import BillInfo from '../work/bill';
-import Carousel from "./Carousel";
+import Carousel from "../common/Carousel";
 import {View} from "react-native";
+import Bills from "../work/bill/BillHistory";
+import BillTotal from "../work/bill/BillTotal";
 
 export default class Home extends Component<any> {
     static navigationOptions = ({navigation}) => ({
@@ -29,6 +31,8 @@ export default class Home extends Component<any> {
     render() {
         const screens = [
             <BillInfo key={1} navigation={this.props.navigation}/>,
+            <Bills key={2} navigation={this.props.navigation}/>,
+            <BillTotal key={3} navigation={this.props.navigation}/>,
         ];
 
         return (

@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import type { Element } from 'react';
 import Button from "./Button";
+import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 export type Props = {
     style?:style,//
@@ -60,14 +61,14 @@ const FilterTab = (props:Props = defaultProps) => {
 
                                 <View style={{
                                     width:64,
-                                    height:25,
-                                    borderRadius:5,
+                                    height:pxTodpHeight(50),
+                                    borderRadius:pxTodpWidth(10),
                                     backgroundColor:item.id===value?selectBgColor:unSelectBgColor,
                                     alignItems:'center',
                                     justifyContent:'center',
-                                    marginRight: 3,
+                                    marginRight: pxTodpWidth(6)
                                 }}>
-                                    <Text style={{fontSize:14, color:item.id===value?selectFontColor:unSelectFontColor}}>
+                                    <Text style={{fontSize:pxTodpWidth(28), color:item.id===value?selectFontColor:unSelectFontColor}}>
                                         {item.name}
                                     </Text>
                                 </View>
@@ -94,10 +95,10 @@ const styles = StyleSheet.create({
         height: 0,
         backgroundColor: 'transparent',
         borderStyle: 'solid',
-        borderTopWidth: 5,
-        borderBottomWidth: 5,
-        borderLeftWidth: 10,
-        borderRightWidth: 10,
+        borderTopWidth: pxTodpWidth(10),
+        borderBottomWidth: pxTodpWidth(10),
+        borderLeftWidth: pxTodpWidth(20),
+        borderRightWidth: pxTodpWidth(20),
         borderLeftColor: 'transparent',
         borderRightColor: 'transparent',
         borderBottomColor: 'transparent',

@@ -5,6 +5,7 @@ import {
     View,
 } from 'react-native';
 import Input from './Input';
+import {pxTodpWidth} from "../../utils/ScreenUtil";
 
 export type Props = {
     title:string,//标签名称
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
     },
     titleStyle:{
-        fontSize:14,
+        fontSize:pxTodpWidth(28),
         color:'#666666',
     },
     inputViewStyle:{
@@ -50,11 +51,11 @@ const styles = StyleSheet.create({
         alignItems:'flex-start',
         borderWidth:1,
         borderColor:'#dcdcdc',
-        borderRadius:20,
-        marginLeft:10,
+        borderRadius:pxTodpWidth(40),
+        marginLeft:pxTodpWidth(20),
     },
     inputStyle:{
-        fontSize:14,
+        fontSize:pxTodpWidth(28),
         color:'#333',
     }
 })

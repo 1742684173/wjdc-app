@@ -5,6 +5,7 @@ import {
     Text,
 }from 'react-native';
 import type { Element } from 'react';
+import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 export type Props = {
     text?:String,
@@ -21,8 +22,8 @@ const Title = (props:Props) => {
         <View style={[styles.smallTitleView,style]}>
             <View style={[styles.smallTitleImage,{backgroundColor:color==undefined?'#21c2fd':color}]}/>
             <Text style={styles.smallTitleText}>{text}</Text>
-            <Text style={{fontSize:12,color:'#999999'}}>{smallText}</Text>
-            <Text style={{fontSize:11}}>{unit}</Text>
+            <Text style={{fontSize:pxTodpWidth(24),color:'#999999'}}>{smallText}</Text>
+            <Text style={{fontSize:pxTodpWidth(22)}}>{unit}</Text>
         </View>
     )
 };
@@ -31,20 +32,20 @@ const styles = StyleSheet.create({
     smallTitleView:{
         flexDirection:'row',
         alignItems:'center',
-        marginVertical:15,
+        marginVertical:pxTodpHeight(30),
     },
     //分类标题前面的图片
     smallTitleImage:{
         // backgroundColor:'#21c2fd',
-        height:15,
-        width:5,
-        borderRadius:3,
-        marginRight:5,
+        height:pxTodpHeight(30),
+        width:pxTodpWidth(10),
+        borderRadius:pxTodpWidth(6),
+        marginRight:pxTodpWidth(10),
     },
     //分类标题
     smallTitleText:{
         color:'#333333',
-        fontSize:15,
+        fontSize:pxTodpWidth(30),
     },
 })
 

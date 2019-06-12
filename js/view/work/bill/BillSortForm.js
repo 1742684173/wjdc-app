@@ -9,6 +9,7 @@ import Button from '../../common/Button';
 import * as appJson from '../../../../app';
 import * as actions from '../../../actions/index';
 import BaseComponent from "../../base/BaseComponent";
+import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 
 class BillSortForm extends BaseComponent {
     state = {
@@ -84,15 +85,15 @@ class BillSortForm extends BaseComponent {
         let view = (
             <ScrollView style={styles.contain} keyboardShouldPersistTaps={'handled'}>
 
-                <View style={{height:12}}/>
+                <View style={{height:pxTodpHeight(24)}}/>
 
                 <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
 
-                <View style={{height:12}}/>
-                <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={100}/>
+                <View style={{height:pxTodpHeight(24)}}/>
+                <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={pxTodpHeight(200)}/>
 
-                <View style={{height:50}}/>
-                <Button style={{height:39,backgroundColor:'#21c3ff',}}
+                <View style={{height:pxTodpHeight(100)}}/>
+                <Button style={{height:pxTodpHeight(78),backgroundColor:'#21c3ff',}}
                         onPress={this.props.handleSubmit(this._handleSubmit)}>
                     <Text style={styles.btnSubmit}>提交</Text>
                 </Button>
@@ -109,10 +110,10 @@ const styles = StyleSheet.create({
     contain:{
         flex:1,
         backgroundColor:'#fff',
-        paddingHorizontal: 15,
+        paddingHorizontal: pxTodpWidth(30),
     },
     btnSubmit:{
-        fontSize:20,
+        fontSize:pxTodpWidth(40),
         color:'#fff'
     },
 });

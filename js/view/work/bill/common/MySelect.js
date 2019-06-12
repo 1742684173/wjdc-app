@@ -17,6 +17,7 @@ const upPic = require('../../../../img/common/up.png');
 const downPic = require('../../../../img/common/down.png');
 const selectPic = require('../../../../img/common/select.png');
 import Title from "../../../common/Title";
+import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
 type Props = {
     values:Array,//数据
@@ -85,23 +86,23 @@ const styles = StyleSheet.create({
     },
     div2:{
         backgroundColor:'#f8f8f8',
-        height:33,
+        height:pxTodpHeight(66),
         flexDirection:'row',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius:10,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        marginVertical:3,
-        marginLeft: 15,
+        borderRadius:pxTodpWidth(20),
+        paddingVertical: pxTodpHeight(10),
+        paddingHorizontal: pxTodpWidth(20),
+        marginVertical:pxTodpHeight(6),
+        marginLeft: pxTodpWidth(30),
         borderColor:'#21c3fe',
     },
     font1:{
-        fontSize:13,
+        fontSize:pxTodpWidth(26),
         color:'#333'
     },
     title:{
-        marginTop:10,
+        marginTop:pxTodpHeight(20)
     }
 })
 

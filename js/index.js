@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import type { ComponentType } from 'react';
-import {Slider,SafeAreaView, StatusBar,YellowBox,Platform,View,Text} from 'react-native';
+import {Slider,SafeAreaView, StatusBar,YellowBox,Platform,View,Text,PixelRatio,Dimensions} from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './store/configureStore';

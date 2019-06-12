@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import Input from '../../common/Input';
 import del from "../../../img/common/delete.png";
+import {pxTodpHeight,pxTodpWidth} from "../../../utils/ScreenUtil";
 
 export type Props = {
     onPostfixPress?:Function,
@@ -27,18 +28,18 @@ const styles = StyleSheet.create({
         backgroundColor:'#ffffff',
     },
     title:{
-        fontSize:14,
+        fontSize:pxTodpWidth(28),
         color:'#666666',
     },
     inputStyle:{
-        width:10,
-        height:36,
+        width:pxTodpWidth(20),
+        height:pxTodpHeight(72),
         borderWidth:1,
         borderColor:'#dcdcdc',
-        borderRadius:20,
-        fontSize:14,
+        borderRadius:pxTodpWidth(40),
+        fontSize:pxTodpWidth(28),
         color:'#333',
-        marginLeft:10,
+        marginLeft:pxTodpWidth(20),
     }
 })
 
