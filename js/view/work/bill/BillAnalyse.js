@@ -5,7 +5,7 @@ import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
 import BaseComponent from '../../base/BaseComponent';
 import Title from "../../common/Title";
-import BillTotalLabel from "./common/BillTotalLabel";
+import BillTotalLabel from "./BillTotalLabel";
 import Button from "../../common/Button";
 import FilterTab from "../../common/FilterTab";
 import DateBetween from "../../common/DateBetween";

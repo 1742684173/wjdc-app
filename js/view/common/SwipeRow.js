@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     swipeActions: {
-        backgroundColor: 'grey',
+        backgroundColor: '#00000000',
         width: '100%',
         overflow: 'hidden',
         ...StyleSheet.absoluteFillObject,

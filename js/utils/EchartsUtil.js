@@ -77,7 +77,8 @@ class EchartsUtil {
                 //     barWidth:10,
                 //     data: billByDateSR
                 // }
-            ]
+            ],
+            //color:[]
         };
         return this;
     }
@@ -137,6 +138,11 @@ class EchartsUtil {
         return this;
     }
 
+    setColor(colors){
+        this.option.color = colors;
+        return this;
+    }
+
     setSeries(obj){
         this.option.series = obj;
         return this;
@@ -145,6 +151,7 @@ class EchartsUtil {
     getOption(){
         return this.option;
     }
+
 }
 
 module.exports = EchartsUtil;

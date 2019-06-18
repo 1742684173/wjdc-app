@@ -31,8 +31,8 @@ export default class Home extends Component<any> {
     render() {
         const screens = [
             <BillInfo key={1} navigation={this.props.navigation}/>,
-            <Bills key={2} navigation={this.props.navigation}/>,
-            <BillTotal key={3} navigation={this.props.navigation}/>,
+           // <Bills key={2} navigation={this.props.navigation}/>,
+            //<BillTotal key={3} navigation={this.props.navigation}/>,
         ];
 
         return (

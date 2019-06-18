@@ -57,7 +57,7 @@ export default class BaseComponent extends Component<any> {
     initBase = async () => {
         await this.setState({
             orientation:'portrait',
-            netStatus:0,//none：离线状态 cellular:通过蜂窝数据流量联网 wifi:通过wifi联网 unknown:联网状态异常
+            netStatus:'none',//none：离线状态 cellular:通过蜂窝数据流量联网 wifi:通过wifi联网 unknown:联网状态异常
             dialogType:'load',//load alert others
             isDialogVisible:false,//是否显示加载框
             dialogTitle:'信息提示',//加载框提示

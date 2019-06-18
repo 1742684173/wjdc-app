@@ -1,5 +1,6 @@
 import Communications from 'react-native-communications';
 import forge from 'node-forge';
+import moment from "moment";
 
 //md5加密
 export const md5 = (str:string) => {
@@ -64,4 +65,108 @@ export const len = (s) => {
         }
     }
     return l;
+}
+
+//计算两日期相差的天数
+export const daysReduce = (date1,date2) => {
+    let days = (new Date(date1)).getTime() - (new Date(date2)).getTime();
+    let day = parseInt(days / (1000 * 60 * 60 * 24));
+    return day;
+}
+
+/**
+ * 日期格式
+ * format
+ */
+export const formatDate = (date,format) => {
+    return moment(date).format(format);
+}
+
+//格式当前周几的日期成星期几
+export const formatDateToWeek = (date) => {
+    let nowDate = new Date();
+    let w = (new Date(nowDate)).getDay();
+
+    let result = date;
+    let count = daysReduce(nowDate,date);
+    switch (w) {
+        case 0:
+            if(count <= 7){
+                if(count < 3){
+                    result = getRecentThree(daysReduce(nowDate,date));
+                }else {
+                    result = getWeekName(date);
+                }
+            }
+            break;
+        case 1:
+            if(count <= 6){
+                if(count < 3){
+                    result = getRecentThree(daysReduce(nowDate,date));
+                }else {
+                    result = getWeekName(date);
+                }
+            }
+            break;
+        case 2:
+            if(count <= 5){
+                if(count < 3){
+                    result = getRecentThree(daysReduce(nowDate,date));
+                }else {
+                    result = getWeekName(date);
+                }
+            }
+            break;
+        case 3:
+            if(count <= 4){
+                if(count < 3){
+                    result = getRecentThree(daysReduce(nowDate,date));
+                }else {
+                    result = getWeekName(date);
+                }
+            }
+            break;
+        case 4:
+            if(count <= 3){
+                result = getRecentThree(daysReduce(nowDate,date));
+            }
+            break;
+        case 5:
+            if(count <= 2){
+                result = getRecentThree(daysReduce(nowDate,date));
+            }
+            break;
+        case 6:
+            if(count <= 1){
+                result = getRecentThree(daysReduce(nowDate,date));
+            }
+            break;
+    }
+
+    return result;
+}
+
+export const getRecentThree = (count) => {
+    if(count === 0){
+        return '今天';
+    }else if(count === 1){
+        return '昨天';
+    }else if(count === 2){
+        return '前天';
+    }
+}
+
+export const getWeekName = (date) => {
+    let w = new Date(date).getDay();
+    let name = '';
+    switch (w) {
+        case 0:name = '星期天';break;
+        case 1:name = '星期一';break;
+        case 2:name = '星期二';break;
+        case 3:name = '星期三';break;
+        case 4:name = '星期四';break;
+        case 5:name = '星期五';break;
+        case 6:name = '星期六';break;
+    }
+    return name;
 }

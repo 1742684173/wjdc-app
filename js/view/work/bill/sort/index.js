@@ -10,7 +10,7 @@ import moment from "moment";
 import BaseComponent from '../../base/BaseComponent'
 import Button from "../../common/Button";
 import MoreList from "../../common/MoreList";
-import {formatDate, formatDateToWeek, numberFormatter} from "../../../utils/ToolUtil";
+import {numberFormatter} from "../../../utils/ToolUtil";
 import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 import test from '../../../test/img/index_icon_16.png'
 import Divider from "../../common/Divider";
@@ -84,11 +84,6 @@ class BillInfo extends BaseComponent {
     }
 
     _goBillHistory = () => {
-        if(this.state.billsHistory.length===0){
-            this.showToast('记录为空');
-            return;
-        }
-
         this.props.navigation.navigate('BillHistory',{
             callback:(data)=>{
                 this.getBillInfo();
@@ -139,30 +134,25 @@ class BillInfo extends BaseComponent {
                                 <View key={i} style={[styles.itemView,{borderTopWidth:i===0?0:1}]}>
                                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                                         {/*分类名称*/}
-                                        <Text ellipsizeMode={'tail'} numberOfLines={1} style={{fontSize:pxTodpWidth(30)}}>
+                                        <Text ellipsizeMode={'tail'} style={{flex:1,fontSize:pxTodpWidth(30)}}>
                                             {item.sortName}
                                             <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>
-                                                ({formatDateToWeek(formatDate(item.dates,"YYYY-MM-DD hh:mm:ss"))})
+                                                {item.labelName?('('+item.labelName+')'):''}
                                             </Text>
                                         </Text>
                                         {/*分类金额*/}
-                                        <Text ellipsizeMode={'tail'} numberOfLines={1} style={{textAlign:'right',color:item.type === 1?'#f03':'#00cd00',fontSize:pxTodpWidth(30)}}>
+                                        <Text ellipsizeMode={'tail'} style={{textAlign:'right',flex:1,color:item.type === 1?'#f03':'#00cd00',fontSize:pxTodpWidth(30)}}>
                                             {item.type === 1?('+'+item.sums):('-'+item.sums)}
                                         </Text>
                                     </View>
 
                                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                        <Text ellipsizeMode={'tail'} numberOfLines={1} style={{flex:1,color:'#999',fontSize:pxTodpWidth(24)}}>
+                                        <Text ellipsizeMode={'tail'} style={{flex:1,color:'#999',fontSize:pxTodpWidth(24)}}>
                                             描述:{item.descs}
                                         </Text>
-                                        {
-                                            item.labelName?(
-                                                <Text ellipsizeMode={'tail'}  numberOfLines={1} style={{flex:1,textAlign:'right',color:'#999',fontSize:pxTodpWidth(24)}}>
-                                                    标签：{item.labelName}
-                                                </Text>
-                                            ):null
-                                        }
-
+                                        <Text ellipsizeMode={'tail'} style={{textAlign:'right',flex:1,color:'#999',fontSize:pxTodpWidth(24)}}>
+                                            时间:{moment(item.dates).format("YYYY-MM-DD hh:mm:ss")}
+                                        </Text>
                                     </View>
                                 </View>
                             )
@@ -382,7 +372,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#fff',
         borderTopRightRadius:pxTodpWidth(20),
         borderTopLeftRadius:pxTodpWidth(20),
-    },
+    }
 });
 
 export default connect(null,actions)(BillInfo);

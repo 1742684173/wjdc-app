@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import {Text, ScrollView,View, StyleSheet, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {reduxForm} from 'redux-form';
-import Field from '../../common/Field';
-import TextField from '../../common/TextField';
-import TextArea from '../../common/TextArea';
-import Button from '../../common/Button';
-import * as appJson from '../../../../app';
-import * as actions from '../../../actions/index';
-import BaseComponent from "../../base/BaseComponent";
-import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
+import Field from '../../../common/Field';
+import TextField from '../../../common/TextField';
+import TextArea from '../../../common/TextArea';
+import Button from '../../../common/Button';
+import * as appJson from '../../../../../app';
+import * as actions from '../../../../actions/index';
+import BaseComponent from "../../../base/BaseComponent";
+import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
-class BillLabelForm extends BaseComponent {
+class BillSortForm extends BaseComponent {
     state = {
         data:[],
         selectSort:[],
@@ -53,8 +53,7 @@ class BillLabelForm extends BaseComponent {
         try{
             this.showActivityIndicator();
 
-            const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑方式','form');
-            this.hideActivityIndicator();
+            const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑分类','form');
 
             if(type === this.func){
                 if(code === appJson.action.success){
@@ -76,7 +75,7 @@ class BillLabelForm extends BaseComponent {
                 }
             }
         }catch (e) {
-            this.handleRequestError(e);
+            this.hideActivityIndicator();
 
         }
     }
@@ -91,7 +90,7 @@ class BillLabelForm extends BaseComponent {
                 <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
 
                 <View style={{height:pxTodpHeight(24)}}/>
-                <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={100}/>
+                <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={pxTodpHeight(200)}/>
 
                 <View style={{height:pxTodpHeight(100)}}/>
                 <Button style={{height:pxTodpHeight(78),backgroundColor:'#21c3ff',}}
@@ -119,9 +118,9 @@ const styles = StyleSheet.create({
     },
 });
 
-const ReduxBillLabelForm = reduxForm({
-    form: 'BillLabelForm',
-})(BillLabelForm)
+const ReduxBillSortForm = reduxForm({
+    form: 'BillSortForm',
+})(BillSortForm)
 
 
-export default connect(null,actions)(ReduxBillLabelForm);
+export default connect(null,actions)(ReduxBillSortForm);

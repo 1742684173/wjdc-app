@@ -35,7 +35,7 @@ class BillForm extends BaseComponent {
             sums:this.data.sums+'',
             type:this.data.type+'',
             dates:this.data.dates+'',
-            LabelId:this.data.LabelId+'',
+            labelId:this.data.labelId+'',
             sortId:this.data.sortId+'',
             descs:this.data.descs+'',
         }):null
@@ -89,9 +89,9 @@ class BillForm extends BaseComponent {
         this.showActivityIndicator();
         try{
             //方式
-            const LabelData = await this.props.postAction(appJson.action.billLabelFind,{},'查询方式');
+            const labelData = await this.props.postAction(appJson.action.billLabelFind,{},'查询方式');
             this.hideActivityIndicator();
-            this._dealParams(LabelData);
+            this._dealParams(labelData);
         }catch (e) {
             this.handleRequestError(e);
         }
@@ -385,20 +385,6 @@ class BillForm extends BaseComponent {
 
                 <View style={{width:'100%',position:'absolute',top:pxTodpHeight(370)}}>
                     <Field
-                        name={'sortId'} component={Select} title={'分类'} isNeed={true}
-                        values={this.state.selectSort}
-                        isShowAdd={true}
-                        addBtn={this._addSortBtn}
-                        isShowEdit={true}
-                        editBtn={this._editSortBtn}
-                        isShowDelete={true}
-                        deleteBtn={this._deleteSortBtn}
-                        defaultValue={this.data?this.data.sortId:null}
-                    />
-                </View>
-
-                <View style={{width:'100%',position:'absolute',top:pxTodpHeight(280)}}>
-                    <Field
                         name={'labelId'} component={Select} title={'标签'}
                         values={this.state.selectLabel}
                         isShowAdd={true}
@@ -408,6 +394,20 @@ class BillForm extends BaseComponent {
                         isShowDelete={true}
                         deleteBtn={this._deleteLabelBtn}
                         defaultValue={this.data?this.data.labelId:null}
+                    />
+                </View>
+
+                <View style={{width:'100%',position:'absolute',top:pxTodpHeight(280)}}>
+                    <Field
+                        name={'sortId'} component={Select} title={'分类'} isNeed={true}
+                        values={this.state.selectSort}
+                        isShowAdd={true}
+                        addBtn={this._addSortBtn}
+                        isShowEdit={true}
+                        editBtn={this._editSortBtn}
+                        isShowDelete={true}
+                        deleteBtn={this._deleteSortBtn}
+                        defaultValue={this.data?this.data.sortId:null}
                     />
                 </View>
 

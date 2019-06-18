@@ -6,7 +6,7 @@ import Search from '../../common/Search';
 import {connect} from 'react-redux';
 import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
-import BillLabel from './common/BillLabel';
+import BillLabel from './BillLabel';
 import BaseComponent from '../../base/BaseComponent';
 
 
@@ -16,8 +16,8 @@ class BillHistory extends BaseComponent {
         total:0,//事件总数
         foot:1,
         data:[],
-        selectSort:[],//消费方式
-        selectlabel:[],//消费类别
+        sort:[],//分类
+        label:[],//标签
         selectLabel:{sortName:'dates desc',type:'all',labelId:'all',sortId:'all'},//筛选的结果
     }
 
@@ -71,8 +71,9 @@ class BillHistory extends BaseComponent {
     renderLabel(){
         return (
             <BillLabel
-                label={this.state.selectLabel}
-                sort={this.state.selectSort}
+                label={this.state.label}
+                sort={this.state.sort}
+                selectLabel={this.state.selectLabel}
                 hideModal={()=>this.initBase()}
                 onSubmit={this._onSumbit}
                 onReset={this._onReset}
@@ -250,7 +251,7 @@ class BillHistory extends BaseComponent {
             case appJson.action.billSortFind:
                 if(code === appJson.action.success){
                     if(data.totalCount > 0){
-                        this.setState({selectSort:data.list});
+                        this.setState({sort:data.list});
                     }
                 }
                 break;
@@ -260,7 +261,7 @@ class BillHistory extends BaseComponent {
                 let selectLabel = [];
                 if(code === appJson.action.success){
                     if(data.totalCount > 0){
-                        this.setState({selectLabel:data.list});
+                        this.setState({label:data.list});
                     }
                 }
                 break;
@@ -273,7 +274,7 @@ class BillHistory extends BaseComponent {
 
     _onReset = async () => {
         this.initLabel();
-        await this.setState({selectLabel:{sortName:'dates desc',type:'all',label:'all',sort:'all'}});
+        await this.setState({selectLabel:{sortName:'dates desc',type:'all',labelId:'all',sortId:'all'}});
         await this._getBillList();
     }
 

@@ -1,15 +1,13 @@
 import React,{Component} from 'react';
 import {StyleSheet,View,Text,TouchableWithoutFeedback,Image,FlatList} from 'react-native';
 import PropTypes from 'prop-types';
-import nullDataIcon from "../../../img/common/nullDataIcon.png";
+import nullDataIcon from "../../../../img/common/nullDataIcon.png";
 import moment from "moment";
-import Button from "../../common/Button";
-import SwipeRow from "../../common/SwipeRow";
-import Divider from "../../common/Divider";
-import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
-import {formatDate, formatDateToWeek} from "../../../utils/ToolUtil";
+import Button from "../../../common/Button";
+import SwipeRow from "../../../common/SwipeRow";
+import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
-export default class BillHistoryList extends Component{
+export default class BillLabelList extends Component{
     static propTypes = {
         data:PropTypes.any,//传入的数据
         onRefresh:PropTypes.func,//刷新数据
@@ -62,9 +60,8 @@ export default class BillHistoryList extends Component{
                 <Button
                     style={{
                         width:pxTodpWidth(100),
-                        height:pxTodpHeight(160),
                         backgroundColor: '#f03',
-                        borderRadius:pxTodpWidth(10),
+                        borderRadius: 0,
                         justifyContent:'center',
                         alignItems:'center',
                     }}
@@ -73,10 +70,15 @@ export default class BillHistoryList extends Component{
                     <Text style={{color:'#fff',fontSize:pxTodpWidth(30)}}>删除</Text>
                 </Button>
 
-                <TouchableWithoutFeedback onPress={()=>this._goDetail(item)}>
+                <TouchableWithoutFeedback
+                    underlayColor={'#fff'}
+                    onPress={()=>this._goDetail(item)}
+                >
 
                     <View style={{
-                        borderRadius:pxTodpWidth(10),
+                        borderRadius:0,
+                        // borderBottomLeftRadius:5,
+                        // borderTopLeftRadius:5,
                         width:'100%',
                         height:'100%',
                         justifyContent:'space-around',
@@ -84,31 +86,10 @@ export default class BillHistoryList extends Component{
                         paddingVertical: pxTodpHeight(10),
                         paddingHorizontal: pxTodpWidth(10),
                     }}>
-                        <View style={{flex:1,width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
-                            {/*分类名称*/}
-                            <Text ellipsizeMode={'tail'} style={{flex:1,fontSize:pxTodpWidth(30)}}>
-                                {item.sortName}
-                                <Text ellipsizeMode={'tail'} style={{flex:1,textAlign:'right',color:'#666',fontSize:pxTodpWidth(24)}}>
-                                    ({formatDateToWeek(formatDate(item.dates,"YYYY-MM-DD hh:mm:ss"))})
-                                </Text>
-                            </Text>
-
-                            {/*分类金额*/}
-                            <Text ellipsizeMode={'tail'} style={{flex:1,textAlign:'right',color:item.type === -1?'#00cd00':'#f03',fontSize:pxTodpWidth(30)}}>
-                                {item.type === -1?'-':'+'}{item.sums}
-                            </Text>
-                        </View>
-
-                        <Divider style={{width:'100%',height:1,backgroundColor:'#dcdcdc',marginVertical: pxTodpHeight(10)}}/>
-                        <View style={{width:'100%',flex:2}}>
-                            <Text ellipsizeMode={'tail'} style={{flex:1,color:'#999',fontSize:pxTodpWidth(24)}} ellipsizeMode={'tail'}>
-                                详情：{item.descs}
-                            </Text>
-
-                            <Text ellipsizeMode={'tail'} style={{flex:1,color:'#999',fontSize:pxTodpWidth(24)}} ellipsizeMode={'tail'}>
-                                标签：{item.labelName}
-                            </Text>
-                        </View>
+                        {/*分类名称*/}
+                        <Text ellipsizeMode={'tail'} style={{flex:1,fontSize:pxTodpWidth(30)}}>
+                            {item.name}
+                        </Text>
                     </View>
                 </TouchableWithoutFeedback>
             </SwipeRow>
@@ -136,10 +117,10 @@ export default class BillHistoryList extends Component{
 
 const styles = StyleSheet.create({
     itemView:{
-        // borderRadius:pxTodpWidth(10),
-        height:pxTodpHeight(160),
+        //alignItems:'center',
+        height:pxTodpHeight(100),
         width:undefined,
-        backgroundColor:'#00000000',
+        backgroundColor:'#fff',
         marginHorizontal: pxTodpWidth(30),
     },
     emptyView:{

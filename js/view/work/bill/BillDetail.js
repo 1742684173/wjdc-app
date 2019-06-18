@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, ListView, BackHandler, ScrollView,} from 'react-native';
+import {Text, View, StyleSheet, Platform} from 'react-native';
 import {connect} from 'react-redux';
 import BaseComponent from "../../base/BaseComponent";
 import {postAction} from "../../../actions";
@@ -17,12 +17,23 @@ class BillDetail extends BaseComponent {
     // 构造
     constructor(props) {
         super(props);
+        this.props.navigation.setParams({rightView:this._renderRightView()});
         this.setTitle("帐单详情");
     }
 
     componentDidMount = async () => {
         await this.initBase();
         this._getBill();
+    }
+
+    //右上筛选按钮
+    _renderRightView = () => {
+        return (
+            <Button style={{marginRight:pxTodpWidth(30)}}
+                    onPress={this._editBill}>
+                <Text style={{fontSize:pxTodpWidth(36),color:'#00c2ff'}}>编辑</Text>
+            </Button>
+        )
     }
 
     _getBill = async () => {
@@ -35,7 +46,7 @@ class BillDetail extends BaseComponent {
                 appJson.action.billFind,{
                     billId:this.props.navigation.state.params.id,
                     all:"all"
-                },"查询消费详情");
+                },"查询详情");
 
             this.hideActivityIndicator();
 
@@ -65,29 +76,29 @@ class BillDetail extends BaseComponent {
         let view = (
             <View style={styles.contain}>
                 <View style={[styles.itemView,{marginTop:0}]}>
-                    <Text style={styles.textName}>消费时间：</Text>
+                    <Text style={styles.textName}>时间：</Text>
                     <Text style={styles.textValue}>{
                         moment(this.state.data.dates).format("YYYY-MM-DD hh:mm:ss")
                     }</Text>
                 </View>
 
                 <View style={styles.itemView}>
-                    <Text style={styles.textName}>消费类型：</Text>
+                    <Text style={styles.textName}>类型：</Text>
                     <Text style={styles.textValue}>{this.state.data.type === -1?'支出':'收入'}</Text>
                 </View>
 
                 <View style={styles.itemView}>
-                    <Text style={styles.textName}>消费金额：</Text>
+                    <Text style={styles.textName}>金额：</Text>
                     <Text style={styles.textValue}>{this.state.data.sums}</Text>
                 </View>
 
                 <View style={styles.itemView}>
-                    <Text style={styles.textName}>消费方式：</Text>
-                    <Text style={styles.textValue}>{this.state.data.methodName}</Text>
+                    <Text style={styles.textName}>标签：</Text>
+                    <Text style={styles.textValue}>{this.state.data.labelName}</Text>
                 </View>
 
                 <View style={styles.itemView}>
-                    <Text style={styles.textName}>消费分类：</Text>
+                    <Text style={styles.textName}>分类：</Text>
                     <Text style={styles.textValue}>{this.state.data.sortName}</Text>
                 </View>
 
@@ -96,10 +107,10 @@ class BillDetail extends BaseComponent {
                     <Text style={styles.textValue}>{this.state.data.descs}</Text>
                 </View>
 
-                <View style={{height:50}}/>
-                <Button style={{height:39,backgroundColor:'#21c3ff',}} onPress={this._editBill}>
-                    <Text style={styles.btnSubmit}>编辑</Text>
-                </Button>
+                {/*<View style={{height:50}}/>*/}
+                {/*<Button style={{height:39,backgroundColor:'#21c3ff',}} onPress={this._editBill}>*/}
+                    {/*<Text style={styles.btnSubmit}>编辑</Text>*/}
+                {/*</Button>*/}
             </View>
         );
         return super.renderBase(view);

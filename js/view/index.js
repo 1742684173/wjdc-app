@@ -12,8 +12,9 @@ import BillHistory from './work/bill/BillHistory';
 import BillTotal from './work/bill/BillTotal';
 import BillForm from './work/bill/BillForm';
 import BillDetail from './work/bill/BillDetail';
-import BillLabelForm from './work/bill/BillLabelForm';
-import BillSortForm from './work/bill/BillSortForm';
+import BillLabel from './work/bill/label';
+import BillLabelForm from './work/bill/label/BillLabelForm';
+import BillSortForm from './work/bill/sort/BillSortForm';
 import Contact from './work/contact';
 import ContactDetail from './work/contact/ContactDetail'
 
@@ -25,6 +26,7 @@ const AppStack = StackNavigator({
     BillTotal,
     BillForm,
     BillDetail,
+    BillLabel,
     BillLabelForm,
     BillSortForm,
     Publish,
