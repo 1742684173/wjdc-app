@@ -1,18 +1,6 @@
 import React,{Component} from 'react';
 import{StyleSheet, Text, View, TouchableOpacity, Image,ScrollView}from 'react-native';
 
-export type Props = {
-    values:Array,//选项
-    title:string,//标签名称
-    isNeed:boolean,//是否必填
-    isShowAdd:boolean,//是否显示添加按钮
-    addBtn:Function,//添加按钮方法
-    isShowEdit:boolean,//是否显示编辑按钮
-    editBtn:Function,//编辑按钮方法
-    isShowDelete:boolean,//是否显示删除按钮
-    deleteBtn:Function,//删除按钮方法
-}
-
 const upPic = require('../../../../img/common/up.png');
 const downPic = require('../../../../img/common/down.png');
 const selectPic = require('../../../../img/common/select.png');

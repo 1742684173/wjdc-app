@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import {Text, View, StyleSheet, Platform} from 'react-native';
 import {connect} from 'react-redux';
-import BaseComponent from "../../base/BaseComponent";
-import {postAction} from "../../../actions";
+import BaseComponent from "../../../base/BaseComponent";
+import {postAction} from "../../../../actions";
 import moment from "moment";
-import * as appJson from '../../../../app';
-import Button from "../../common/Button";
-import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
+import * as appJson from '../../../../../app';
+import Button from "../../../common/Button";
+import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
-class BillDetail extends BaseComponent {
+class Detail extends BaseComponent {
 
     state = {
         data:{},
@@ -18,56 +18,54 @@ class BillDetail extends BaseComponent {
     constructor(props) {
         super(props);
         this.props.navigation.setParams({rightView:this._renderRightView()});
-        this.setTitle("帐单详情");
+        this.setTitle("分类详情");
+        this.item = this.props.navigation.state.params.item;
     }
 
     componentDidMount = async () => {
+        super.componentDidMount();
         await this.initBase();
-        this._getBill();
+        this._getBillSort();
     }
 
     //右上筛选按钮
     _renderRightView = () => {
         return (
             <Button style={{marginRight:pxTodpWidth(30)}}
-                    onPress={this._editBill}>
+                    onPress={this._editBillSort}>
                 <Text style={{fontSize:pxTodpWidth(36),color:'#00c2ff'}}>编辑</Text>
             </Button>
         )
     }
 
-    _getBill = async () => {
+    _getBillSort = async () => {
         this.showActivityIndicator();
 
         try{
-
             //分类
             const {type,code,msg,data} = await this.props.postAction(
-                appJson.action.billFind,{
-                    billId:this.props.navigation.state.params.id,
-                    all:"all"
-                },"查询详情");
+                appJson.action.billSortFindDetailById,{id:this.item.id},"查询分类详情");
 
             this.hideActivityIndicator();
 
-            if(type === appJson.action.billFind){
+            if(type === appJson.action.billSortFindDetailById){
                 if(code === appJson.action.success){
-                    data.totalCount >0 ? this.setState({data:data.list[0]}):null;
+                   this.setState({data:data.list[0]});
+                }else {
+                    this.showToast(msg);
                 }
             }
         }catch (e) {
             this.handleRequestError(e.message || e.note);
         }
-
     }
 
     //去编辑帐单界面
-    _editBill = () => {
-        this.props.navigation.navigate('BillForm',{
-            title:'编辑帐单',
-            data:this.state.data,
+    _editBillSort = () => {
+        this.props.navigation.navigate('BillSortUpdateForm',{
+            item:Object.assign(this.state.data,{parentName:this.item.parentName}),
             callback:(data)=>{
-                this._getBill();
+                this._getBillSort();
             }});
     }
 
@@ -76,30 +74,18 @@ class BillDetail extends BaseComponent {
         let view = (
             <View style={styles.contain}>
                 <View style={[styles.itemView,{marginTop:0}]}>
-                    <Text style={styles.textName}>时间：</Text>
-                    <Text style={styles.textValue}>{
-                        moment(this.state.data.dates).format("YYYY-MM-DD hh:mm:ss")
-                    }</Text>
+                    <Text style={styles.textName}>名称：</Text>
+                    <Text style={styles.textValue}>{this.state.data.name}</Text>
                 </View>
 
                 <View style={styles.itemView}>
-                    <Text style={styles.textName}>类型：</Text>
-                    <Text style={styles.textValue}>{this.state.data.type === -1?'支出':'收入'}</Text>
+                    <Text style={styles.textName}>上一级名称：</Text>
+                    <Text style={styles.textValue}>{this.item.parentName}</Text>
                 </View>
 
                 <View style={styles.itemView}>
-                    <Text style={styles.textName}>金额：</Text>
-                    <Text style={styles.textValue}>{this.state.data.sums}</Text>
-                </View>
-
-                <View style={styles.itemView}>
-                    <Text style={styles.textName}>标签：</Text>
-                    <Text style={styles.textValue}>{this.state.data.labelName}</Text>
-                </View>
-
-                <View style={styles.itemView}>
-                    <Text style={styles.textName}>分类：</Text>
-                    <Text style={styles.textValue}>{this.state.data.sortName}</Text>
+                    <Text style={styles.textName}>是否置顶：</Text>
+                    <Text style={styles.textValue}>{this.state.data.top===1?'是':'否'}</Text>
                 </View>
 
                 <View style={styles.itemView}>
@@ -149,4 +135,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect(null,{postAction})(BillDetail);
+export default connect(null,{postAction})(Detail);

@@ -226,6 +226,17 @@ export default class BaseComponent extends Component<any> {
         })
     }
 
+    //显示alert
+    showSelectAlert = async (obj:{title?:string,content?:string,buttons?:Array}) => {
+        await this.setState({
+            dialogType:'selectAlert',
+            isDialogVisible:true,
+            dialogTitle:obj.title,
+            dialogContent:obj.content,
+            dialogButtons:obj.buttons.length?obj.buttons:[],
+        })
+    }
+
     hideAlert = async () => {
         await this.setState({
             dialogType:'load',//load alert others

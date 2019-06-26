@@ -8,6 +8,13 @@ import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 var curDate = new Date();
 let format = 'YYYY-MM-DD';
+
+type Props = {
+    title:string,//标题
+    mode:string,//格式
+    defaultValue:string,//默认值
+}
+
 export default class DateTimeField extends Component {
     state = {
         isDateTimePickerVisible: false,

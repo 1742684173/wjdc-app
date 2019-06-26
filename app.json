@@ -5,16 +5,20 @@
     "sign":"1as2jfa3jkfda.jkakk",
     "loginAccount":"login_account",
     "loginPassword":"login_password",
-    "loginToken":"login_token",
+    "loginToken":"login_token"
   },
   "websocket":{
+    "connect":"connect",
     "connectSuccess":"connect_success",
     "connectFail":"connect_fail",
-    "connectFail":"connect_fail"
+    "connectClose":"connect_close",
+    "sendMsg":"send_msg",
+    "retureMsg":"return_msg"
   },
   "action":{
-//    "url":"http://localhost:8080/wjdc",
-        "url":"http://192.168.101.88:8080/wjdc",
+    "test":"test",
+    "url":"http://localhost:8080/wjdc",
+//        "url":"http://192.168.60.210:8080/wjdc",
 
     "connectServerError":-1,
     "success":200,
@@ -37,7 +41,10 @@
     "billSortAdd":"/billSort/add.do",
     "billSortDeleteById":"/billSort/deleteById.do",
     "billSortUpdateById":"/billSort/updateById.do",
+    "billSortTopById":"/billSort/topById.do",
+    "billSortCancelTopById":"/billSort/cancelTopById.do",
     "billSortFind":"/billSort/find.do",
+    "billSortFindDetailById":"/billSort/findDetailById.do",
 
     "billLabelAdd":"/billLabel/add.do",
     "billLabelDeleteById":"/billLabel/deleteById.do",

@@ -4,9 +4,9 @@ import LoadView from '../../../common/LoadView';
 import Search from '../../../common/Search';
 import {connect} from 'react-redux';
 import * as appJson from '../../../../../app';
-import * as actions from '../../../../actions';
+import * as actions from '../../../../actions/index';
 import BaseComponent from '../../../base/BaseComponent';
-import BillLabelList from './BillLabelList';
+import List from './common/List';
 
 
 class BillLabel extends BaseComponent {
@@ -33,6 +33,7 @@ class BillLabel extends BaseComponent {
     }
 
     componentDidMount = async () => {
+        super.componentDidMount();
         await this.initBase();
         await this._getBillLabelList();
     }
@@ -133,9 +134,7 @@ class BillLabel extends BaseComponent {
 
     //去新增
     _onAddBtn = () => {
-        this.props.navigation.navigate('BillLabelForm',{
-            title:'添加标签',
-            func:appJson.action.billLabelAdd,
+        this.props.navigation.navigate('BillLabelAddForm',{
             callback:(data)=>{
                 this._onRefresh();
             }});
@@ -191,34 +190,19 @@ class BillLabel extends BaseComponent {
                         placeholder={'请转入关健字'}//提示
                         isShowBeforeBtn={true}//是否显示前面按钮
                         onBeforeBtn={this._onSearchBtn}//
-                        // beforeImg={beforeImg}//图标
                         isShowMiddle={true}//是否显示中间按钮
                         onMiddleBtn={this._onAddBtn}
-                        // middleImg={middleImg}//图标
-                        // isShowBehind={true}//是否显示后面按钮
-                        // onBehindBtn={this._onSelectBtn}
-                        // behindImg={behindImg}//图标
                     />
                 </View>
 
-                <View style={styles.div1}>
-                    {
-                        // this.state.data.map((item,i)=>{
-                        //     return(
-                        //         <TouchableOpacity
-                        //             style={[styles.div2,{borderWidth:item.id===value?1:0}]}
-                        //             key={i}
-                        //             onPress={()=>{}}
-                        //         >
-                        //             <Text style={styles.font1}>
-                        //                 {item.name}
-                        //             </Text>
-                        //             {item.id===value?<Image source={selectPic}/>:null}
-                        //         </TouchableOpacity>
-                        //     )
-                        // })
-                    }
-                </View>
+                <List
+                    data={this.state.data}
+                    onRefresh={this._onRefresh}
+                    footView={this._footView}
+                    onEndReached={this._onEndReached}
+                    onPress={this._onItemClick}
+                    onDeleteItem={this._onDeleteItem}
+                />
 
             </View>
         )

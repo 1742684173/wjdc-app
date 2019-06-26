@@ -10,7 +10,7 @@ import {
 import Button from "./Button";
 import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 export type Props = {
-    type?:string,//类形: load->加载框 alert->弹出框 others->自定义  默认是load
+    type?:string,//类形: load->加载框 selectAlert alert->弹出框 others->自定义  默认是load
     visible:boolean,//是否显示
     title?:string,//标题
     content?:any,//内容
@@ -79,6 +79,48 @@ class MyDialog extends Component{
                                     </Button>
                                 )
 
+                            }
+                        </View>
+
+                    </View>
+                );
+                break;
+
+            case 'selectAlert':
+                view = (
+                    <View style={styles.modal}>
+                        {
+                            title?(
+                                <Text style={{color:'#333',fontSize:pxTodpWidth(30),marginVertical:pxTodpHeight(30)}}>
+                                    {title}
+                                </Text>
+                            ):null
+                        }
+
+                        {
+                            content?(
+                                <View style={{marginHorizontal: pxTodpWidth(10)}}>
+                                    <Text style={{color:'#666',fontSize:pxTodpWidth(30),marginBottom: pxTodpHeight(30)}}>
+                                        {content}
+                                    </Text>
+                                </View>
+                            ):null
+                        }
+
+                        <View style={{width:'100%'}}>
+                            {
+                                buttons.map((item,i)=>{
+                                    return (
+                                        <Button
+                                            key={i}
+                                            style={{borderColor:'#dcdcdc',height:pxTodpHeight(100),borderBottomWidth:i===buttons.length-1?0:1}}
+                                            onPress={item.onPress}>
+                                            <Text style={{fontSize:pxTodpWidth(30),color:'#666666'}}>
+                                                {item.text}
+                                            </Text>
+                                        </Button>
+                                    )
+                                })
                             }
                         </View>
 

@@ -6,6 +6,8 @@ import thunk from 'redux-thunk';
 import promise from 'redux-promise';
 import logger from './logger';
 import reducers from '../reducers';
+import createSagaMiddleware from 'redux-saga';
+import saga from '../saga';
 
 const persistedReducer = persistReducer({
     key: 'root',
@@ -13,8 +15,19 @@ const persistedReducer = persistReducer({
     whitelist: ['user'],
 }, reducers);
 
+const sagaMiddleware = createSagaMiddleware();
+
+// export const store = createStore(
+//     reducers, // 合并reducer
+//     window.devToolsExtension ? window.devToolsExtension() : undefined, // dev-tools
+//     applyMiddleware(sagaMiddleware)  // 中间件，加载sagaMiddleware
+// )
+//
+// sagaMiddleware.run(saga)// 执行rootSaga
+
 const configureStore = () => {
-    const enhancer = applyMiddleware(thunk, promise, logger);
+    // const enhancer = applyMiddleware(thunk, promise, logger);
+    const enhancer = applyMiddleware(sagaMiddleware, promise, logger);
     const store = createStore(persistedReducer, enhancer);
 
     const persistor = persistStore(store);

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { Text, View, StyleSheet, TouchableOpacity,ScrollView} from 'react-native';
-import Title from '../../common/Title';
-import DateTimeField from '../../common/DateTimeField';
-import Field from '../../common/Field';
-import MySelect from './common/MySelect';
+import Title from '../../../common/Title';
+import DateTimeField from '../../../common/DateTimeField';
+import Field from '../../../common/Field';
+import MySelect from './MySelect';
 import {reduxForm} from 'redux-form';
-import * as actions from '../../../actions/index';
-import Button from "../../common/Button";
-import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
+import * as actions from '../../../../actions/index';
+import Button from "../../../common/Button";
+import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
 type Props = {
     modalVisible?:boolean,//是否显示
@@ -29,7 +29,7 @@ const dateformats = [
     {id:'%Y',name:'年'},
 ]
 
-class BillTotalLabel extends Component<Props> {
+class TotalLabel extends Component<Props> {
 
     _onReset = async () => {
         this.props.onReset();
@@ -148,6 +148,6 @@ const styles = StyleSheet.create({
 
 const ReduxBillTotalLabelForm = reduxForm({
     form: 'BillTotalLabelForm',
-})(BillTotalLabel)
+})(TotalLabel)
 
 export default connect(null,actions)(ReduxBillTotalLabelForm);

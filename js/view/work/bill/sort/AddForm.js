@@ -10,8 +10,9 @@ import * as appJson from '../../../../../app';
 import * as actions from '../../../../actions/index';
 import BaseComponent from "../../../base/BaseComponent";
 import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
+import RadioButton from "../../../common/RadioButton";
 
-class BillSortForm extends BaseComponent {
+class AddForm extends BaseComponent {
     state = {
         data:[],
         selectSort:[],
@@ -20,20 +21,24 @@ class BillSortForm extends BaseComponent {
     // 构造
     constructor(props) {
         super(props);
-
+        // {
+        //     parentId:0,
+        //     parentName:'一级目录'
+        // },
         this.item = this.props.navigation.state.params.item;
-        this.func = this.props.navigation.state.params.func;
-        this.setTitle(this.props.navigation.state.params.title);
-        this.item?this.props.initialize(this.item):null;
+        this.setTitle('添加分类');
+        this.props.initialize({parentId:this.item.parentId,top:0});
+
     }
 
     componentDidMount = async () => {
+        super.componentDidMount();
         await this.initBase();
     }
 
     _confirm = ()=>{
         this.hideActivityIndicator();
-        this.item?null:this.props.reset();
+        this.props.initialize({parentId:this.item.parentId,top:0});
     }
 
     _cancel = () => {
@@ -53,12 +58,15 @@ class BillSortForm extends BaseComponent {
         try{
             this.showActivityIndicator();
 
-            const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑分类','form');
+            const {type,code,msg} = await this.props.postAction(
+                appJson.action.billSortAdd,
+                object, '添加分类'
+            );
 
-            if(type === this.func){
+            if(type === appJson.action.billSortAdd){
                 if(code === appJson.action.success){
                     this.showAlert({
-                        content:(this.item?'编辑':'添加')+'成功,是否继续'+'？',
+                        content:'添加成功,是否继续？',
                         buttons:[
                             {
                                 text:'是',
@@ -87,7 +95,24 @@ class BillSortForm extends BaseComponent {
 
                 <View style={{height:pxTodpHeight(24)}}/>
 
+                <View style={{flexDirection:'row',}}>
+                    <Text style={{fontSize:pxTodpWidth(28), color:'#666666',}}>
+                        <Text style={{color:'#eb3232'}}>*</Text>父类
+                    </Text>
+
+                    <Text style={{marginLeft:pxTodpWidth(20),fontSize:pxTodpWidth(28), color:'#333',}}>
+                        {this.item.parentName}
+                    </Text>
+                </View>
+
+                <View style={{height:pxTodpHeight(24)}}/>
+
                 <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
+
+                <View style={{height:pxTodpHeight(24)}}/>
+                <Field name={'top'} component={RadioButton} title={'置顶'} isNeed={true}
+                       values={[{id:0,value:'否'},{id:1,value:'是'}]}
+                />
 
                 <View style={{height:pxTodpHeight(24)}}/>
                 <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={pxTodpHeight(200)}/>
@@ -118,9 +143,9 @@ const styles = StyleSheet.create({
     },
 });
 
-const ReduxBillSortForm = reduxForm({
-    form: 'BillSortForm',
-})(BillSortForm)
+const ReduxAddForm = reduxForm({
+    form: 'AddForm',
+})(AddForm)
 
 
-export default connect(null,actions)(ReduxBillSortForm);
+export default connect(null,actions)(ReduxAddForm);

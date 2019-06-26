@@ -18,6 +18,7 @@ export type Props = {
     style?: any,
     children?: Element<any>,
     onPress?: Function,
+    onLongPress?: Function,
     disabled?: boolean,
 };
 
@@ -27,6 +28,7 @@ const Button = (props: Props) => {
         style,
         children,
         onPress,
+        onLongPress,
         disabled,
     } = props;
 
@@ -45,6 +47,7 @@ const Button = (props: Props) => {
     return (
         <Touchable
             onPress={onPress}
+            onLongPress={onLongPress}
             disabled={disabled}
             style={buttonStyle}
         >

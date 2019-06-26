@@ -1,15 +1,15 @@
 import React,{Component} from 'react';
 import {StyleSheet,View,Text,TouchableWithoutFeedback,Image,FlatList} from 'react-native';
 import PropTypes from 'prop-types';
-import nullDataIcon from "../../../img/common/nullDataIcon.png";
+import nullDataIcon from "../../../../img/common/nullDataIcon.png";
 import moment from "moment";
-import Button from "../../common/Button";
-import SwipeRow from "../../common/SwipeRow";
-import Divider from "../../common/Divider";
-import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
-import {formatDate, formatDateToWeek} from "../../../utils/ToolUtil";
+import Button from "../../../common/Button";
+import SwipeRow from "../../../common/SwipeRow";
+import Divider from "../../../common/Divider";
+import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
+import {formatDate, formatDateToWeek} from "../../../../utils/ToolUtil";
 
-export default class BillHistoryList extends Component{
+export default class HistoryList extends Component{
     static propTypes = {
         data:PropTypes.any,//传入的数据
         onRefresh:PropTypes.func,//刷新数据

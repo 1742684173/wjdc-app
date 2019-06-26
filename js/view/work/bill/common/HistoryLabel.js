@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { Text, View, StyleSheet, Image, Platform,TextInput, TouchableHighlight,TouchableOpacity,ListView,Modal,PixelRatio,ScrollView,SafeAreaView } from 'react-native';
-import Title from '../../common/Title';
-import DateBetween from '../../common/DateBetween';
-import DateTimeField from '../../common/DateTimeField';
-import Field from '../../common/Field';
-import TextField from '../../common/TextField';
-import MySelect from './common/MySelect';
+import Title from '../../../common/Title';
+import DateBetween from '../../../common/DateBetween';
+import DateTimeField from '../../../common/DateTimeField';
+import Field from '../../../common/Field';
+import TextField from '../../../common/TextField';
+import MySelect from './MySelect';
 import {reduxForm} from 'redux-form';
-import * as actions from '../../../actions/index';
-import Button from "../../common/Button";
-import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
+import * as actions from '../../../../actions/index';
+import Button from "../../../common/Button";
+import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
 type Props = {
     modalVisible?:boolean,//是否显示
@@ -35,7 +35,7 @@ const type = [
     {id:'out',name:'支出'},
 ];
 
-class BillLabel extends Component<Props> {
+class HistoryLabel extends Component<Props> {
 
     _onReset = async () => {
         this.props.onReset();
@@ -175,6 +175,6 @@ const styles = StyleSheet.create({
 
 const ReduxBillLabelForm = reduxForm({
     form: 'BillLabelForm',
-})(BillLabel)
+})(HistoryLabel)
 
 export default connect(null,actions)(ReduxBillLabelForm);

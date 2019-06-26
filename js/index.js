@@ -6,6 +6,8 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './store/configureStore';
 import App from './view';
+import Test from './Test';
+
 const { store, persistor } = configureStore();
 import codePush from "react-native-code-push";
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
@@ -96,6 +98,7 @@ class Root extends Component{
                             barStyle={'dark-content'} // enum('default', 'light-content', 'dark-content')
                         />
                         <App />
+                        {/*<Test />*/}
                     </PersistGate>
                 </Provider>
             );

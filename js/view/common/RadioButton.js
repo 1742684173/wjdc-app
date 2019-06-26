@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         backgroundColor: '#00000000',
         alignItems: 'center',
+        justifyContent: 'flex-start'
     },
     outCircle:{
         justifyContent:'center',

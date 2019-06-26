@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, FlatList, BackHandler,} from 'react-native';
-import BillHistoryList from './BillHistoryList';
+import HistoryList from './common/HistoryList';
 import LoadView from '../../common/LoadView';
 import Search from '../../common/Search';
 import {connect} from 'react-redux';
 import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
-import BillLabel from './BillLabel';
+import BillLabel from './common/HistoryLabel';
 import BaseComponent from '../../base/BaseComponent';
 
 
-class BillHistory extends BaseComponent {
+class History extends BaseComponent {
 
     state = {
         total:0,//事件总数
@@ -50,6 +50,7 @@ class BillHistory extends BaseComponent {
     }
 
     componentDidMount = async () => {
+        super.componentDidMount();
         await this.initBase();
         this.showActivityIndicator();
         try{
@@ -318,7 +319,7 @@ class BillHistory extends BaseComponent {
                     />
                 </View>
 
-                <BillHistoryList
+                <HistoryList
                     data={this.state.data}
                     footView={this._footView}
                     onEndReached={this._onEndReached}
@@ -342,4 +343,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect(null,actions)(BillHistory);
+export default connect(null,actions)(History);

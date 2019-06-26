@@ -11,7 +11,7 @@ import * as actions from '../../../../actions/index';
 import BaseComponent from "../../../base/BaseComponent";
 import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
-class BillLabelForm extends BaseComponent {
+class UpdateForm extends BaseComponent {
     state = {
         data:[],
         selectSort:[],
@@ -28,6 +28,7 @@ class BillLabelForm extends BaseComponent {
     }
 
     componentDidMount = async () => {
+        super.componentDidMount();
         await this.initBase();
     }
 
@@ -53,7 +54,7 @@ class BillLabelForm extends BaseComponent {
         try{
             this.showActivityIndicator();
 
-            const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑方式','form');
+            const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑方式');
             this.hideActivityIndicator();
 
             if(type === this.func){
@@ -119,9 +120,9 @@ const styles = StyleSheet.create({
     },
 });
 
-const ReduxBillLabelForm = reduxForm({
-    form: 'BillLabelForm',
-})(BillLabelForm)
+const ReduxUpdateForm = reduxForm({
+    form: 'UpdateForm',
+})(UpdateForm)
 
 
-export default connect(null,actions)(ReduxBillLabelForm);
+export default connect(null,actions)(ReduxUpdateForm);
