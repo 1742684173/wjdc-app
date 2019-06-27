@@ -11,21 +11,45 @@ import * as actions from '../../../../actions/index';
 import BaseComponent from "../../../base/BaseComponent";
 import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
-class AddForm extends BaseComponent {
+class BillLabelEditForm extends BaseComponent {
     state = {
         data:[],
-        selectSort:[],
+        selectLabel:[],
     }
 
     // 构造
     constructor(props) {
         super(props);
-        this.setTitle('添加标签')
+        this.setTitle('编辑标签');
+        this.item = this.props.navigation.state.params.item;
     }
 
     componentDidMount = async () => {
         super.componentDidMount();
         await this.initBase();
+        this._getBillLabel();
+    }
+
+    _getBillLabel = async () => {
+        this.showActivityIndicator();
+
+        try{
+            //分类
+            const {type,code,msg,data} = await this.props.postAction(
+                appJson.action.billLabelFindDetailById,{id:this.item.id},"查询标签详情");
+
+            this.hideActivityIndicator();
+
+            if(type === appJson.action.billLabelFindDetailById){
+                if(code === appJson.action.success){
+                    this.props.initialize(data.list[0]);
+                }else {
+                    this.showToast(msg);
+                }
+            }
+        }catch (e) {
+            this.handleRequestError(e.message || e.note);
+        }
     }
 
     _confirm = ()=>{
@@ -39,7 +63,6 @@ class AddForm extends BaseComponent {
         this.props.navigation.goBack();
     }
 
-    //添加
     _handleSubmit = async (object:Object) => {
         const {name} = object;
         if(name === undefined || name === null || name.length === 0){
@@ -50,24 +73,22 @@ class AddForm extends BaseComponent {
         try{
             this.showActivityIndicator();
 
-            const {type,code,msg} = await this.props.postAction(appJson.action.billLabelAdd,object,'添加标签');
+            const {type,code,msg} = await this.props.postAction(appJson.action.billLabelUpdate,object,'编辑标签');
             this.hideActivityIndicator();
 
-            if(type === appJson.action.billLabelAdd){
+            if(type === appJson.action.billLabelUpdate){
                 if(code === appJson.action.success){
                     this.showAlert({
-                        content:'添加成功,是否继续',
-                        buttons:[
-                            {
-                                text:'是',
-                                onPress:this._confirm
-                            },
-                            {
-                                text:'否',
-                                onPress:this._cancel
+                        content:'修改成功',
+                        buttons:[{
+                            text:'确定',
+                            onPress:()=>{
+                                this.hideAlert();
+                                this.props.navigation.state.params.callback({});
+                                this.props.navigation.goBack();
                             }
-                        ]
-                    });
+                        }]
+                    })
                 }else{
                     this.showToast(msg);
                 }
@@ -116,9 +137,9 @@ const styles = StyleSheet.create({
     },
 });
 
-const ReduxAddForm = reduxForm({
-    form: 'AddForm',
-})(AddForm)
+const ReduxLabelEditForm = reduxForm({
+    form: 'BillLabelEditForm',
+})(BillLabelEditForm)
 
 
-export default connect(null,actions)(ReduxAddForm);
+export default connect(null,actions)(ReduxLabelEditForm);

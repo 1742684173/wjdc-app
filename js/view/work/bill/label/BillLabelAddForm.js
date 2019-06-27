@@ -11,7 +11,7 @@ import * as actions from '../../../../actions/index';
 import BaseComponent from "../../../base/BaseComponent";
 import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
-class UpdateForm extends BaseComponent {
+class BillLabelAddForm extends BaseComponent {
     state = {
         data:[],
         selectSort:[],
@@ -20,11 +20,7 @@ class UpdateForm extends BaseComponent {
     // 构造
     constructor(props) {
         super(props);
-
-        this.item = this.props.navigation.state.params.item;
-        this.func = this.props.navigation.state.params.func;
-        this.setTitle(this.props.navigation.state.params.title);
-        this.item?this.props.initialize(this.item):null;
+        this.setTitle('添加标签')
     }
 
     componentDidMount = async () => {
@@ -54,13 +50,13 @@ class UpdateForm extends BaseComponent {
         try{
             this.showActivityIndicator();
 
-            const {type,code,msg} = await this.props.postAction(this.func,object,'添加/编辑方式');
+            const {type,code,msg} = await this.props.postAction(appJson.action.billLabelAdd,object,'添加标签');
             this.hideActivityIndicator();
 
-            if(type === this.func){
+            if(type === appJson.action.billLabelAdd){
                 if(code === appJson.action.success){
                     this.showAlert({
-                        content:(this.item?'编辑':'添加')+'成功,是否继续'+'？',
+                        content:'添加成功,是否继续',
                         buttons:[
                             {
                                 text:'是',
@@ -120,9 +116,9 @@ const styles = StyleSheet.create({
     },
 });
 
-const ReduxUpdateForm = reduxForm({
-    form: 'UpdateForm',
-})(UpdateForm)
+const ReduxAddForm = reduxForm({
+    form: 'BillLabelAddForm',
+})(BillLabelAddForm)
 
 
-export default connect(null,actions)(ReduxUpdateForm);
+export default connect(null,actions)(ReduxAddForm);
