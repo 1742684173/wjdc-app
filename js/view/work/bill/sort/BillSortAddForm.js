@@ -11,24 +11,17 @@ import * as actions from '../../../../actions/index';
 import BaseComponent from "../../../base/BaseComponent";
 import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 import RadioButton from "../../../common/RadioButton";
+import SelectField from "../../../common/SelectField";
 
-class AddForm extends BaseComponent {
+class BillSortAddForm extends BaseComponent {
     state = {
         data:[],
-        selectSort:[],
     }
 
     // 构造
     constructor(props) {
         super(props);
-        // {
-        //     parentId:0,
-        //     parentName:'一级目录'
-        // },
-        this.item = this.props.navigation.state.params.item;
         this.setTitle('添加分类');
-        this.props.initialize({parentId:this.item.parentId,top:0});
-
     }
 
     componentDidMount = async () => {
@@ -38,7 +31,7 @@ class AddForm extends BaseComponent {
 
     _confirm = ()=>{
         this.hideActivityIndicator();
-        this.props.initialize({parentId:this.item.parentId,top:0});
+        this.props.initialize({});
     }
 
     _cancel = () => {
@@ -95,23 +88,11 @@ class AddForm extends BaseComponent {
 
                 <View style={{height:pxTodpHeight(24)}}/>
 
-                <View style={{flexDirection:'row',}}>
-                    <Text style={{fontSize:pxTodpWidth(28), color:'#666666',}}>
-                        <Text style={{color:'#eb3232'}}>*</Text>父类
-                    </Text>
-
-                    <Text style={{marginLeft:pxTodpWidth(20),fontSize:pxTodpWidth(28), color:'#333',}}>
-                        {this.item.parentName}
-                    </Text>
-                </View>
-
-                <View style={{height:pxTodpHeight(24)}}/>
-
                 <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
 
                 <View style={{height:pxTodpHeight(24)}}/>
                 <Field name={'top'} component={RadioButton} title={'置顶'} isNeed={true}
-                       values={[{id:0,value:'否'},{id:1,value:'是'}]}
+                       values={[{id:'0',name:'否'},{id:'1',name:'是'}]} defaultValue={'0'}
                 />
 
                 <View style={{height:pxTodpHeight(24)}}/>
@@ -144,8 +125,8 @@ const styles = StyleSheet.create({
 });
 
 const ReduxAddForm = reduxForm({
-    form: 'AddForm',
-})(AddForm)
+    form: 'BillSortAddForm',
+})(BillSortAddForm)
 
 
 export default connect(null,actions)(ReduxAddForm);

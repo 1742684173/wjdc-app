@@ -12,7 +12,7 @@ import BaseComponent from "../../../base/BaseComponent";
 import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 import RadioButton from "../../../common/RadioButton";
 
-class UpdateForm extends BaseComponent {
+class BillSortEditForm extends BaseComponent {
     state = {
         data:[],
         selectSort:[],
@@ -48,19 +48,23 @@ class UpdateForm extends BaseComponent {
         try{
             this.showActivityIndicator();
 
-            const {type,code,msg} = await this.props.postAction('编辑分类');
+            const {type,code,msg} = await this.props.postAction(
+                appJson.action.billSortUpdateById, object, '编辑分类'
+            );
 
-            if(type === this.func){
+            if(type === appJson.action.billSortUpdateById){
                 if(code === appJson.action.success){
                     this.showAlert({
-                        content:'编辑成功',
-                        buttons:[
-                            {
-                                text:'确定',
-                                onPress:this._confirm
-                            },
-                        ]
-                    });
+                        content:'修改成功',
+                        buttons:[{
+                            text:'确定',
+                            onPress:()=>{
+                                this.hideAlert();
+                                this.props.navigation.state.params.callback({});
+                                this.props.navigation.goBack();
+                            }
+                        }]
+                    })
                 }else{
                     this.showToast(msg);
                 }
@@ -77,15 +81,11 @@ class UpdateForm extends BaseComponent {
 
                 <View style={{height:pxTodpHeight(24)}}/>
 
-                <Field name={'parentId'} component={TextField} title={'父类'} isNeed={true}/>
-
-                <View style={{height:pxTodpHeight(24)}}/>
-
                 <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
 
                 <View style={{height:pxTodpHeight(24)}}/>
                 <Field name={'top'} component={RadioButton} title={'置顶'} isNeed={true}
-                       values={[{id:0,value:'否'},{id:1,value:'是'}]}
+                       values={[{id:0,name:'否'},{id:1,name:'是'}]}
                 />
 
                 <View style={{height:pxTodpHeight(24)}}/>
@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
 });
 
 const ReduxUpdateForm = reduxForm({
-    form: 'UpdateForm',
-})(UpdateForm)
+    form: 'BillSortEditForm',
+})(BillSortEditForm)
 
 
 export default connect(null,actions)(ReduxUpdateForm);

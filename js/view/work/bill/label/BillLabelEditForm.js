@@ -73,7 +73,7 @@ class BillLabelEditForm extends BaseComponent {
         try{
             this.showActivityIndicator();
 
-            const {type,code,msg} = await this.props.postAction(appJson.action.billLabelUpdate,object,'编辑标签');
+            const {type,code,msg} = await this.props.postAction(appJson.action.billLabelUpdateById,object,'编辑标签');
             this.hideActivityIndicator();
 
             if(type === appJson.action.billLabelUpdate){

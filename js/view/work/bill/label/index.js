@@ -223,7 +223,7 @@ class BillLabel extends BaseComponent {
                     />
                 </View>
 
-                <View style={{flex:1,width:'100%',padding:15,}}>
+                <View style={{flex:1,width:undefined,margin:15}}>
                     <FlatList
                         style={{borderRadius:10,backgroundColor:'#fff'}}
                         data={this.state.data}
@@ -239,14 +239,7 @@ class BillLabel extends BaseComponent {
                 </View>
                 {
                     !this.state.isShowRightEdit?(
-                        <View style={{
-                            backgroundColor:'#fff',
-                            width:'100%',
-                            height:pxTodpHeight(120),
-                            justifyContent:'center',
-                            alignItems:'center',
-                            paddingHorizontal:pxTodpWidth(30)
-                        }}>
+                        <View style={styles.bottomView}>
                             <Button
                                 style={{flex:1,backgroundColor:'#21c3fe',height:pxTodpHeight(88)}}
                                 onPress={this._onDeletePress}
@@ -271,7 +264,6 @@ class BillLabel extends BaseComponent {
                 id={item.id}
                 isShowRightEdit={this.state.isShowRightEdit}
                 onPressItem={ this._onPressItem }
-                onEditPressItem={ this._onEditPressItem }
                 onDetailPress={ this._onDetailPress }
                 selected={ !!this.state.selected.get(item.id)}
                 item={item}
@@ -328,7 +320,7 @@ class FlatListItem extends React.PureComponent {
         const item = this.props.item;
         return(
             <Button
-                style={{width:'100%', height:pxTodpHeight(104), justifyContent:'space-between', paddingHorizontal:pxTodpWidth(20)}}
+                style={styles.itemView}
                 onPress={this.props.isShowRightEdit?this._onDetailPress:this._onPress}
             >
                 <View style={{flexDirection:'row', alignItems:'center',}}>
@@ -345,6 +337,21 @@ class FlatListItem extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+    bottomView:{
+        flexDirection: 'row',
+        backgroundColor:'#fff',
+        width:undefined,
+        height:pxTodpHeight(120),
+        justifyContent:'center',
+        alignItems:'center',
+        paddingHorizontal:pxTodpWidth(30)
+    },
+    itemView:{
+        width:undefined,
+        height:pxTodpHeight(104),
+        justifyContent:'space-between',
+        paddingHorizontal:pxTodpWidth(20)
+    }
 });
 
 export default connect(null,actions)(BillLabel);

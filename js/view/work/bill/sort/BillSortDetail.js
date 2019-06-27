@@ -8,7 +8,7 @@ import * as appJson from '../../../../../app';
 import Button from "../../../common/Button";
 import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 
-class Detail extends BaseComponent {
+class BillSortDetail extends BaseComponent {
 
     state = {
         data:{},
@@ -79,11 +79,6 @@ class Detail extends BaseComponent {
                 </View>
 
                 <View style={styles.itemView}>
-                    <Text style={styles.textName}>上一级名称：</Text>
-                    <Text style={styles.textValue}>{this.item.parentName}</Text>
-                </View>
-
-                <View style={styles.itemView}>
                     <Text style={styles.textName}>是否置顶：</Text>
                     <Text style={styles.textValue}>{this.state.data.top===1?'是':'否'}</Text>
                 </View>
@@ -92,11 +87,6 @@ class Detail extends BaseComponent {
                     <Text style={styles.textName}>描述：</Text>
                     <Text style={styles.textValue}>{this.state.data.descs}</Text>
                 </View>
-
-                {/*<View style={{height:50}}/>*/}
-                {/*<Button style={{height:39,backgroundColor:'#21c3ff',}} onPress={this._editBill}>*/}
-                    {/*<Text style={styles.btnSubmit}>编辑</Text>*/}
-                {/*</Button>*/}
             </View>
         );
         return super.renderBase(view);
@@ -135,4 +125,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect(null,{postAction})(Detail);
+export default connect(null,{postAction})(BillSortDetail);
