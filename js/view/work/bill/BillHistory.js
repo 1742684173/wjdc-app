@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, FlatList, BackHandler,} from 'react-native';
-import HistoryList from './common/HistoryList';
+import {Text, View, StyleSheet, TouchableOpacity, FlatList, BackHandler, TouchableWithoutFeedback,} from 'react-native';
 import LoadView from '../../common/LoadView';
 import Search from '../../common/Search';
 import {connect} from 'react-redux';
@@ -8,11 +7,17 @@ import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
 import BillLabel from './common/HistoryLabel';
 import BaseComponent from '../../base/BaseComponent';
+import SwipeRow from "../../common/SwipeRow";
+import Button from "../../common/Button";
+import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
+import {formatDate, formatDateToWeek} from "../../../utils/ToolUtil";
+import Divider from "../../common/Divider";
 
 
 class BillHistory extends BaseComponent {
 
     state = {
+        isRefresh:false,
         total:0,//事件总数
         foot:1,
         data:[],
@@ -85,7 +90,9 @@ class BillHistory extends BaseComponent {
     }
 
     _getBillList = async () => {
-        this.showActivityIndicator();
+        if(!this.state.refreshing){
+            await this.showActivityIndicator();
+        }
 
         try{
             //帐单
@@ -124,7 +131,7 @@ class BillHistory extends BaseComponent {
                         foot = 1;//listView底部显示没有更多数据了
                     }
 
-                    this.setState({foot:foot,data:myData});
+                    this.setState({isRefresh:false,foot:foot,data:myData});
                 }
             }
             this.hideActivityIndicator();
@@ -176,7 +183,7 @@ class BillHistory extends BaseComponent {
     }
 
     //前往详情界面
-    _onItemClick = (item) => {
+    _onDetailPress = (item) => {
         this.props.navigation.navigate('BillDetail', {
             item:{id:item.id},
             callback:(data)=>{
@@ -188,7 +195,6 @@ class BillHistory extends BaseComponent {
     //去新增帐单界面
     _onAddBtn = () => {
         this.props.navigation.navigate('BillAddForm',{
-            title:'添加帐单',
             callback:(data)=>{
                 this._onRefresh();
             }});
@@ -206,43 +212,39 @@ class BillHistory extends BaseComponent {
         });
     }
 
-    _onDeleteItem = async (item) => {
+    _onDeleteItem = async ({item,callback}) => {
+        console.log(JSON.stringify(item));
         this.showAlert({
             content:'确认删除?',
             buttons:[
                 {
                     text:'确认',
-                    onPress:()=>this._confirmDeleteBill(item.id)
+                    onPress:async ()=>{
+                        await this.showActivityIndicator();
+                        try{
+                            //方式
+                            const {code,type,msg} = await this.props.postAction(appJson.action.billDeleteById,{id:item.id},'通过id删除帐单');
+                            this.hideActivityIndicator();
+                            if(type === appJson.action.billDeleteById){
+                                if(code === appJson.action.success){
+                                    this.showToast(msg);
+                                    this._onRefresh();
+                                    callback(true);
+                                }else{
+                                    this.showToast(msg);
+                                }
+                            }
+                        }catch (e) {
+                            this.handleRequestError(e);
+                        }
+                    }
                 },
                 {
                     text:'取消',
-                    onPress:this._cancelDelete
+                    onPress:()=> this.hideActivityIndicator()
                 }
             ]
         });
-    }
-
-    //确认删除消费类别
-    _confirmDeleteBill = async (id:number) => {
-        this.showActivityIndicator();
-        try{
-            //方式
-            const {code,type,msg} = await this.props.postAction(appJson.action.billDeleteById,{id:id},'通过id删除帐单');
-            this.hideActivityIndicator();
-            if(type === appJson.action.billDeleteById){
-                if(code === appJson.action.success){
-                    this._onRefresh();
-                }else{
-                    this.showToast(msg);
-                }
-            }
-        }catch (e) {
-            this.handleRequestError(e);
-        }
-    }
-
-    _cancelDelete = () => {
-        this.hideActivityIndicator();
     }
 
     _dealParams = (params:Object) => {
@@ -319,13 +321,18 @@ class BillHistory extends BaseComponent {
                     />
                 </View>
 
-                <HistoryList
+                <FlatList
                     data={this.state.data}
-                    footView={this._footView}
-                    onEndReached={this._onEndReached}
                     onRefresh={this._onRefresh}
-                    onItemClick={this._onItemClick}
-                    onDeleteItem={this._onDeleteItem}
+                    refreshing={this.state.isRefresh}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderRow}
+                    showsVerticalScrollIndicator={false}
+                    ListEmptyComponent={this._ListEmptyComponent}
+                    ListFooterComponent={this._footView}
+                    onEndReached={this._onEndReached}
+                    onEndReachedThreshold={1}
+                    ItemSeparatorComponent={this._ItemSeparatorComponent}
                 />
 
             </View>
@@ -334,6 +341,107 @@ class BillHistory extends BaseComponent {
         return super.renderBase(view);
     }
 
+    _renderRow = ({item}) => {
+        return (
+            <FlatListItem
+                id={item.id}
+                onDetailItem={ this._onDetailPress }
+                onDeleteItem={this._onDeleteItem }
+                item={item}
+            />
+        )
+    }
+
+    _keyExtractor = (item, index) => index+'';
+
+    _ItemSeparatorComponent = () => <View style={{height:pxTodpHeight(24),}}/>
+
+}
+
+// 封装Item组件
+class FlatListItem extends React.PureComponent {
+    _goDetail = () => {
+        this.props.onDetailItem(this.props.item);
+    };
+
+    //删除
+    _onDeleteItem = () => {
+        this.props.onDeleteItem({
+            item:this.props.item,
+            callback:(success)=>{
+                success?this._closeSwipeRow():null
+            }
+        });
+    }
+
+
+    _closeSwipeRow = () => {
+        this.swiperow._animateToClosedPosition();
+    }
+
+    render() {
+        const item = this.props.item;
+        return(
+            <SwipeRow
+                style={{ height:pxTodpHeight(160), width:undefined, backgroundColor:'#00000000', marginHorizontal: pxTodpWidth(30),}}
+                ref={ref=>this.swiperow=ref}
+            >
+                <Button
+                    style={{
+                        width:pxTodpWidth(100),
+                        height:pxTodpHeight(160),
+                        backgroundColor: '#f03',
+                        borderRadius:pxTodpWidth(10),
+                        justifyContent:'center',
+                        alignItems:'center',
+                    }}
+                    onPress={()=>this._onDeleteItem(item)}
+                >
+                    <Text style={{color:'#fff',fontSize:pxTodpWidth(30)}}>删除</Text>
+                </Button>
+
+                <TouchableWithoutFeedback onPress={()=>this._goDetail(item)}>
+
+                    <View style={{
+                        borderRadius:pxTodpWidth(10),
+                        width:'100%',
+                        height:'100%',
+                        justifyContent:'space-around',
+                        backgroundColor:'#fff',
+                        paddingVertical: pxTodpHeight(10),
+                        paddingHorizontal: pxTodpWidth(10),
+                    }}>
+                        <View style={{flex:1,width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
+                            {/*分类名称*/}
+                            <Text ellipsizeMode={'tail'} style={{flex:1,fontSize:pxTodpWidth(30)}}>
+                                {item.sortName}
+                                <Text ellipsizeMode={'tail'} style={{flex:1,textAlign:'right',color:'#666',fontSize:pxTodpWidth(24)}}>({
+                                    formatDateToWeek(formatDate(item.dates,"YYYY-MM-DD"))+' '
+                                    +formatDate(item.dates,"HH:mm:ss")
+                                })</Text>
+                            </Text>
+
+                            {/*分类金额*/}
+                            <Text ellipsizeMode={'tail'} style={{flex:1,textAlign:'right',color:item.type === -1?'#00cd00':'#f03',fontSize:pxTodpWidth(30)}}>
+                                {item.type === -1?'-':'+'}{item.sums}
+                            </Text>
+                        </View>
+
+                        <Divider style={{width:'100%',height:1,backgroundColor:'#dcdcdc',marginVertical: pxTodpHeight(10)}}/>
+                        <View style={{width:'100%',flex:2}}>
+                            <Text ellipsizeMode={'tail'} style={{flex:1,color:'#999',fontSize:pxTodpWidth(24)}} ellipsizeMode={'tail'}>
+                                详情：{item.descs}
+                            </Text>
+
+                            <Text ellipsizeMode={'tail'} style={{flex:1,color:'#999',fontSize:pxTodpWidth(24)}} ellipsizeMode={'tail'}>
+                                标签：{item.labelName}
+                            </Text>
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            </SwipeRow>
+        );
+    }
 }
 
 const styles = StyleSheet.create({

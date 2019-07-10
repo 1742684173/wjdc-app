@@ -24,18 +24,17 @@ const billManager = [
     //{route:'AccountActivate',name:'导入支付宝数据',icon:test},
     //{route:'AccountActivate',name:'导入微信数据',icon:test},
 ];
-const analyseTitle = [
+const totalTitle = [
     {key:'time',name:'时间'},
-    {key:'incomeValue',name:'收入'},
-    {key:'expendValue',name:'支出'},
-    {key:'avgValue',name:'平均值'}
+    {key:'iValue',name:'收入'},
+    {key:'eValue',name:'支出'},
+    {key:'dValue',name:'差值'}
 ];
 
 class BillInfo extends BaseComponent {
 
     state = {
         billsHistory:[],
-        billsData:[],
         billsTotal:[],
         refreshing:false
     }
@@ -62,20 +61,58 @@ class BillInfo extends BaseComponent {
 
         try{
             let billParams = await this.props.postAction(appJson.action.billFind,{pageSize:3,currentPage:1,sortName:'dates desc'},'查询账单');
+            this.dealParam(billParams);
+
+            const currentDay = await this.props.postAction(appJson.action.totalBillByType,{filteTime:'currentDay'},'今日统计');
+            this.dealParam(currentDay,1);
+
+            const currentWeek = await this.props.postAction(appJson.action.totalBillByType,{filteTime:'currentWeek'},'本周统计');
+            this.dealParam(currentWeek,2);
+
+            const currentMouth = await this.props.postAction(appJson.action.totalBillByType,{filteTime:'currentMouth'},'本月统计');
+            this.dealParam(currentMouth,3);
+
+            const currentYear = await this.props.postAction(appJson.action.totalBillByType,{filteTime:'currentYear'},'本年统计');
+            this.dealParam(currentYear,4);
+
             this.hideActivityIndicator();
 
-            this.dealParam(billParams);
+
         }catch (e) {
             this.handleRequestError(e);
         }
     }
 
-    dealParam = (params) => {
+    dealParam = (params,flag) => {
         const {type,code,msg,data} = params;
         switch (type) {
             case appJson.action.billFind:
                 if(code === appJson.action.success){
                     this.setState({billsHistory:data.list});
+                }
+                break;
+
+            case appJson.action.totalBillByType:
+                if(code === appJson.action.success){
+                    if(flag === 1) this.billsTotal = [];
+                    let eValue = 0,iValue = 0;
+                    let myTime = ['今日','本周','本月','本年'];
+                    for(let i=0;i<data.list.length;i++){
+                        if(data.list[i].name === '支出'){
+                            eValue = data.list[i].value;
+                        }else{
+                            iValue = data.list[i].value;
+                        }
+                    }
+                    this.billsTotal.push({
+                        time:myTime[flag - 1],
+                        eValue:eValue,
+                        iValue:iValue,
+                        dValue:iValue-eValue,
+                    });
+                    if(flag === 4){
+                        this.setState({billsTotal:this.billsTotal});
+                    }
                 }
                 break;
         }
@@ -192,7 +229,7 @@ class BillInfo extends BaseComponent {
                 >
                     <View style={styles.bottomTitleSty}>
                         {
-                            analyseTitle.map((item,index)=>{
+                            totalTitle.map((item,index)=>{
                                 return (
                                     <View key={index} style={[styles.itemSty,{flex:1,backgroundColor:'#c3eeff'}]}>
                                         <Text style={[styles.itemFont,{color:'#333',}]}>{item.name}</Text>
@@ -203,21 +240,16 @@ class BillInfo extends BaseComponent {
                     </View>
 
                     {
-                        [
-                            {time:'今日',incomeValue:'341',expendValue:'2342',avgValue:'141'},
-                            {time:'本周',incomeValue:'341',expendValue:'2342',avgValue:'141'},
-                            {time:'本月',incomeValue:'341',expendValue:'2342',avgValue:'141'},
-                            {time:'本年',incomeValue:'341',expendValue:'2342',avgValue:'141'},
-                        ].map((item,i)=>{
+                        this.state.billsTotal.map((item,i)=>{
                             return (
                                 <View key={i} style={{flexDirection:'row',backgroundColor:i%2===0?'#fff':'#E6F8FF'}}>
                                     {
-                                        analyseTitle.map((itemTitle,index)=>{
+                                        totalTitle.map((itemTitle,index)=>{
                                             return (
                                                 <View key={index} style={[styles.itemSty,{flex:1}]}>
-                                                    <Text style={styles.itemFont}>{
-                                                        item.key === 'time'?item[itemTitle.key]:
-                                                            numberFormatter(item[itemTitle.key])
+                                                    <Text style={[styles.itemFont,itemTitle.key === 'dValue'?{color:item[itemTitle.key]>0?'#f03':'#00cd00'}:null]}>{
+                                                        itemTitle.key === 'time'?item[itemTitle.key]:
+                                                            numberFormatter(Math.floor(item[itemTitle.key]))
                                                     }</Text>
                                                 </View>
                                             )

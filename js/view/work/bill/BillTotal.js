@@ -18,7 +18,7 @@ import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 let echartsUtil = new EchartsUtil();
 
 const filter = [
-    {id:'currenDay',name:'当日'},
+    {id:'currentDay',name:'当日'},
     {id:'lastDay',name:'上日'},
     {id:'currentWeek',name:'本周'},
     {id:'lastWeek',name:'上周'},
@@ -42,7 +42,7 @@ class BillTotal extends BaseComponent {
             sortId:'all',
             dateformat:'%Y-%m-%d',
         },
-        filterValue:'currenDay',
+        filterValue:'currentDay',
         //starDate:moment(new Date()).format('YYYY-MM-DD')+' 00:00:00',//开始时间
         //endDate:moment(new Date()).format('YYYY-MM-DD')+' 24:00:00',//结束时间
         dataByDates:echartsUtil.init().getOption(),
@@ -62,7 +62,7 @@ class BillTotal extends BaseComponent {
         this.type = null;
         this.startTime = null;
         this.endTime = null;
-        this.filteTime = 'currenDay';
+        this.filteTime = 'currentDay';
         this.labelId = null;
         this.sortId = null;
         this.dateformat = '%Y-%m-%d';
@@ -212,7 +212,7 @@ class BillTotal extends BaseComponent {
                                 },
                                 label: {
                                     normal: {
-                                        formatter: '{b}:{d}%',
+                                        formatter: '{b}:{c} ({d}%)',
                                     }
                                 },
                             }
@@ -245,7 +245,7 @@ class BillTotal extends BaseComponent {
                                 },
                                 label: {
                                     normal: {
-                                        formatter: '{b}:{d}%',
+                                        formatter: '{b}:{c} ({d}%)',
                                        }
                                 },
                             }
