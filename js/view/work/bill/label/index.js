@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, StyleSheet, FlatList, Text, TouchableOpacity, Image} from 'react-native';
+import {View, StyleSheet, FlatList, Text, TouchableOpacity, Image, TouchableWithoutFeedback} from 'react-native';
 import {connect} from 'react-redux';
 import * as appJson from '../../../../../app';
 import * as actions from '../../../../actions';
@@ -13,6 +13,8 @@ import selectIcon from "../../../../img/common/select1.png";
 import editIcon from "../../../../img/common/edit.png";
 import Search from "../../../common/Search";
 import Divider from "../../../common/Divider";
+import SwipeRow from "../../../common/SwipeRow";
+import nullDataIcon from "../../../../img/common/nullDataIcon.png";
 
 
 class BillLabel extends BaseComponent {
@@ -28,7 +30,7 @@ class BillLabel extends BaseComponent {
     // 构造
     constructor(props){
         super(props);
-        this.setTitle('分类管理');
+        this.setTitle('标签管理');
         this.props.navigation.setParams({rightView:this._renderRightView()});
     }
 
@@ -58,9 +60,9 @@ class BillLabel extends BaseComponent {
                     currentPage:this.currentPage,
                     pageSize:this.pageSize,
                     condition:this.condition,
-                    labelName:'top desc'
+                    sortName:'top desc'
                 },
-                '查询账单分类'
+                '查询账单标签'
             );
             if(type === appJson.action.billLabelFind){
                 if (code === appJson.action.success) {
@@ -122,7 +124,7 @@ class BillLabel extends BaseComponent {
     _onDeletePress = async () => {
         let ids='';
         this.state.selected.forEach(function(value ,key ,map) {
-            value?(ids=ids+key+';'):null;
+            value?(ids=ids+key+','):null;
         });
 
         console.log('---->ids:'+ids);
@@ -137,7 +139,7 @@ class BillLabel extends BaseComponent {
                 buttons:[
                     {
                         text:'确认',
-                        onPress:()=>this._confirmDelete(ids)
+                        onPress:()=>this._confirmDelete(ids.substring(0,ids.length-1))
                     },
                     {
                         text:'取消',
@@ -178,7 +180,7 @@ class BillLabel extends BaseComponent {
     }
 
     //选择
-    _onPressItem = (id) => {
+    _onPressItem = ({id}) => {
         this.setState((state) => {
             const selected = new Map(state.selected);
             selected.set(id, !selected.get(id));
@@ -187,7 +189,7 @@ class BillLabel extends BaseComponent {
     }
 
     //去详情
-    _onDetailPress = (id) => {
+    _onDetailPress = ({id}) => {
         this.props.navigation.navigate('BillLabelDetail',{
             item:{id:id},
             callback:this._getBillLabel
@@ -207,6 +209,70 @@ class BillLabel extends BaseComponent {
         this._getBillLabel();
     }
 
+    //置顶
+    _onTopItem = async ({item,callback}) => {
+        await this.showActivityIndicator();
+
+        try{
+            let {type,code,msg,data} = await this.props.postAction(
+                appJson.action.billLabelTopById,
+                {id:item.id,top:item.top===0?1:0},
+                '置顶'
+            );
+            this.hideActivityIndicator();
+
+            if(type === appJson.action.billLabelTopById){
+                if (code === appJson.action.success) {
+                    this._onRefresh();
+                    callback(true);
+                }else{
+                    this.showToast(msg);
+                }
+            }
+
+        }catch (e) {
+            this.handleRequestError(e);
+        }
+    }
+
+    _onDeleteItem = async ({item,callback}) => {
+        this.showAlert({
+            content:'确定删除?',
+            buttons:[
+                {
+                    text:'确定',
+                    onPress:async ()=>{
+                        await this.showActivityIndicator();
+
+                        try{
+                            let {type,code,msg,data} = await this.props.postAction(
+                                appJson.action.billLabelDeleteById,
+                                {id:item.id}, '通过id删除标签'
+                            );
+
+                            this.hideActivityIndicator();
+                            if(type === appJson.action.billLabelDeleteById ){
+                                if (code === appJson.action.success) {
+                                    this.showToast(msg);
+                                    this._onRefresh();
+                                    callback(true);
+                                }else{
+                                    this.showToast(msg);
+                                }
+                            }
+                        }catch (e) {
+                            this.handleRequestError(e);
+                        }
+                    }
+                },
+                {
+                    text: '取消',
+                    onPress:this.hideAlert
+                }
+            ]
+        })
+    }
+
     render() {
         super.render();
         let view = (
@@ -223,7 +289,7 @@ class BillLabel extends BaseComponent {
                     />
                 </View>
 
-                <View style={{flex:1,width:undefined,margin:15}}>
+                <View style={styles.flatlistView}>
                     <FlatList
                         style={{borderRadius:10,backgroundColor:'#fff'}}
                         data={this.state.data}
@@ -235,6 +301,7 @@ class BillLabel extends BaseComponent {
                         renderItem={this._renderRow}
                         ItemSeparatorComponent={this._ItemSeparatorComponent}
                         showsVerticalScrollIndicator={false}
+                        ListEmptyComponent={this._ListEmptyComponent}
                     />
                 </View>
                 {
@@ -263,12 +330,24 @@ class BillLabel extends BaseComponent {
             <FlatListItem
                 id={item.id}
                 isShowRightEdit={this.state.isShowRightEdit}
+                onDetailItem={ this._onDetailPress }
                 onPressItem={ this._onPressItem }
-                onDetailPress={ this._onDetailPress }
+                onDeleteItem={this._onDeleteItem }
+                onTopItem={ this._onTopItem }
                 selected={ !!this.state.selected.get(item.id)}
                 item={item}
             />
         )
+    }
+
+    _ListEmptyComponent = () =>{
+        let cpt = (
+            <View style={{flex:1, alignItems:'center', marginTop:pxTodpHeight(100)}}>
+                <Image source={nullDataIcon} style={{height:pxTodpHeight(110),width:pxTodpWidth(364),resizeMode:'contain',}}/>
+                <Text style={{color:'#999'}}>空空如也~</Text>
+            </View>
+        )
+        return cpt;
     }
 
     _ItemSeparatorComponent = () => <Divider/>
@@ -305,33 +384,68 @@ class BillLabel extends BaseComponent {
 // 封装Item组件
 class FlatListItem extends React.PureComponent {
     _onPress = () => {
-        this.props.onPressItem(this.props.id);
-    }
-
-    _onEditPress = () => {
-        this.props.onEditPressItem(this.props.id);
+        !this.props.isShowRightEdit?this.props.onPressItem(this.props.item):this.props.onDetailItem(this.props.item);
     };
 
-    _onDetailPress = () => {
-        this.props.onDetailPress(this.props.id);
+    //删除
+    _onDeleteItem = () => {
+        this.props.onDeleteItem({
+            item:this.props.item,
+            callback:(success)=>{
+                success?this._closeSwipeRow():null
+            }
+        });
+    }
+
+    //置顶
+    _onTopItem = () => {
+        this.props.onTopItem({
+            item:this.props.item,
+            callback:(success)=>{
+                success?this._closeSwipeRow():null
+            }
+        });
+    }
+
+    _closeSwipeRow = () => {
+        this.swiperow._animateToClosedPosition();
     }
 
     render() {
         const item = this.props.item;
         return(
-            <Button
-                style={styles.itemView}
-                onPress={this.props.isShowRightEdit?this._onDetailPress:this._onPress}
-            >
-                <View style={{flexDirection:'row', alignItems:'center',}}>
-                    {
-                        !this.props.isShowRightEdit?(
-                            <Image source={this.props.selected?selectIcon:unselectIcon} style={{marginRight:pxTodpWidth(22)}}/>
-                        ):null
-                    }
-                    <Text style={{fontSize:pxTodpWidth(32),color:'#333'}}>{item.name}</Text>
+            <SwipeRow ref={ref => this.swiperow=ref} style={styles.itemContain}>
+                <View style={{flexDirection: 'row'}}>
+                    <Button
+                        style={[styles.itemBtn,{backgroundColor: '#dcdcdc'}]}
+                        onPress={this._onTopItem}
+                    >
+                        <Text style={{color:'#fff',fontSize:pxTodpWidth(30)}}>
+                            {item.top === 1?'取消置顶':'置顶'}
+                        </Text>
+                    </Button>
+
+                    <Button
+                        style={[styles.itemBtn,{backgroundColor: '#f03'}]}
+                        onPress={this._onDeleteItem}
+                    >
+                        <Text style={{color:'#fff',fontSize:pxTodpWidth(30)}}>删除</Text>
+                    </Button>
                 </View>
-            </Button>
+
+                <TouchableWithoutFeedback onPress={this._onPress}>
+                    <View style={styles.itemView}>
+                        {
+                            !this.props.isShowRightEdit?(
+                                <Image source={this.props.selected?selectIcon:unselectIcon} style={{marginRight:pxTodpWidth(22)}}/>
+                            ):null
+                        }
+                        <Text style={{fontSize:pxTodpWidth(32),color:item.top === 1?'#f03':'#333'}}>
+                            {item.name}
+                        </Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            </SwipeRow>
         );
     }
 }
@@ -346,11 +460,33 @@ const styles = StyleSheet.create({
         alignItems:'center',
         paddingHorizontal:pxTodpWidth(30)
     },
-    itemView:{
-        width:undefined,
+    itemContain:{
         height:pxTodpHeight(104),
-        justifyContent:'space-between',
-        paddingHorizontal:pxTodpWidth(20)
+        width:undefined,
+        backgroundColor:'#00000000',
+        // marginHorizontal: pxTodpWidth(30),
+    },
+    itemView:{
+        flexDirection:'row',
+        width:'100%',
+        height:'100%',
+        alignItems:'center',
+        backgroundColor:'#fff',
+        paddingVertical: pxTodpHeight(10),
+        paddingHorizontal: pxTodpWidth(10),
+    },
+    itemBtn:{
+        height:pxTodpHeight(104),
+        borderRadius:0,
+        justifyContent:'center',
+        alignItems:'center',
+        paddingHorizontal: pxTodpWidth(10),
+    },
+    flatlistView:{
+        flex:1,
+        width:undefined,
+        paddingHorizontal:pxTodpWidth(30),
+        marginTop:pxTodpHeight(30)
     }
 });
 

@@ -55,10 +55,15 @@ export default class HistoryList extends Component{
 
     _keyExtractor = (item, index) => index+++'';
 
+    _onDeleteItem = (item) => {
+        this.props.onDeleteItem(item);
+        this.swiperow._animateToClosedPosition();
+    }
+
     _renderItem = ({item}) => {
 
         return (
-            <SwipeRow style={styles.itemView}>
+            <SwipeRow style={styles.itemView} ref={ref=>this.swiperow=ref}>
                 <Button
                     style={{
                         width:pxTodpWidth(100),
@@ -68,7 +73,7 @@ export default class HistoryList extends Component{
                         justifyContent:'center',
                         alignItems:'center',
                     }}
-                    onPress={()=>this.props.onDeleteItem(item)}
+                    onPress={()=>this._onDeleteItem(item)}
                 >
                     <Text style={{color:'#fff',fontSize:pxTodpWidth(30)}}>删除</Text>
                 </Button>
@@ -88,9 +93,10 @@ export default class HistoryList extends Component{
                             {/*分类名称*/}
                             <Text ellipsizeMode={'tail'} style={{flex:1,fontSize:pxTodpWidth(30)}}>
                                 {item.sortName}
-                                <Text ellipsizeMode={'tail'} style={{flex:1,textAlign:'right',color:'#666',fontSize:pxTodpWidth(24)}}>
-                                    ({formatDateToWeek(formatDate(item.dates,"YYYY-MM-DD hh:mm:ss"))})
-                                </Text>
+                                <Text ellipsizeMode={'tail'} style={{flex:1,textAlign:'right',color:'#666',fontSize:pxTodpWidth(24)}}>({
+                                    formatDateToWeek(formatDate(item.dates,"YYYY-MM-DD"))+' '
+                                    +formatDate(item.dates,"HH:mm:ss")
+                                })</Text>
                             </Text>
 
                             {/*分类金额*/}

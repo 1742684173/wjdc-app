@@ -141,7 +141,7 @@ export default class SwipeRow extends Component {
 
     _animateToOpenPosition(): void {
         this._isOpen = true;
-        this._animateTo(-100);
+        this._animateTo(-150);
     }
 
     _animateToClosedPosition(duration: number = 300): void {

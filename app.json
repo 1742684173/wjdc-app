@@ -32,6 +32,7 @@
     "billDeleteById":"/bill/deleteById.do",
     "billUpdateById":"/bill/updateById.do",
     "billFind":"/bill/find.do",
+    "billFindDetail":"/bill/findDetail.do",
     "billFindById":"/bill/findById.do",
     "totalBillByDates":"/bill/totalBillByDates.do",
     "totalBillBySort":"/bill/totalBillBySort.do",
@@ -42,13 +43,15 @@
     "billSortDeleteById":"/billSort/deleteById.do",
     "billSortUpdateById":"/billSort/updateById.do",
     "billSortTopById":"/billSort/topById.do",
-    "billSortCancelTopById":"/billSort/cancelTopById.do",
     "billSortFind":"/billSort/find.do",
     "billSortFindDetailById":"/billSort/findDetailById.do",
 
     "billLabelAdd":"/billLabel/add.do",
+    "billLabelDeleteByIds":"/billLabel/deleteByIds.do",
     "billLabelDeleteById":"/billLabel/deleteById.do",
     "billLabelUpdateById":"/billLabel/updateById.do",
-    "billLabelFind":"/billLabel/find.do"
+    "billLabelTopById":"/billLabel/topById.do",
+    "billLabelFind":"/billLabel/find.do",
+    "billLabelFindDetailById":"/billLabel/findDetailById.do"
   }
 }

@@ -10,12 +10,21 @@ import Button from "../../common/Button";
 import FilterTab from "../../common/FilterTab";
 import DateBetween from "../../common/DateBetween";
 import select from "../../../img/common/search_select.png";
-import Echarts from 'native-echarts';
-import EchartsUtil from '../../../utils/EchartsUtil';
-import moment from "moment";
 import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 
-let echartsUtil = new EchartsUtil();
+const analyseTitle = [
+    {key:'incomeValue',name:'总收入'},
+    {key:'expendValue',name:'总支出'},
+    {key:'maxValue',name:'最大'},
+    {key:'minValue',name:'最小'},
+    {key:'countValue',name:'消费次数'},
+    {key:'countAvg',name:'次平均值'},
+    {key:'dayAvg',name:'日平均值'},
+    {key:'weekAvg',name:'周平均值'},
+    {key:'mouthAvg',name:'月平均值'},
+    {key:'quarterAvg',name:'季平均值'},
+    {key:'yearAvg',name:'年平均值'},
+];
 
 const filter = [
     {id:'currenDay',name:'当日'},
@@ -31,11 +40,11 @@ const filter = [
 ];
 
 
-class Total extends BaseComponent {
+class BillAnalyse extends BaseComponent {
 
     state = {
-        sort:[],
-        label:[],
+        selectSort:[],
+        selectLabels:[],
         selectLabel: {
             type:'all',
             labelId:'all',
@@ -43,17 +52,16 @@ class Total extends BaseComponent {
             dateformat:'%Y-%m-%d',
         },
         filterValue:'currenDay',
-        //starDate:moment(new Date()).format('YYYY-MM-DD')+' 00:00:00',//开始时间
-        //endDate:moment(new Date()).format('YYYY-MM-DD')+' 24:00:00',//结束时间
-        dataByDates:echartsUtil.init().getOption(),
-        dataBySort:echartsUtil.init().getOption(),
-        dataByType:echartsUtil.init().getOption(),
+        data:{
+            sumValue:'1231',incomeValue:'341',expendValue:'2342',avgValue:'141',
+            modeValue:'214',maxValue:'123',minValue:'123'
+        },
     }
 
     // 构造
     constructor(props) {
         super(props);
-        // this.setTitle('消费统计');
+        this.setTitle('数据分析');
         this.props.navigation.setParams({rightView:this._renderRightView()});
 
     }
@@ -75,11 +83,11 @@ class Total extends BaseComponent {
         this.showActivityIndicator();
         try{
             //分类
-            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询类别');
+            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询消费类别');
             this._dealParams(sortData);
 
             //方式
-            const labelData = await this.props.postAction(appJson.action.billLabelFind,{},'查询标签');
+            const labelData = await this.props.postAction(appJson.action.billLabelFind,{},'查询消费方式');
             this._dealParams(labelData);
 
             await this._totalData();
@@ -124,20 +132,22 @@ class Total extends BaseComponent {
     _dealParams = (params:Object) => {
         let {type,code,msg,data} = params;
         switch (type) {
-            //类别
+            //消费类别
             case appJson.action.billSortFind:
                 if(code === appJson.action.success){
                     if(data.totalCount >0){
-                        this.setState({sort:data.list});
+                        this.setState({selectSort:data.list});
                     }
                 }
                 break;
 
-            //标签
+            //消费方式
             case appJson.action.billLabelFind:
+                let selectLabel = [];
                 if(code === appJson.action.success){
-                    if(data.totalCount >0){
-                        this.setState({label:data.list});
+                    data.list.map((item,i)=>selectLabel.push(item));
+                    if(selectLabel.length >0){
+                        this.setState({selectLabel:selectLabel});
                     }
                 }
 
@@ -146,112 +156,6 @@ class Total extends BaseComponent {
             //通过时间统计帐单
             case appJson.action.totalBillByDates:
 
-                let billByDateSR = [],billByDateZC=[],X=[];
-                if(code === appJson.action.success){
-                    data.list.map((item,i)=>{
-                        item.type === -1 ?billByDateZC.push(item.sums):billByDateSR.push(item.sums);
-                        if(!X.includes(item.dates)){
-                            X.push(item.dates);
-                        }
-                    });
-                    console.log('X--->'+JSON.stringify(X));
-                    let dataByDates = echartsUtil.init().setTitle('金额')
-                        .setLegendData(['支出(元)','收入(元)'])
-                        .setXAxisData(X).setSeries([
-                            {
-                                name: '支出(元)',
-                                type: 'bar',
-                                barWidth:pxTodpWidth(20),
-                                //barCateGoryGap:pxTodpWidth(20),//条间距离
-                                data: billByDateZC,
-                                itemStyle:{
-                                    normal:{
-                                        barBorderRadius:[5,5,0,0],
-                                    },
-
-                                }
-                            },
-                            {
-                                name: '收入(元)',
-                                type: 'bar',
-                                barWidth:pxTodpWidth(20),
-                                data: billByDateSR,
-                                itemStyle:{
-                                    normal:{
-                                        barBorderRadius:[5,5,0,0],
-                                    },
-
-                                }
-                            }
-                        ]).setColor(['#00cd00','#f03']).getOption();
-                    this.setState({dataByDates:dataByDates});
-                }
-                break;
-
-            //通过分类统计帐单
-            case appJson.action.totalBillBySort:
-                if(code === appJson.action.success){
-                    let dataBySort = echartsUtil.init().setTitle('分类比例')
-                        .setTooltip({trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)"})
-                        .setDataZoom(null)
-                        .setXAxis(null)
-                        .setYAxis(null)
-                        .setSeries([
-                            {
-                                name:'分类',
-                                type: 'pie',
-                                radius : '70%',
-                                center: ['50%', '60%'],
-                                data:data.list,
-                                itemStyle: {
-                                    emphasis: {
-                                        shadowBlur: 10,
-                                        shadowOffsetX: 0,
-                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                    }
-                                },
-                                label: {
-                                    normal: {
-                                        formatter: '{b}:{d}%',
-                                    }
-                                },
-                            }
-                        ]).getOption();
-                    this.setState({dataBySort:dataBySort})
-                }
-                break;
-
-            //通过类型统计帐单
-            case appJson.action.totalBillByType:
-                if(code === appJson.action.success){
-                    let dataByType = echartsUtil.init().setTitle('收入与支出比例')
-                        .setTooltip({trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)"})
-                        .setDataZoom(null)
-                        .setXAxis(null)
-                        .setYAxis(null)
-                        .setSeries([
-                            {
-                                name:'收入与支出',
-                                type: 'pie',
-                                radius : '70%',
-                                center: ['50%', '60%'],
-                                data:data.list,
-                                itemStyle: {
-                                    emphasis: {
-                                        shadowBlur: 10,
-                                        shadowOffsetX: 0,
-                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                    }
-                                },
-                                label: {
-                                    normal: {
-                                        formatter: '{b}:{d}%',
-                                       }
-                                },
-                            }
-                        ]).getOption();
-                    this.setState({dataByType:dataByType})
-                }
                 break;
 
             default:
@@ -335,20 +239,24 @@ class Total extends BaseComponent {
                     />
                 </View>
 
-                <View style={{marginHorizontal: pxTodpWidth(30),marginBottom: pxTodpHeight(30)}}>
-                    {/*折线 x:time  y:金额*/}
-                    <View style={styles.echartSty}>
-                        <Echarts height={pxTodpHeight(300)} option={this.state.dataByDates}/>
-                    </View>
-
-                    {/*饼图*/}
-                    <View style={styles.echartSty}>
-                        <Echarts height={pxTodpHeight(300)} option={this.state.dataBySort}/>
-                    </View>
-
-                    <View style={styles.echartSty}>
-                        <Echarts height={pxTodpHeight(300)} option={this.state.dataByType}/>
-                    </View>
+                <View style={{
+                    marginVertical:pxTodpHeight(20),
+                    marginHorizontal: pxTodpWidth(30),
+                    backgroundColor:'#fff',
+                    borderRadius: pxTodpWidth(20),
+                    paddingHorizontal: pxTodpWidth(10),
+                    paddingVertical: pxTodpHeight(10)
+                }}>
+                    {
+                        analyseTitle.map((item,i)=>{
+                            return (
+                                <View key={i} style={styles.itemView}>
+                                    <Text style={styles.textName}>{item.name}:</Text>
+                                    <Text style={styles.textValue}>{this.state.data[item.key]}</Text>
+                                </View>
+                            )
+                        })
+                    }
                 </View>
             </ScrollView>
         )
@@ -370,9 +278,8 @@ class Total extends BaseComponent {
     renderLabel(){
         return (
             <BillTotalLabel
-                selectLabel={this.state.selectLabel}
-                label={this.state.label}
-                sort={this.state.sort}
+                label={this.state.selectLabel}
+                sort={this.state.selectSort}
                 hideModal={()=>this.initBase()}
                 onSubmit={this._onSumbit}
                 onReset={this._onReset}
@@ -406,13 +313,22 @@ const styles = StyleSheet.create({
         resizeMode:'contain',
 
     },
-    echartSty:{
-        backgroundColor:'#fff',
-        paddingVertical:pxTodpHeight(10),
-        paddingHorizontal:pxTodpWidth(10),
-        marginTop:pxTodpHeight(16),
-        borderRadius: pxTodpWidth(20)
-    }
+    itemView:{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        borderBottomWidth: 1,
+        borderBottomColor:"#dcdcdc",
+        paddingBottom: pxTodpHeight(6),
+        marginTop:pxTodpHeight(30)
+    },
+    textName:{
+        fontSize:pxTodpWidth(28),
+        color:'#666666',
+    },
+    textValue:{
+        fontSize:pxTodpWidth(28),
+        color:'#333',
+    },
 });
 
-export default connect(null,actions)(Total);
+export default connect(null,actions)(BillAnalyse);

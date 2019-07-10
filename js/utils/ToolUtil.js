@@ -85,64 +85,19 @@ export const formatDate = (date,format) => {
 //格式当前周几的日期成星期几
 export const formatDateToWeek = (date) => {
     let nowDate = new Date();
-    let w = (new Date(nowDate)).getDay();
+    let w = (new Date(nowDate)).getDay() === 0?7:(new Date(nowDate)).getDay();
 
-    let result = date;
+    let result = '';
     let count = daysReduce(nowDate,date);
-    switch (w) {
-        case 0:
-            if(count <= 7){
-                if(count < 3){
-                    result = getRecentThree(daysReduce(nowDate,date));
-                }else {
-                    result = getWeekName(date);
-                }
-            }
-            break;
-        case 1:
-            if(count <= 6){
-                if(count < 3){
-                    result = getRecentThree(daysReduce(nowDate,date));
-                }else {
-                    result = getWeekName(date);
-                }
-            }
-            break;
-        case 2:
-            if(count <= 5){
-                if(count < 3){
-                    result = getRecentThree(daysReduce(nowDate,date));
-                }else {
-                    result = getWeekName(date);
-                }
-            }
-            break;
-        case 3:
-            if(count <= 4){
-                if(count < 3){
-                    result = getRecentThree(daysReduce(nowDate,date));
-                }else {
-                    result = getWeekName(date);
-                }
-            }
-            break;
-        case 4:
-            if(count <= 3){
-                result = getRecentThree(daysReduce(nowDate,date));
-            }
-            break;
-        case 5:
-            if(count <= 2){
-                result = getRecentThree(daysReduce(nowDate,date));
-            }
-            break;
-        case 6:
-            if(count <= 1){
-                result = getRecentThree(daysReduce(nowDate,date));
-            }
-            break;
+    if(w - count <= 0){
+        result = date;
+    }else{
+        if(count < 3){
+            result = getRecentThree(daysReduce(nowDate,date));
+        }else {
+            result = getWeekName(date);
+        }
     }
-
     return result;
 }
 

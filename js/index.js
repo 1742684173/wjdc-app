@@ -65,7 +65,7 @@ class Root extends Component{
     }
 
     componentDidMount() {
-        this._checkUpdate(this.state.iosStagKey);
+        // this._checkUpdate(this.state.iosStagKey);
     }
 
     render() {

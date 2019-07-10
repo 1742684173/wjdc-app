@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import BillInfo from '../work/bill';
 import Carousel from "../common/Carousel";
 import {View} from "react-native";
-import Bills from "../work/bill/History";
-import BillTotal from "../work/bill/Total";
+import Bills from "../work/bill/BillHistory";
+import BillTotal from "../work/bill/BillTotal";
 
 export default class Home extends Component<any> {
     static navigationOptions = ({navigation}) => ({

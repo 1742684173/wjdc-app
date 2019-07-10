@@ -59,6 +59,8 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
                 msg = '很报歉，服务器正在维修中，请稍后再使用';
             }else if('request timeout' === e){
                 msg = '请求超时，请刷新重试';
+            }else{
+                msg = '请求错误';
             }
             reject(Object.assign({code:appJson.action.connectServerError,msg:msg},result));
         }

@@ -9,7 +9,7 @@ import Button from "./Button";
 import {pxTodpHeight, pxTodpWidth} from "../../utils/ScreenUtil";
 
 export type Props = {
-    values:Array,//选项
+    values:Array,//选项 [{id:'0',name:'否'},{id:'1',name:'是'}]
     title:string,//标签名称
     isNeed:boolean,//是否必填
 }
@@ -27,9 +27,9 @@ export default class RadioButton extends Component{
             return(
                 <Button key={i} style={styles.radioStyle} onPress={()=>onChange(item.id)}>
                     <View style={styles.outCircle}>
-                        {item.id===value?<View style={styles.inCircle}/>:null}
+                        {item.id+''===value+''?<View style={styles.inCircle}/>:null}
                     </View>
-                    <Text style={styles.inputStyle}>{item.value}</Text>
+                    <Text style={styles.inputStyle}>{item.name}</Text>
                 </Button>
             )
         })

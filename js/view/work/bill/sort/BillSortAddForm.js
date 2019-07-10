@@ -11,7 +11,6 @@ import * as actions from '../../../../actions/index';
 import BaseComponent from "../../../base/BaseComponent";
 import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
 import RadioButton from "../../../common/RadioButton";
-import SelectField from "../../../common/SelectField";
 
 class BillSortAddForm extends BaseComponent {
     state = {

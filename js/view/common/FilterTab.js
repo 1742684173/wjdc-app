@@ -72,7 +72,7 @@ const FilterTab = (props:Props = defaultProps) => {
                                         {item.name}
                                     </Text>
                                 </View>
-                                <View style={[styles.toggle,{borderTopColor:item.id===value?selectBgColor:'#00000000'}]}/>
+                                {/*<View style={[styles.toggle,{borderTopColor:item.id===value?selectBgColor:'#00000000'}]}/>*/}
                             </Button>
                         )
                     })

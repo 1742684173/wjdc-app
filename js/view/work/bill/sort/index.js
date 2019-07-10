@@ -14,6 +14,7 @@ import editIcon from "../../../../img/common/edit.png";
 import Search from "../../../common/Search";
 import Divider from "../../../common/Divider";
 import SwipeRow from "../../../common/SwipeRow";
+import nullDataIcon from "../../../../img/common/nullDataIcon.png";
 
 
 class BillSort extends BaseComponent {
@@ -169,18 +170,19 @@ class BillSort extends BaseComponent {
         })
     }
 
-    //置顶与取消置顶
+    //置顶
     _onTopItem = async ({item,callback}) => {
         await this.showActivityIndicator();
 
         try{
             let {type,code,msg,data} = await this.props.postAction(
-                item.top===1?appJson.action.billSortCancelTopById:appJson.action.billSortTopById,
-                {id:item.id}, '置顶'
+                appJson.action.billSortTopById,
+                {id:item.id,top:item.top===1?0:1},
+                '置顶'
             );
             this.hideActivityIndicator();
 
-            if(type === appJson.action.billSortTopById || type === appJson.action.billSortCancelTopById){
+            if(type === appJson.action.billSortTopById){
                 if (code === appJson.action.success) {
                     this._onRefresh();
                     callback(true);
@@ -255,6 +257,7 @@ class BillSort extends BaseComponent {
                         renderItem={this._renderRow}
                         ItemSeparatorComponent={this._ItemSeparatorComponent}
                         showsVerticalScrollIndicator={false}
+                        ListEmptyComponent={this._ListEmptyComponent}
                     />
                 </View>
 
@@ -263,6 +266,16 @@ class BillSort extends BaseComponent {
         )
 
         return super.renderBase(view);
+    }
+
+    _ListEmptyComponent = () =>{
+        let cpt = (
+            <View style={{flex:1, alignItems:'center', marginTop:pxTodpHeight(100)}}>
+                <Image source={nullDataIcon} style={{height:pxTodpHeight(110),width:pxTodpWidth(364),resizeMode:'contain',}}/>
+                <Text style={{color:'#999'}}>空空如也~</Text>
+            </View>
+        )
+        return cpt;
     }
 
     _keyExtractor = (item, index) => index+'';
@@ -303,7 +316,6 @@ class FlatListItem extends React.PureComponent {
 
     render() {
         const item = this.props.item;
-        const swipeRowStatus = this.props.swipeRowStatus;
         return(
             <SwipeRow ref={ref => this.swiperow=ref} style={styles.itemContain}>
                 <View style={{flexDirection: 'row'}}>

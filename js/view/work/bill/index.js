@@ -10,19 +10,25 @@ import moment from "moment";
 import BaseComponent from '../../base/BaseComponent'
 import Button from "../../common/Button";
 import MoreList from "../../common/MoreList";
-import {formatDate, formatDateToWeek, numberFormatter} from "../../../utils/ToolUtil";
+import {daysReduce, formatDate, formatDateToWeek, numberFormatter} from "../../../utils/ToolUtil";
 import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 import test from '../../../test/img/index_icon_16.png'
 import Divider from "../../common/Divider";
 
 const billManager = [
-    {route:'BillForm',name:'新增帐单',icon:test},
-    {route:'BillTotal',name:'帐单统计',icon:test},
+    {route:'BillAddForm',name:'新增帐单',icon:test},
+    {route:'BillAnalyse',name:'数据分析',icon:test},
     {route:'BillLabel',name:'标签管理',icon:test},
     {route:'BillSort',name:'分类管理',icon:test},
 
     //{route:'AccountActivate',name:'导入支付宝数据',icon:test},
     //{route:'AccountActivate',name:'导入微信数据',icon:test},
+];
+const analyseTitle = [
+    {key:'time',name:'时间'},
+    {key:'incomeValue',name:'收入'},
+    {key:'expendValue',name:'支出'},
+    {key:'avgValue',name:'平均值'}
 ];
 
 class BillInfo extends BaseComponent {
@@ -38,6 +44,9 @@ class BillInfo extends BaseComponent {
     constructor(props){
         super(props);
         this.setTitle('我的帐单');
+
+        let nowDate = new Date();
+        console.log(daysReduce('2019-07-05','2019-07-07'));
     }
 
     componentDidMount = async () => {
@@ -53,9 +62,9 @@ class BillInfo extends BaseComponent {
 
         try{
             let billParams = await this.props.postAction(appJson.action.billFind,{pageSize:3,currentPage:1,sortName:'dates desc'},'查询账单');
-            this.dealParam(billParams);
-
             this.hideActivityIndicator();
+
+            this.dealParam(billParams);
         }catch (e) {
             this.handleRequestError(e);
         }
@@ -74,9 +83,8 @@ class BillInfo extends BaseComponent {
 
     _onPress = (item) => {
         this.props.navigation.navigate(item.route,{
-            title:item.name,
             callback:(data)=>{
-                if(item.route === 'BillForm'){
+                if(item.route === 'BillAddForm'){
                     this.getBillInfo();
                 }
             }
@@ -96,8 +104,12 @@ class BillInfo extends BaseComponent {
         });
     }
 
-    _goBillAnalyse = () => {
-        this.props.navigation.navigate('BillAnalyse');
+    _goBillTotal = () => {
+        this.props.navigation.navigate('BillTotal',{
+            callback:(data)=>{
+                this.getBillInfo();
+            }
+        });
     }
 
     _refresh = async () => {
@@ -130,7 +142,7 @@ class BillInfo extends BaseComponent {
                 <Title text={'历史记录'}/>
 
                 {/*最近的记录*/}
-                <Button onPress={this._goBillHistory}>
+                <Button onPress={this._goBillHistory} style={{flexDirection: 'column',}}>
                     {
                         this.state.billsHistory.length===0?(
                             <Image source={nullDataPic} style={{height:pxTodpHeight(110),width:'100%'}} resizeMode={'contain'}/>
@@ -141,9 +153,10 @@ class BillInfo extends BaseComponent {
                                         {/*分类名称*/}
                                         <Text ellipsizeMode={'tail'} numberOfLines={1} style={{fontSize:pxTodpWidth(30)}}>
                                             {item.sortName}
-                                            <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>
-                                                ({formatDateToWeek(formatDate(item.dates,"YYYY-MM-DD hh:mm:ss"))})
-                                            </Text>
+                                            <Text style={{color:'#999',fontSize:pxTodpWidth(24)}}>({
+                                                    formatDateToWeek(formatDate(item.dates,"YYYY-MM-DD"))+' '
+                                                    +formatDate(item.dates,"HH:mm:ss")
+                                            })</Text>
                                         </Text>
                                         {/*分类金额*/}
                                         <Text ellipsizeMode={'tail'} numberOfLines={1} style={{textAlign:'right',color:item.type === 1?'#f03':'#00cd00',fontSize:pxTodpWidth(30)}}>
@@ -171,95 +184,49 @@ class BillInfo extends BaseComponent {
                 </Button>
 
                 {/*所有 本年 本月 当天 上一周 上一月 上一年*/}
-                <Title text={'数据指标'}/>
+                <Title text={'数据统计'}/>
 
-                <Button style={{flex:1,width:undefined,}} onPress={this._goBillAnalyse}>
-                    <MoreList
-                        onEndReached={()=>{}}
-                        onRefresh={()=>{}}
-                        isShowActivityIndicator={false}
-                        headerHeight={pxTodpHeight(60)}
-                        leftWidth={pxTodpWidth(160)}
-                        leftTitle={[
-                            {key:'time',value:'时间'},
-                        ]}
-                        rightTitle={[
-                            {key:'sumValue',value:'总额'},
-                            {key:'incomeValue',value:'总收入'},
-                            {key:'expendValue',value:'总支出'},
-                            {key:'modeValue',value:'众数'},
-                            {key:'maxValue',value:'最大'},
-                            {key:'minValue',value:'最小'},
-                            {key:'avgValue',value:'日平均值'},
-                            {key:'countValue',value:'消费次数'},
-                            {key:'countAvgValue',value:'次平均值'},
-                        ]}
-                        data={[
-                            {
-                                time:'参考标准',sumValue:'1231',incomeValue:'341',expendValue:'2342',avgValue:'141',
-                                modeValue:'214',maxValue:'123',minValue:'123'
-                            },
-                            {
-                                time:'今日',sumValue:'1231',incomeValue:'341',expendValue:'2342',avgValue:'141',
-                                modeValue:'214',maxValue:'123',minValue:'123'
-                            },
-                            {
-                                time:'本周',sumValue:'1231',incomeValue:'341',expendValue:'2342',avgValue:'141',
-                                modeValue:'214',maxValue:'123',minValue:'123'
-                            },
-                            {
-                                time:'本月',sumValue:'1231',incomeValue:'341',expendValue:'2342',avgValue:'141',
-                                modeValue:'214',maxValue:'123',minValue:'123'
-                            },
-                        ]}
-                        itemHeadView={
-                            (item)=>{
-                                return(
-                                    <Button key={item.key} style={[styles.itemSty,{backgroundColor:'#c3eeff',borderRadius:0}]}>
-                                        <Text style={[styles.itemFont,{color:'#333',}]}>{item.value}</Text>
-                                    </Button>
-                                )
-                            }
-                        }
-                        itemLeftView={
-                            (item,index)=>{
-                                return(
-                                    <View key={index} style={[styles.itemSty,{backgroundColor:index%2===0?'#fff':'#E6F8FF'}]}>
-                                        <Text style={styles.itemFont}>{item.time}</Text>
+                <Button
+                    style={{flexDirection:'column'}}
+                    onPress={this._goBillTotal}
+                >
+                    <View style={styles.bottomTitleSty}>
+                        {
+                            analyseTitle.map((item,index)=>{
+                                return (
+                                    <View key={index} style={[styles.itemSty,{flex:1,backgroundColor:'#c3eeff'}]}>
+                                        <Text style={[styles.itemFont,{color:'#333',}]}>{item.name}</Text>
                                     </View>
                                 )
-                            }
+                            })
                         }
-                        itemRightView={
-                            (item,index)=>{
-                                return(
-                                    <View key={index} style={{flexDirection:'row',backgroundColor:index%2===0?'#fff':'#E6F8FF'}}>
-                                        <View style={styles.itemSty}>
-                                            <Text style={styles.itemFont}>{numberFormatter(item.sumValue)}</Text>
-                                        </View>
-                                        <View style={styles.itemSty}>
-                                            <Text style={[styles.itemFont,{color:'#f03'}]}>{numberFormatter(item.incomeValue)}</Text>
-                                        </View>
-                                        <View style={styles.itemSty}>
-                                            <Text style={[styles.itemFont,{color:'#00cd00'}]}>{numberFormatter(item.expendValue)}</Text>
-                                        </View>
-                                        <View style={styles.itemSty}>
-                                            <Text style={styles.itemFont}>{numberFormatter(item.avgValue)}</Text>
-                                        </View>
-                                        <View style={styles.itemSty}>
-                                            <Text style={styles.itemFont}>{numberFormatter(item.modeValue)}</Text>
-                                        </View>
-                                        <View style={styles.itemSty}>
-                                            <Text style={styles.itemFont}>{numberFormatter(item.maxValue)}</Text>
-                                        </View>
-                                        <View style={styles.itemSty}>
-                                            <Text style={styles.itemFont}>{numberFormatter(item.minValue)}</Text>
-                                        </View>
-                                    </View>
-                                )
-                            }
-                        }
-                    />
+                    </View>
+
+                    {
+                        [
+                            {time:'今日',incomeValue:'341',expendValue:'2342',avgValue:'141'},
+                            {time:'本周',incomeValue:'341',expendValue:'2342',avgValue:'141'},
+                            {time:'本月',incomeValue:'341',expendValue:'2342',avgValue:'141'},
+                            {time:'本年',incomeValue:'341',expendValue:'2342',avgValue:'141'},
+                        ].map((item,i)=>{
+                            return (
+                                <View key={i} style={{flexDirection:'row',backgroundColor:i%2===0?'#fff':'#E6F8FF'}}>
+                                    {
+                                        analyseTitle.map((itemTitle,index)=>{
+                                            return (
+                                                <View key={index} style={[styles.itemSty,{flex:1}]}>
+                                                    <Text style={styles.itemFont}>{
+                                                        item.key === 'time'?item[itemTitle.key]:
+                                                            numberFormatter(item[itemTitle.key])
+                                                    }</Text>
+                                                </View>
+                                            )
+                                        })
+                                    }
+                                </View>
+                            )
+                        })
+                    }
                 </Button>
 
             </ScrollView>
@@ -383,6 +350,11 @@ const styles = StyleSheet.create({
         borderTopRightRadius:pxTodpWidth(20),
         borderTopLeftRadius:pxTodpWidth(20),
     },
+    bottomTitleSty:{
+        flexDirection:'row',
+        borderTopRightRadius:pxTodpWidth(20),
+        borderTopLeftRadius:pxTodpWidth(20)
+    }
 });
 
 export default connect(null,actions)(BillInfo);

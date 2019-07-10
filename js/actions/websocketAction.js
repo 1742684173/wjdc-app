@@ -4,7 +4,7 @@ const wsconnect =  (connectobj)  => ({type : appJson.websocket.connect,connectob
 const wsconnectClose =  ()  => ({ type : appJson.websocket.connectClose});
 const connectSuccess =  ()  => ({ type : appJson.websocket.connectSuccess});
 const connectFall =  ()  => ({ type : appJson.websocket.connectFail});
-const sendmsg =  (sendmsg)  => ({ type : appJson.websocket.sendMsg,sendmsg:sendmsg});
+const sendMsg =  (sendmsg)  => ({ type : appJson.websocket.sendMsg,sendmsg:sendmsg});
 const responseMsg =  (msgstr)  => ({ type : appJson.websocket.retureMsg,msgstr:msgstr});
 
 
@@ -13,6 +13,6 @@ export {
     wsconnectClose,
     connectSuccess,
     connectFall,
-    sendmsg,
+    sendMsg,
     responseMsg,
 }

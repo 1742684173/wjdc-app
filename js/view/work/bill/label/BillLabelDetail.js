@@ -79,6 +79,11 @@ class BillLabelDetail extends BaseComponent {
                 </View>
 
                 <View style={styles.itemView}>
+                    <Text style={styles.textName}>是否置顶：</Text>
+                    <Text style={styles.textValue}>{this.state.data.top===1?'是':'否'}</Text>
+                </View>
+
+                <View style={styles.itemView}>
                     <Text style={styles.textName}>描述：</Text>
                     <Text style={styles.textValue}>{this.state.data.descs}</Text>
                 </View>

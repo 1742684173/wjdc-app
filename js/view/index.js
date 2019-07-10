@@ -8,17 +8,20 @@ import AuthLoading from './auth';
 import Publish from './publish';
 import DrawerSideBar from './DrawerSideBar';
 import Bill from './work/bill';
-import BillHistory from './work/bill/History';
-import BillTotal from './work/bill/Total';
-import BillForm from './work/bill/BillForm';
-import BillDetail from './work/bill/Detail';
+import BillHistory from './work/bill/BillHistory';
+import BillTotal from './work/bill/BillTotal';
+import BillAnalyse from './work/bill/BillAnalyse';
+import BillEditForm from './work/bill/BillEditForm';
+import BillAddForm from './work/bill/BillAddForm';
+import BillDetail from './work/bill/BillDetail';
 import BillLabel from './work/bill/label';
+import BillLabelDetail from './work/bill/label/BillLabelDetail';
+import BillLabelAddForm from './work/bill/label/BillLabelAddForm';
+import BillLabelEditForm from './work/bill/label/BillLabelEditForm';
 import BillSort from './work/bill/sort';
-import BillSortDetail from './work/bill/sort/Detail';
-import BillLabelAddForm from './work/bill/label/AddForm';
-import BillLabelUpdateForm from './work/bill/label/UpdateForm';
-import BillSortAddForm from './work/bill/sort/AddForm';
-import BillSortUpdateForm from './work/bill/sort/UpdateForm';
+import BillSortDetail from './work/bill/sort/BillSortDetail';
+import BillSortAddForm from './work/bill/sort/BillSortAddForm';
+import BillSortUpdateForm from './work/bill/sort/BillSortEditForm';
 import Contact from './work/contact';
 import ContactDetail from './work/contact/ContactDetail'
 
@@ -27,13 +30,16 @@ const AppStack = StackNavigator({
     Bill,
     BillHistory,
     BillTotal,
-    BillForm,
+    BillAnalyse,
+    BillAddForm,
+    BillEditForm,
     BillDetail,
     BillLabel,
+    BillLabelDetail,
+    BillLabelAddForm,
+    BillLabelEditForm,
     BillSort,
     BillSortDetail,
-    BillLabelAddForm,
-    BillLabelUpdateForm,
     BillSortAddForm,
     BillSortUpdateForm,
     Publish,

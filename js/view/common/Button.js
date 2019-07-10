@@ -58,6 +58,7 @@ const Button = (props: Props) => {
 
 const styles = StyleSheet.create({
     button: {
+        flexDirection: 'row',
         borderRadius: pxTodpWidth(44),
         // padding: 8,
         // backgroundColor: '#21c3ff',

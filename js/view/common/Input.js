@@ -50,7 +50,7 @@ class Input extends Component<any> {
                     style={[styles.input, inputStyle]}
                     underlineColorAndroid={'transparent'}
                     onChangeText={(text)=>onChange(text)}
-                    defaultValue={value}
+                    defaultValue={value+''}
                     {...other}
                 />
                 <TouchableOpacity onPress={this.onPress}>

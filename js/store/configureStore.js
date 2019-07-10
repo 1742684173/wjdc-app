@@ -30,6 +30,7 @@ const configureStore = () => {
     const enhancer = applyMiddleware(sagaMiddleware, promise, logger);
     const store = createStore(persistedReducer, enhancer);
 
+    sagaMiddleware.run(saga)// 执行rootSaga
     const persistor = persistStore(store);
     return { store, persistor };
 };

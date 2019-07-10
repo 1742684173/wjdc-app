@@ -18,6 +18,7 @@ export type Props = {
     isNeed?:boolean,//是否必填
     isShowAdd?:boolean,//是否显示添加按钮
     addBtn?:Function,//添加按钮方法
+    addImg?:string,
     isShowDelete?:boolean,//是否显示删除按钮
     deleteBtn?:Function,//删除按钮方法
     onItemPress?:Function,//父按钮方法
@@ -36,7 +37,7 @@ export default class SelectField extends Component<Props>{
     _onChange = (item) => {
         this.props.isParent?this.props.onItemPress(item):null;
 
-        if(this.props.value === item.id){
+        if(this.props.value+'' === item.id+''){
             this.props.onChange(null);
         }else{
             this.props.onChange(item.id);
@@ -52,6 +53,7 @@ export default class SelectField extends Component<Props>{
             isAll,
             isShowAdd,
             addBtn,
+            addImg,
             isShowDelete,
             deleteBtn,
             isParent,//是否有父类
@@ -64,14 +66,14 @@ export default class SelectField extends Component<Props>{
         let select = flagArray.map((item,i)=>{
             return(
                 <TouchableOpacity
-                    style={[styles.div2,{borderWidth:item.id===value?1:0}]}
+                    style={[styles.div2,{borderWidth:item.id+''===value+''?1:0}]}
                     key={i}
                     onPress={()=>this._onChange(item)}
                 >
                     <Text style={styles.font1}>
                         {item.name}
                     </Text>
-                    {item.id===value?<Image source={selectPic}/>:null}
+                    {item.id+''===value+''?<Image source={selectPic}/>:null}
                     {
                         isShowDelete && item.id!==value?(
                             <Button style={{height:'100%',paddingLeft: pxTodpWidth(20),backgroundColor:'#00000000'}} onPress={()=>deleteBtn(item)}>
@@ -145,7 +147,7 @@ export default class SelectField extends Component<Props>{
                                 onPress={addBtn}
                                 style={[styles.div2,{marginLeft:pxTodpWidth(30),backgroundColor:'#00000000'}]}
                             >
-                                <Image source={add}/>
+                                <Image source={addImg?addImg:add}/>
                             </Button>
                         ):null
                     }

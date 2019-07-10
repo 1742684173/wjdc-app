@@ -10,7 +10,7 @@ import BillLabel from './common/HistoryLabel';
 import BaseComponent from '../../base/BaseComponent';
 
 
-class History extends BaseComponent {
+class BillHistory extends BaseComponent {
 
     state = {
         total:0,//事件总数
@@ -33,7 +33,7 @@ class History extends BaseComponent {
     //初始化list
     initList = () => {
         this.currentPage = 1;
-        this.pageSize = 10;
+        this.pageSize = 20;
         this.condition = null;
     }
 
@@ -75,7 +75,7 @@ class History extends BaseComponent {
                 label={this.state.label}
                 sort={this.state.sort}
                 selectLabel={this.state.selectLabel}
-                hideModal={()=>this.initBase()}
+                hideModal={()=>this.hideActivityIndicator()}
                 onSubmit={this._onSumbit}
                 onReset={this._onReset}
                 onRequestClose={()=>this.initBase()}
@@ -178,7 +178,7 @@ class History extends BaseComponent {
     //前往详情界面
     _onItemClick = (item) => {
         this.props.navigation.navigate('BillDetail', {
-            id:item.id,
+            item:{id:item.id},
             callback:(data)=>{
                 this._onRefresh();
             }
@@ -187,7 +187,7 @@ class History extends BaseComponent {
 
     //去新增帐单界面
     _onAddBtn = () => {
-        this.props.navigation.navigate('BillForm',{
+        this.props.navigation.navigate('BillAddForm',{
             title:'添加帐单',
             callback:(data)=>{
                 this._onRefresh();
@@ -343,4 +343,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect(null,actions)(History);
+export default connect(null,actions)(BillHistory);

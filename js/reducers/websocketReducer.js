@@ -8,7 +8,6 @@ const initwsState ={
 }
 
 export default function webSockerfun(state=initwsState,action) {
-    return state;
     switch (action.type){
         case appJson.websocket.connectSuccess:
             return{

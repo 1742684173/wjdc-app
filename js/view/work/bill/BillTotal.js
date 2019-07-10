@@ -31,11 +31,11 @@ const filter = [
 ];
 
 
-class Analyse extends BaseComponent {
+class BillTotal extends BaseComponent {
 
     state = {
-        selectSort:[],
-        selectLabels:[],
+        sort:[],
+        label:[],
         selectLabel: {
             type:'all',
             labelId:'all',
@@ -43,6 +43,8 @@ class Analyse extends BaseComponent {
             dateformat:'%Y-%m-%d',
         },
         filterValue:'currenDay',
+        //starDate:moment(new Date()).format('YYYY-MM-DD')+' 00:00:00',//开始时间
+        //endDate:moment(new Date()).format('YYYY-MM-DD')+' 24:00:00',//结束时间
         dataByDates:echartsUtil.init().getOption(),
         dataBySort:echartsUtil.init().getOption(),
         dataByType:echartsUtil.init().getOption(),
@@ -51,7 +53,7 @@ class Analyse extends BaseComponent {
     // 构造
     constructor(props) {
         super(props);
-        this.setTitle('数据分析');
+        this.setTitle('数据统计');
         this.props.navigation.setParams({rightView:this._renderRightView()});
 
     }
@@ -73,11 +75,11 @@ class Analyse extends BaseComponent {
         this.showActivityIndicator();
         try{
             //分类
-            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询消费类别');
+            const sortData = await this.props.postAction(appJson.action.billSortFind,{},'查询类别');
             this._dealParams(sortData);
 
             //方式
-            const labelData = await this.props.postAction(appJson.action.billLabelFind,{},'查询消费方式');
+            const labelData = await this.props.postAction(appJson.action.billLabelFind,{},'查询标签');
             this._dealParams(labelData);
 
             await this._totalData();
@@ -122,22 +124,20 @@ class Analyse extends BaseComponent {
     _dealParams = (params:Object) => {
         let {type,code,msg,data} = params;
         switch (type) {
-            //消费类别
+            //类别
             case appJson.action.billSortFind:
                 if(code === appJson.action.success){
                     if(data.totalCount >0){
-                        this.setState({selectSort:data.list});
+                        this.setState({sort:data.list});
                     }
                 }
                 break;
 
-            //消费方式
+            //标签
             case appJson.action.billLabelFind:
-                let selectLabel = [];
                 if(code === appJson.action.success){
-                    data.list.map((item,i)=>selectLabel.push(item));
-                    if(selectLabel.length >0){
-                        this.setState({selectLabel:selectLabel});
+                    if(data.totalCount >0){
+                        this.setState({label:data.list});
                     }
                 }
 
@@ -161,16 +161,29 @@ class Analyse extends BaseComponent {
                             {
                                 name: '支出(元)',
                                 type: 'bar',
-                                barWidth:10,
-                                data: billByDateZC
+                                barWidth:pxTodpWidth(20),
+                                //barCateGoryGap:pxTodpWidth(20),//条间距离
+                                data: billByDateZC,
+                                itemStyle:{
+                                    normal:{
+                                        barBorderRadius:[5,5,0,0],
+                                    },
+
+                                }
                             },
                             {
                                 name: '收入(元)',
                                 type: 'bar',
-                                barWidth:10,
-                                data: billByDateSR
+                                barWidth:pxTodpWidth(20),
+                                data: billByDateSR,
+                                itemStyle:{
+                                    normal:{
+                                        barBorderRadius:[5,5,0,0],
+                                    },
+
+                                }
                             }
-                        ]).getOption();
+                        ]).setColor(['#00cd00','#f03']).getOption();
                     this.setState({dataByDates:dataByDates});
                 }
                 break;
@@ -233,7 +246,7 @@ class Analyse extends BaseComponent {
                                 label: {
                                     normal: {
                                         formatter: '{b}:{d}%',
-                                    }
+                                       }
                                 },
                             }
                         ]).getOption();
@@ -325,16 +338,16 @@ class Analyse extends BaseComponent {
                 <View style={{marginHorizontal: pxTodpWidth(30),marginBottom: pxTodpHeight(30)}}>
                     {/*折线 x:time  y:金额*/}
                     <View style={styles.echartSty}>
-                        <Echarts height={pxTodpHeight(320)} option={this.state.dataByDates}/>
+                        <Echarts height={pxTodpHeight(300)} option={this.state.dataByDates}/>
                     </View>
 
                     {/*饼图*/}
                     <View style={styles.echartSty}>
-                        <Echarts height={pxTodpHeight(320)} option={this.state.dataBySort}/>
+                        <Echarts height={pxTodpHeight(300)} option={this.state.dataBySort}/>
                     </View>
 
                     <View style={styles.echartSty}>
-                        <Echarts height={pxTodpHeight(320)} option={this.state.dataByType}/>
+                        <Echarts height={pxTodpHeight(300)} option={this.state.dataByType}/>
                     </View>
                 </View>
             </ScrollView>
@@ -357,9 +370,10 @@ class Analyse extends BaseComponent {
     renderLabel(){
         return (
             <BillTotalLabel
-                label={this.state.selectLabel}
-                sort={this.state.selectSort}
-                hideModal={()=>this.initBase()}
+                selectLabel={this.state.selectLabel}
+                label={this.state.label}
+                sort={this.state.sort}
+                hideModal={()=>this.hideActivityIndicator()}
                 onSubmit={this._onSumbit}
                 onReset={this._onReset}
                 onRequestClose={()=>this.initBase()}
@@ -401,4 +415,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default connect(null,actions)(Analyse);
+export default connect(null,actions)(BillTotal);

@@ -58,16 +58,16 @@ class TotalLabel extends Component<Props> {
                     >
 
                         <Field name={'type'} component={MySelect} title={'类形'}
-                               values={type} isAll={true} defaultValue={selectLabel.type}/>
+                               values={type} isAll={true} defaultValue={'all'}/>
 
                         <Field name={'dateformat'} component={MySelect} title={'时间段'}
                                values={dateformats} defaultValue={selectLabel.dateformat}/>
 
-                        <Field name={'labelId'} component={MySelect} title={'方式'}
-                               values={label}  isAll={true} defaultValue={selectLabel.labelId}/>
-
                         <Field name={'sortId'} component={MySelect} title={'分类'}
-                               values={sort}  isAll={true} defaultValue={selectLabel.sortId}/>
+                               values={sort}  isAll={true} defaultValue={'all'}/>
+
+                        <Field name={'labelId'} component={MySelect} title={'标签'}
+                               values={label}  isAll={true} defaultValue={'all'}/>
 
                         <View style={{height:pxTodpHeight(400)}}/>
                     </ScrollView>

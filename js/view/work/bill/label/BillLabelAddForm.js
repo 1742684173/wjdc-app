@@ -10,6 +10,7 @@ import * as appJson from '../../../../../app';
 import * as actions from '../../../../actions/index';
 import BaseComponent from "../../../base/BaseComponent";
 import {pxTodpHeight, pxTodpWidth} from "../../../../utils/ScreenUtil";
+import RadioButton from "../../../common/RadioButton";
 
 class BillLabelAddForm extends BaseComponent {
     state = {
@@ -86,6 +87,11 @@ class BillLabelAddForm extends BaseComponent {
                 <View style={{height:pxTodpHeight(24)}}/>
 
                 <Field name={'name'} component={TextField} title={'名称'} isNeed={true}/>
+
+                <View style={{height:pxTodpHeight(24)}}/>
+                <Field name={'top'} component={RadioButton} title={'置顶'} isNeed={true}
+                       values={[{id:'0',name:'否'},{id:'1',name:'是'}]} defaultValue={'0'}
+                />
 
                 <View style={{height:pxTodpHeight(24)}}/>
                 <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={100}/>

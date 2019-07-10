@@ -8,7 +8,7 @@ import * as appJson from '../../../../app';
 import Button from "../../common/Button";
 import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 
-class Detail extends BaseComponent {
+class BillDetail extends BaseComponent {
 
     state = {
         data:{},
@@ -18,6 +18,7 @@ class Detail extends BaseComponent {
     constructor(props) {
         super(props);
         this.props.navigation.setParams({rightView:this._renderRightView()});
+        this.item = this.props.navigation.state.params.item;
         this.setTitle("帐单详情");
     }
 
@@ -44,16 +45,17 @@ class Detail extends BaseComponent {
 
             //分类
             const {type,code,msg,data} = await this.props.postAction(
-                appJson.action.billFind,{
-                    billId:this.props.navigation.state.params.id,
-                    all:"all"
+                appJson.action.billFindDetail,{
+                    billId:this.item.id,
                 },"查询详情");
 
             this.hideActivityIndicator();
 
-            if(type === appJson.action.billFind){
+            if(type === appJson.action.billFindDetail){
                 if(code === appJson.action.success){
-                    data.totalCount >0 ? this.setState({data:data.list[0]}):null;
+                    data.totalCount > 0 ? this.setState({data:data.list[0]}):null;
+                }else{
+                    this.showToast(msg);
                 }
             }
         }catch (e) {
@@ -64,9 +66,8 @@ class Detail extends BaseComponent {
 
     //去编辑帐单界面
     _editBill = () => {
-        this.props.navigation.navigate('BillForm',{
-            title:'编辑帐单',
-            data:this.state.data,
+        this.props.navigation.navigate('BillEditForm',{
+            item:this.state.data,
             callback:(data)=>{
                 this._getBill();
             }});
@@ -150,4 +151,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect(null,{postAction})(Detail);
+export default connect(null,{postAction})(BillDetail);
