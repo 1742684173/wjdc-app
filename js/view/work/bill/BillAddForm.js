@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, ScrollView,View, StyleSheet, } from 'react-native';
+import {KeyboardAvoidingView,Text, ScrollView,View, StyleSheet, } from 'react-native';
 import {connect} from 'react-redux';
 import {formValueSelector, reduxForm} from 'redux-form';
 import Field from '../../common/Field';
@@ -135,9 +135,8 @@ class BillAddForm extends BaseComponent {
                                 onPress:()=>{
                                     this.hideActivityIndicator();
                                     this.props.initialize({
-                                        LabelId:this.state.selectLabel.length>0?this.state.selectLabel[0].id:null,
                                         sortId:this.state.selectSort.length>0?this.state.selectSort[0].id:null,
-                                        dates:moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+                                        dates:moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                                         type:selectType[0].id
                                     });
                                 }
@@ -178,7 +177,7 @@ class BillAddForm extends BaseComponent {
     render() {
         super.render();
         let view = (
-            <ScrollView contentContainerStyle={styles.contain} keyboardShouldPersistTaps={'handled'}>
+            <ScrollView keyboardShouldPersistTaps={'handled'} style={styles.contain}>
 
                 <View style={{height:pxTodpHeight(24)}}/>
                 <Field name={'type'} component={RadioButton} title={'类型'} isNeed={true}
@@ -223,10 +222,7 @@ class BillAddForm extends BaseComponent {
                 />
 
                 <View style={{height:pxTodpHeight(10)}}/>
-
-                <Field name={'descs'} component={TextArea}
-                       title={'描述'} isNeed={false} height={100}
-                />
+                <Field name={'descs'} component={TextArea} title={'描述'} isNeed={false} height={100}/>
 
                 <View style={{height:pxTodpHeight(100)}}/>
                 <Button
@@ -236,7 +232,8 @@ class BillAddForm extends BaseComponent {
                     <Text style={styles.btnSubmit}>提交</Text>
                 </Button>
 
-            </ScrollView>
+                <View style={{height:200}}/>
+             </ScrollView>
         );
 
         return super.renderBase(view);

@@ -27,17 +27,7 @@ class BillLabelAddForm extends BaseComponent {
     componentDidMount = async () => {
         super.componentDidMount();
         await this.initBase();
-    }
-
-    _confirm = ()=>{
-        this.hideActivityIndicator();
-        this.item?null:this.props.reset();
-    }
-
-    _cancel = () => {
-        this.hideActivityIndicator();
-        this.props.navigation.state.params.callback({});
-        this.props.navigation.goBack();
+        this.props.initialize({top:'0'});
     }
 
     //添加
@@ -61,11 +51,18 @@ class BillLabelAddForm extends BaseComponent {
                         buttons:[
                             {
                                 text:'是',
-                                onPress:this._confirm
+                                onPress:()=>{
+                                    this.hideActivityIndicator();
+                                    this.props.initialize({top:'0'});
+                                }
                             },
                             {
                                 text:'否',
-                                onPress:this._cancel
+                                onPress:() => {
+                                    this.hideActivityIndicator();
+                                    this.props.navigation.state.params.callback({});
+                                    this.props.navigation.goBack();
+                                }
                             }
                         ]
                     });
@@ -90,7 +87,7 @@ class BillLabelAddForm extends BaseComponent {
 
                 <View style={{height:pxTodpHeight(24)}}/>
                 <Field name={'top'} component={RadioButton} title={'置顶'} isNeed={true}
-                       values={[{id:'0',name:'否'},{id:'1',name:'是'}]} defaultValue={'0'}
+                       values={[{id:'0',name:'否'},{id:'1',name:'是'}]}
                 />
 
                 <View style={{height:pxTodpHeight(24)}}/>

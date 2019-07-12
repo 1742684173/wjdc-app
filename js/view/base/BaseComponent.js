@@ -8,7 +8,7 @@ import {
     Text,
     Alert,
     TouchableOpacity,
-    SafeAreaView,
+    SafeAreaView, KeyboardAvoidingView,
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import backImg from '../../img/common/back-icon.png';
@@ -139,9 +139,8 @@ export default class BaseComponent extends Component<any> {
                         this.renderDisNet()
                     }
 
-                    {
-                        view
-                    }
+                    {view}
+
                 </View>
             </SafeAreaView>
         );

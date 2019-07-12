@@ -226,6 +226,7 @@ class BillEditForm extends BaseComponent {
                     <Text style={styles.btnSubmit}>提交</Text>
                 </Button>
 
+                <View style={{height:200}}/>
             </ScrollView>
         );
 

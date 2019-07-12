@@ -80,7 +80,7 @@ class BillDetail extends BaseComponent {
                 <View style={[styles.itemView,{marginTop:0}]}>
                     <Text style={styles.textName}>时间：</Text>
                     <Text style={styles.textValue}>{
-                        moment(this.state.data.dates).format("YYYY-MM-DD hh:mm:ss")
+                        moment(this.state.data.dates).format("YYYY-MM-DD HH:mm:ss")
                     }</Text>
                 </View>
 

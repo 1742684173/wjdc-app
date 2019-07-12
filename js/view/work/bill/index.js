@@ -150,7 +150,7 @@ class BillInfo extends BaseComponent {
     }
 
     _refresh = async () => {
-        this.setState({refreshing:true});
+        await this.setState({refreshing:true});
         await this.getBillInfo();
         this.setState({refreshing:false});
     }

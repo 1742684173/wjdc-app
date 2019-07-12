@@ -26,17 +26,7 @@ class BillSortAddForm extends BaseComponent {
     componentDidMount = async () => {
         super.componentDidMount();
         await this.initBase();
-    }
-
-    _confirm = ()=>{
-        this.hideActivityIndicator();
-        this.props.initialize({});
-    }
-
-    _cancel = () => {
-        this.hideActivityIndicator();
-        this.props.navigation.state.params.callback({});
-        this.props.navigation.goBack();
+        this.props.initialize({top:'0'});
     }
 
     //添加
@@ -62,11 +52,18 @@ class BillSortAddForm extends BaseComponent {
                         buttons:[
                             {
                                 text:'是',
-                                onPress:this._confirm
+                                onPress:()=>{
+                                    this.hideActivityIndicator();
+                                    this.props.initialize({top:'0'});
+                                }
                             },
                             {
                                 text:'否',
-                                onPress:this._cancel
+                                onPress:() => {
+                                    this.hideActivityIndicator();
+                                    this.props.navigation.state.params.callback({});
+                                    this.props.navigation.goBack();
+                                }
                             }
                         ]
                     });
