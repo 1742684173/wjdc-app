@@ -17,8 +17,8 @@ type Props = {
 };
 
 const type = [
-    {id:'in',name:'收入'},
-    {id:'out',name:'支出'},
+    {id:1,name:'收入'},
+    {id:-1,name:'支出'},
 ];
 
 const dateformats = [

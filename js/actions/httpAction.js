@@ -19,11 +19,11 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
     console.log((desc?desc:'')+'actionType：'+actionType);
 
     //
-    let token = await AsyncStorage.getItem(appJson.key.loginToken);
+    let token = await AsyncStorage.getItem(appJson.key.token);
 
     //唯一标识
     const uid = 'uid';//DeviceInfo.getUniqueID();
-    const headerParams = Object.assign({},token?{token:token}:{uid:uid});
+    const headerParams = Object.assign({uid:uid},token?{token:token}:{});
     console.log((desc?desc:'')+'headerParams信息：'+JSON.stringify(headerParams));
 
     //签名

@@ -43,7 +43,8 @@ export default class BaseComponent extends Component<any> {
                 </TouchableOpacity>
             ),
             title: params?params.title:'',
-            headerRight:params && params.rightView?params.rightView:<MessageButton/>,
+            headerRight:params && params.rightView?params.rightView:<View/>,
+            // headerRight:navigation.props.rightView,
         }
     };
 
@@ -80,6 +81,10 @@ export default class BaseComponent extends Component<any> {
     componentWillUnMount(){
         NetInfo.removeEventListener('connectionChange', this.handleConnectivityChange);
         Orientation.removeOrientationListener(this._orientationDidChange);
+    }
+
+    setRightView = (view) => {
+        this.props.navigation.setParams({rightView:view});
     }
 
     _signOut = async () => {

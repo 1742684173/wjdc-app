@@ -19,16 +19,16 @@ const TAB_ICONS = {
         default: require('../img/tab/tab_button_3_nor.png'),
         active: require('../img/tab/tab_button_3_selected.png'),
     },
-    // Mine: {
-    //   default: require('../img/tab/tab_button_4_nor.png'),
-    //   active: require('../img/tab/tab_button_4_selected.png'),
-    // },
+    Mine: {
+      default: require('../img/tab/tab_button_4_nor.png'),
+      active: require('../img/tab/tab_button_4_selected.png'),
+    },
 };
 
 const TAB_CONFIG_MAP = [
-    { title: '首页', routeName: 'Home', screen: Home },
-    { title: '工作', routeName: 'Work', screen: Work },
-    // { title: '我的', routeName: 'Mine', screen: Mine },
+    // { title: '首页', routeName: 'Home', screen: Home },
+    // { title: '工作', routeName: 'Work', screen: Work },
+    { title: '我的', routeName: 'Mine', screen: Mine },
 ];
 
 const createTabIconForRouteName = (routeName) => ({ focused }) => {

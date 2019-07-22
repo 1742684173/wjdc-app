@@ -14,26 +14,35 @@ import Echarts from 'native-echarts';
 import EchartsUtil from '../../../utils/EchartsUtil';
 import moment from "moment";
 import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
+import {
+    getCurrentMonthEndDate,
+    getCurrentMonthStartDate, getCurrentQuarterEndDate, getCurrentQuarterStartDate,
+    getCurrentWeekEndDate,
+    getCurrentWeekStartDate, getLastMonthEndDate, getLastMonthStartDate,
+    getLastWeekEndDate,
+    getLastWeekStartDate, getTodayEndDate, getTodayStartDate, getYesterdayEndDate, getYesterdayStartDate
+} from "../../../utils/DateUtil";
 
 let echartsUtil = new EchartsUtil();
 
 const filter = [
-    {id:'currentDay',name:'当日'},
-    {id:'lastDay',name:'上日'},
-    {id:'currentWeek',name:'本周'},
-    {id:'lastWeek',name:'上周'},
-    {id:'currentMouth',name:'本月'},
-    {id:'lastMouth',name:'上月'},
-    {id:'currentQuarter',name:'本季度'},
-    {id:'lastQuarter',name:'上季度'},
-    {id:'currentYear',name:'本年'},
-    {id:'lastYear',name:'上一年'},
+    {id:'currentDay',name:'当日',startTime:getTodayStartDate(),endTime:getTodayEndDate()},
+    {id:'lastDay',name:'上日',startTime:getYesterdayStartDate(),endTime:getYesterdayEndDate()},
+    {id:'currentWeek',name:'本周',startTime:getCurrentWeekStartDate(),endTime:getCurrentWeekEndDate()},
+    {id:'lastWeek',name:'上周',startTime: getLastWeekStartDate(),endTime:getLastWeekEndDate()},
+    {id:'currentMouth',name:'本月',startTime:getCurrentMonthStartDate(),endTime:getCurrentMonthEndDate()},
+    {id:'lastMouth',name:'上月',startTime:getLastMonthStartDate(),endTime:getLastMonthEndDate()},
+    {id:'currentQuarter',name:'本季度',startTime:getCurrentQuarterStartDate(),endTime:getCurrentQuarterEndDate()},
+    // {id:'lastQuarter',name:'上季度'},
+    // {id:'currentYear',name:'本年'},
+    // {id:'lastYear',name:'上一年'},
 ];
 
 
 class BillTotal extends BaseComponent {
 
     state = {
+        filterValue:'currentDay',
         sort:[],
         label:[],
         selectLabel: {
@@ -42,7 +51,6 @@ class BillTotal extends BaseComponent {
             sortId:'all',
             dateformat:'%Y-%m-%d',
         },
-        filterValue:'currentDay',
         //starDate:moment(new Date()).format('YYYY-MM-DD')+' 00:00:00',//开始时间
         //endDate:moment(new Date()).format('YYYY-MM-DD')+' 24:00:00',//结束时间
         dataByDates:echartsUtil.init().getOption(),
@@ -60,9 +68,8 @@ class BillTotal extends BaseComponent {
 
     initLabel = () => {
         this.type = null;
-        this.startTime = null;
-        this.endTime = null;
-        this.filteTime = 'currentDay';
+        this.startTime = getTodayStartDate();
+        this.endTime = getTodayEndDate();
         this.labelId = null;
         this.sortId = null;
         this.dateformat = '%Y-%m-%d';
@@ -97,7 +104,6 @@ class BillTotal extends BaseComponent {
             type:this.type,
             startTime:this.startTime,
             endTime:this.endTime,
-            filteTime:this.filteTime,
             labelId:this.labelId,
             sortId:this.sortId,
             dateformat:this.dateformat,
@@ -200,7 +206,7 @@ class BillTotal extends BaseComponent {
                             {
                                 name:'分类',
                                 type: 'pie',
-                                radius : '70%',
+                                radius : '60%',
                                 center: ['50%', '60%'],
                                 data:data.list,
                                 itemStyle: {
@@ -233,7 +239,7 @@ class BillTotal extends BaseComponent {
                             {
                                 name:'收入与支出',
                                 type: 'pie',
-                                radius : '70%',
+                                radius : '60%',
                                 center: ['50%', '60%'],
                                 data:data.list,
                                 itemStyle: {
@@ -299,7 +305,8 @@ class BillTotal extends BaseComponent {
     _onFilterItem = async (item) => {
         this.refs.dateBetween.clear();
         await this.setState({filterValue:item.id});
-        this.filteTime = item.id;
+        this.startTime = item.startTime;
+        this.endTime = item.endTime;
 
         await this._totalData();
     }
@@ -307,8 +314,8 @@ class BillTotal extends BaseComponent {
     //搜索
     _onSearchDate = async (startTime,endTime) => {
         await this.setState({filterValue:null});
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = startTime+' 00:00:00';
+        this.endTime = endTime+' 23:59:59';
         this.filteTime = null;
 
         await this._totalData();

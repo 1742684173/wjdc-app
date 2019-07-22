@@ -57,12 +57,12 @@ class SignIn extends BaseComponent {
         this.showActivityIndicator();
 
         try{
-            const {type,code,msg,data} = await this.props.postAction(appJson.action.signIn,params,'登录');
+            const  {type,code,msg,data} = await this.props.postAction(appJson.action.signIn,params,'登录');
             if(type === appJson.action.signIn){
                 if(code === appJson.action.success){
                     await AsyncStorage.setItem(appJson.key.loginAccount,account);
                     await AsyncStorage.setItem(appJson.key.loginPassword,password);
-                    await AsyncStorage.setItem(appJson.key.loginToken,data.token);
+                    await AsyncStorage.setItem(appJson.key.token,data.token);
                     await this.hideActivityIndicator();
                     this.props.navigation.navigate('App');
 

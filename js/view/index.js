@@ -2,8 +2,8 @@ import { SwitchNavigator, DrawerNavigator } from 'react-navigation';
 import StackNavigator from './common/StackNavigator';
 import Main from './Main';
 import SignIn from './auth/SignIn';
-// import SignUp from './auth/SignUp';
-// import FindPwd from './auth/FindPwd';
+import SignUp from './auth/SignUp';
+import FindPwd from './auth/FindPwd';
 import AuthLoading from './auth';
 import Publish from './publish';
 import DrawerSideBar from './DrawerSideBar';
@@ -23,10 +23,19 @@ import BillSortDetail from './work/bill/sort/BillSortDetail';
 import BillSortAddForm from './work/bill/sort/BillSortAddForm';
 import BillSortUpdateForm from './work/bill/sort/BillSortEditForm';
 import Contact from './work/contact';
-import ContactDetail from './work/contact/ContactDetail'
+import ContactDetail from './work/contact/ContactDetail';
+import About from './mine/about';
+import Help from './mine/help';
+import Set from './mine/set';
+import Service from './mine/service';
 
 const AppStack = StackNavigator({
+    // Set,
     Main,
+    About,
+    Help,
+    Set,
+    Service,
     Bill,
     BillHistory,
     BillTotal,
@@ -51,8 +60,8 @@ const AppStack = StackNavigator({
 const AuthStack = StackNavigator(
     {
         SignIn,
-        // SignUp,
-        // FindPwd,
+        SignUp,
+        FindPwd,
     },
 );
 

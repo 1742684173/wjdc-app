@@ -75,8 +75,13 @@ class Contact extends Component{
     }
 
     //根据名称搜索
-    _searchContact = (value) => {
+    _onSearchBtn = (value) => {
         this._getContactList({'i_sCxtj':value});
+    }
+
+    //根据名称搜索
+    _onAddBtn = (value) => {
+
     }
 
     //刷新
@@ -93,11 +98,18 @@ class Contact extends Component{
             <View keyboardDismissMode={'on-drag'} style={{backgroundColor:'#ffffff'}}>
 
 
-                <Search
-                    placeholder={'请输入姓名'}
-                    onSearchBtn={this._searchContact}
-                    isShowAdd={false}
-                    onAddBtn={()=>{}}/>
+                <View style={{backgroundColor:'#ffffff',marginBottom: 5}}>
+                    <Search
+                        ref={'search'}
+                        placeholder={'请转入关健字'}//提示
+                        isShowBeforeBtn={true}//是否显示前面按钮
+                        onBeforeBtn={this._onSearchBtn}//
+                        // beforeImg={beforeImg}//图标
+                        isShowMiddle={true}//是否显示中间按钮
+                        onMiddleBtn={this._onAddBtn}
+                        isShowBehind={false}//是否显示后面按钮
+                    />
+                </View>
 
                 <MySectionList
                     data={this.state.data}

@@ -14,6 +14,14 @@ import {daysReduce, formatDate, formatDateToWeek, numberFormatter} from "../../.
 import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 import test from '../../../test/img/index_icon_16.png'
 import Divider from "../../common/Divider";
+import {
+    getCurrentMonthEndDate,
+    getCurrentMonthStartDate,
+    getCurrentWeekEndDate, getCurrentWeekStartDate, getCurrentYearEndDate, getCurrentYearStartDate,
+    getLastWeekStartDate,
+    getTodayEndDate,
+    getTodayStartDate
+} from "../../../utils/DateUtil";
 
 const billManager = [
     {route:'BillAddForm',name:'新增帐单',icon:test},
@@ -44,8 +52,6 @@ class BillInfo extends BaseComponent {
         super(props);
         this.setTitle('我的帐单');
 
-        let nowDate = new Date();
-        console.log(daysReduce('2019-07-05','2019-07-07'));
     }
 
     componentDidMount = async () => {
@@ -63,16 +69,24 @@ class BillInfo extends BaseComponent {
             let billParams = await this.props.postAction(appJson.action.billFind,{pageSize:3,currentPage:1,sortName:'dates desc'},'查询账单');
             this.dealParam(billParams);
 
-            const currentDay = await this.props.postAction(appJson.action.totalBillByType,{filteTime:'currentDay'},'今日统计');
+            const currentDay = await this.props.postAction(appJson.action.totalBillByType, {
+                startTime:getTodayStartDate(),endTime:getTodayEndDate()
+            },'今日统计');
             this.dealParam(currentDay,1);
 
-            const currentWeek = await this.props.postAction(appJson.action.totalBillByType,{filteTime:'currentWeek'},'本周统计');
+            const currentWeek = await this.props.postAction(appJson.action.totalBillByType,{
+                startTime:getCurrentWeekStartDate(),endTime:getCurrentWeekEndDate()
+            },'本周统计');
             this.dealParam(currentWeek,2);
 
-            const currentMouth = await this.props.postAction(appJson.action.totalBillByType,{filteTime:'currentMouth'},'本月统计');
+            const currentMouth = await this.props.postAction(appJson.action.totalBillByType,{
+                startTime:getCurrentMonthStartDate(),endTime:getCurrentMonthEndDate()
+            },'本月统计');
             this.dealParam(currentMouth,3);
 
-            const currentYear = await this.props.postAction(appJson.action.totalBillByType,{filteTime:'currentYear'},'本年统计');
+            const currentYear = await this.props.postAction(appJson.action.totalBillByType,{
+                startTime:getCurrentYearStartDate(),endTime:getCurrentYearEndDate()
+            },'本年统计');
             this.dealParam(currentYear,4);
 
             this.hideActivityIndicator();

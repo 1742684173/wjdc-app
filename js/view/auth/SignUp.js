@@ -7,7 +7,7 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
-    Alert,
+    Alert, AsyncStorage,
 } from 'react-native';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
@@ -18,23 +18,22 @@ import Input from '../common/Input';
 import Field from '../common/Field';
 import * as actions from '../../actions';
 import VCode from './common/VCode';
-import Back from "../common/Back";
+import BaseComponent from "../base/BaseComponent";
+import {pxTodpHeight,pxTodpWidth} from "../../utils/ScreenUtil";
+import * as appJson from '../../../app';
 
-class SignUp extends Component<any> {
-    static navigationOptions = ({navigation}) => ({
-        headerLeft:<Back navigation={navigation}/>,
-        title: '创建用户',
-        headerRight:<View/>,
-    });
+class SignUp extends BaseComponent {
+
+    state={
+        visible:false,
+        codeMsg:'获取验证码',
+        count:0,
+    }
 
     constructor(props) {
         super(props);
-        this.state={
-            visible:false,
-            codeMsg:'获取验证码',
-            count:0,
-            isTelType:false,//注册类型 0|电话 1|邮箱
-        }
+        this.setTitle('创建用户');
+        this.setRightView(<View/>);
     }
 
     componentWillReceiveProps(next){
@@ -64,151 +63,145 @@ class SignUp extends Component<any> {
 
     _signUp = async (object:Object) => {
         console.log('---->'+JSON.stringify(object));
-        if(!object.account){
-            Alert.alert(
-                '信息提示',
-                '请输入名称/邮箱/电话',
-                [
-                    {text: '确定',},
-                ],
-                { cancelable: false }
-            );
+        if(!object.tel){
+            this.showToast('请输入手机号');
             return;
         }
 
         if(!object.password){
-            Alert.alert(
-                '信息提示',
-                '请输入密码',
-                [
-                    {text: '确定',},
-                ],
-                { cancelable: false }
-            );
+            this.showToast('请输入密码');
             return;
         }
-        let params = Object.assign(object,{password:md5(object.password)});
 
-        this.setState({visible:true});
-        const {type} = await this.props.postAction(params);
-        this.setState({visible:false});
-        //this.props.navigation.navigate('App');
+        if(object.password != object.password1){
+            this.showToast('两次密码不一样');
+            return;
+        }
+
+        if(!object.code){
+            this.showToast('请输入验证码');
+            return;
+        }
+
+
+        try{
+            this.showActivityIndicator();
+            const {type,code,msg,data} = await this.props.postAction(appJson.action.signUp, {
+                tel:object.tel,
+                password:md5(object.password),
+                code:object.code,
+            },'创建用户');
+
+            if(type === appJson.action.signUp){
+                if(code === appJson.action.success){
+                    await AsyncStorage.removeItem(appJson.key.token);
+                    this.showAlert({
+                        content:'创建成功，去登录?',
+                        buttons:[
+                            {
+                                text:'确定',
+                                onPress:()=>this.props.navigation.goBack()
+                            }
+                        ]
+                    });
+                }else{
+                    this.showToast(msg)
+                }
+
+            }
+        }catch (e) {
+            this.handleRequestError(e);
+        }
     }
 
     //获取验证码
     _getCode = async(object:Object) => {
-        if(!object.tel || !object.em){
-            Alert.alert(
-                '信息提示',
-                '请输入名称/邮箱/电话',
-                [
-                    {text: '确定',},
-                ],
-                { cancelable: false }
-            );
+        if(!object.tel){
+            this.showToast('请输入手机号');
             return;
         }
-        this.setState({count:5,});
 
-    }
+        try{
+            this.showActivityIndicator();
+            const {type,code,msg,data} = await this.props.postAction(appJson.action.getCode,{tel:object.tel},'获取验证码');
 
-    _switchView = () => {
-        this.setState({isTelType:!this.state.isTelType});
+            if(type === appJson.action.getCode){
+                if(code === appJson.action.success){
+                    await this.setState({count:60,});
+                    await AsyncStorage.setItem(appJson.key.token,data.token);
+                    this.hideActivityIndicator();
+                }
+                this.showToast(msg);
+            }
+        }catch (e) {
+            this.handleRequestError(e);
+        }
+
+
     }
 
     render() {
+        super.render();
         const {handleSubmit} = this.props;
-        return (
+
+        let view = (
             <ScrollView
                 style={styles.container}
                 contentContainerStyle={styles.content}
                 keyboardShouldPersistTaps='handled'
             >
 
-                <View>
-                    <View style={styles.switch}>
-                        <TouchableOpacity
-                            onPress={this._switchView}
-                            style={[styles.switchItem, {
-                                backgroundColor:this.state.isTelType?'#21c2fd':'#ffffff',
-                                borderTopLeftRadius:10,
-                            }]}
-                        >
-                            <Text style={{fontSize:pxTodpWidth(40), color:this.state.isTelType?'#ffffff':'#21c2fd'}}>
-                                电话创建
-                            </Text>
-                        </TouchableOpacity>
+                <Field
+                    style={styles.input}
+                    name={'tel'}
+                    placeholder={'请输入手机号'}
+                    disableUnderline={true}
+                    returnKeyType={'next'}
+                    component={Input}
+                />
 
-                        <TouchableOpacity
-                            onPress={this._switchView}
-                            style={[styles.switchItem, {
-                                backgroundColor:this.state.isTelType?'#ffffff':'#21c2fd',
-                                borderTopRightRadius:pxTodpWidth(20),
-                            }]}
-                        >
-                            <Text style={{fontSize:pxTodpWidth(40), color:this.state.isTelType?'#21c2fd':'#ffffff'}}>
-                                邮箱创建
-                            </Text>
-                        </TouchableOpacity>
+                <Field
+                    style={styles.input}
+                    name={'code'}
+                    placeholder={'请输入验证码'}
+                    disableUnderline={true}
+                    returnKeyType={'next'}
+                    component={Input}
+                    postfix={
+                        <VCode
+                            disabled={this.state.count>0}
+                            msg={this.state.codeMsg}
+                            onPress={handleSubmit(this._getCode)}/>
+                    }
+                />
 
-                    </View>
+                <Field
+                    style={[styles.input]}
+                    name={'password'}
+                    placeholder={'请输入密码'}
+                    disableUnderline={true}
+                    returnKeyType={'next'}
+                    secureTextEntry
+                    component={Input}
+                />
 
+                <Field
+                    style={styles.input}
+                    name={'password1'}
+                    placeholder={'请确认密码'}
+                    disableUnderline={true}
+                    returnKeyType={'next'}
+                    secureTextEntry
+                    component={Input}
+                />
 
-                    <View style={styles.divItem}>
-                        <Field
-                            style={styles.input}
-                            name={!this.state.isTelType?'tel':'email'}
-                            placeholder={!this.state.isTelType?'请输入手机号':'请输入邮箱'}
-                            disableUnderline={true}
-                            returnKeyType={'next'}
-                            component={Input}
-                        />
-
-                        <Field
-                            style={styles.input}
-                            name={'vcode'}
-                            placeholder={'请输入验证码'}
-                            disableUnderline={true}
-                            returnKeyType={'next'}
-                            component={Input}
-                            postfix={
-                                <VCode
-                                    disabled={this.state.count>0}
-                                    msg={this.state.codeMsg}
-                                    onPress={handleSubmit(this._getCode)}/>
-                            }
-                        />
-
-                        <Field
-                            style={[styles.input]}
-                            name={'password'}
-                            placeholder={'请输入密码'}
-                            disableUnderline={true}
-                            returnKeyType={'next'}
-                            secureTextEntry
-                            component={Input}
-                        />
-
-                        <Field
-                            style={styles.input}
-                            name={'password'}
-                            placeholder={'请确认密码'}
-                            disableUnderline={true}
-                            returnKeyType={'next'}
-                            secureTextEntry
-                            component={Input}
-                        />
-
-                    </View>
-
-                </View>
-
-                <Button style={{marginTop: pxTodpHeight(60),height:pxTodpHeight(78)}} onPress={handleSubmit(this._signUp)}>
+                <Button style={{marginTop: pxTodpHeight(60),height:pxTodpHeight(78),backgroundColor:'#21c3ff'}} onPress={handleSubmit(this._signUp)}>
                     <Text style={styles.btnSignIn}>提交</Text>
                 </Button>
 
             </ScrollView>
         );
+        return super.renderBase(view);
     }
 
 }

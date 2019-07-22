@@ -12,7 +12,32 @@ import Button from "../../common/Button";
 import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
 import {formatDate, formatDateToWeek} from "../../../utils/ToolUtil";
 import Divider from "../../common/Divider";
+import {
+    getCurrentMonthEndDate,
+    getCurrentMonthStartDate, getCurrentQuarterEndDate, getCurrentQuarterStartDate,
+    getCurrentWeekEndDate,
+    getCurrentWeekStartDate, getLastMonthEndDate, getLastMonthStartDate, getLastWeekEndDate, getLastWeekStartDate,
+    getTodayEndDate,
+    getTodayStartDate,
+    getYesterdayEndDate,
+    getYesterdayStartDate
+} from "../../../utils/DateUtil";
+import DateBetween from "../../common/DateBetween";
+import FilterTab from "../../common/FilterTab";
 
+
+const filter = [
+    {id:'currentDay',name:'当日',startTime:getTodayStartDate(),endTime:getTodayEndDate()},
+    {id:'lastDay',name:'上日',startTime:getYesterdayStartDate(),endTime:getYesterdayEndDate()},
+    {id:'currentWeek',name:'本周',startTime:getCurrentWeekStartDate(),endTime:getCurrentWeekEndDate()},
+    {id:'lastWeek',name:'上周',startTime: getLastWeekStartDate(),endTime:getLastWeekEndDate()},
+    {id:'currentMouth',name:'本月',startTime:getCurrentMonthStartDate(),endTime:getCurrentMonthEndDate()},
+    {id:'lastMouth',name:'上月',startTime:getLastMonthStartDate(),endTime:getLastMonthEndDate()},
+    {id:'currentQuarter',name:'本季度',startTime:getCurrentQuarterStartDate(),endTime:getCurrentQuarterEndDate()},
+    // {id:'lastQuarter',name:'上季度'},
+    // {id:'currentYear',name:'本年'},
+    // {id:'lastYear',name:'上一年'},
+];
 
 class BillHistory extends BaseComponent {
 
@@ -287,8 +312,8 @@ class BillHistory extends BaseComponent {
         this.currentPage = 1;
 
         this.type = obj.type === 'all'?null:obj.type;
-        this.startTime = obj.startTime;
-        this.endTime = obj.endTime;
+        this.startTime = obj.startTime?obj.startTime+' 00:00:00':null;
+        this.endTime = obj.endTime?obj.endTime+' 23:59:59':null;
         this.sortName = obj.sortName;
         this.minSum = obj.minSum;
         this.maxSum = obj.maxSum;
