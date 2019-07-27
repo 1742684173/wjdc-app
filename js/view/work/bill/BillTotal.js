@@ -206,7 +206,7 @@ class BillTotal extends BaseComponent {
                             {
                                 name:'分类',
                                 type: 'pie',
-                                radius : '60%',
+                                radius : '50%',
                                 center: ['50%', '60%'],
                                 data:data.list,
                                 itemStyle: {
@@ -239,7 +239,7 @@ class BillTotal extends BaseComponent {
                             {
                                 name:'收入与支出',
                                 type: 'pie',
-                                radius : '60%',
+                                radius : '50%',
                                 center: ['50%', '60%'],
                                 data:data.list,
                                 itemStyle: {

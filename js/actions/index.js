@@ -1,4 +1,4 @@
 import {postAction} from "./httpAction";
-import {getAges} from "./testAction";
+import {setGestureAction} from "./appAction";
 
-export {postAction,getAges}
+export {postAction,setGestureAction}

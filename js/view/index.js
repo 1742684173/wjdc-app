@@ -1,6 +1,7 @@
 import { SwitchNavigator, DrawerNavigator } from 'react-navigation';
 import StackNavigator from './common/StackNavigator';
 import Main from './Main';
+import CheckLock from './auth/CheckLock';
 import SignIn from './auth/SignIn';
 import SignUp from './auth/SignUp';
 import FindPwd from './auth/FindPwd';
@@ -26,15 +27,24 @@ import Contact from './work/contact';
 import ContactDetail from './work/contact/ContactDetail';
 import About from './mine/about';
 import Help from './mine/help';
+import Feedback from './mine/help/Feedback';
+import Instruction from './mine/help/Instruction';
 import Set from './mine/set';
+import UpdateTel from './mine/set/UpdateTel';
+import UpdatePassword from './mine/set/UpdatePassword';
+import Lock from './mine/set/Lock';
 import Service from './mine/service';
 
 const AppStack = StackNavigator({
-    // Set,
     Main,
     About,
     Help,
+    Feedback,
+    Instruction,
     Set,
+    UpdateTel,
+    UpdatePassword,
+    Lock,
     Service,
     Bill,
     BillHistory,
@@ -62,6 +72,7 @@ const AuthStack = StackNavigator(
         SignIn,
         SignUp,
         FindPwd,
+        CheckLock,
     },
 );
 

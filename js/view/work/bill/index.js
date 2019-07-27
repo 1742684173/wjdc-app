@@ -26,9 +26,8 @@ import {
 const billManager = [
     {route:'BillAddForm',name:'新增帐单',icon:test},
     {route:'BillAnalyse',name:'数据分析',icon:test},
-    {route:'BillLabel',name:'标签管理',icon:test},
     {route:'BillSort',name:'分类管理',icon:test},
-
+    {route:'BillLabel',name:'标签管理',icon:test},
     //{route:'AccountActivate',name:'导入支付宝数据',icon:test},
     //{route:'AccountActivate',name:'导入微信数据',icon:test},
 ];

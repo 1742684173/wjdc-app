@@ -57,6 +57,7 @@ class BillSort extends BaseComponent {
             let {type,code,msg,data} = await this.props.postAction(
                 appJson.action.billSortFind,
                 {
+                    parentId:0,
                     currentPage:this.currentPage,
                     pageSize:this.pageSize,
                     condition:this.condition,

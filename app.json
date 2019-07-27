@@ -5,7 +5,8 @@
     "sign":"1as2jfa3jkfda.jkakk",
     "loginAccount":"login_account",
     "loginPassword":"login_password",
-    "token":"token"
+    "token":"token",
+    "codeToken":"code_token"
   },
   "websocket":{
     "connect":"connect",
@@ -25,11 +26,15 @@
     "error":400,
     "sessionError":401,
 
+    "setGesture":"/set/gesture",
+
     "signIn":"/user/signIn.do",
     "signOut":"/user/signOut.do",
     "getCode":"/user/getCode.do",
     "signUp":"/user/signUp.do",
     "findPassword":"/user/findPassword.do",
+    "updatePassword":"/user/updatePassword.do",
+    "updateTel":"/user/updateTel.do",
 
     "billAdd":"/bill/add.do",
     "billDeleteById":"/bill/deleteById.do",

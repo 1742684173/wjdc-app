@@ -128,7 +128,7 @@ export default class BaseComponent extends Component<any> {
     renderBase(view){
 
         return (
-            <SafeAreaView style={{flex:1}}>
+           // <SafeAreaView style={{flex:1}}>
                 <View style={styles.contain}>
                     <MyDialog
                         type={this.state.dialogType}
@@ -147,7 +147,7 @@ export default class BaseComponent extends Component<any> {
                     {view}
 
                 </View>
-            </SafeAreaView>
+            //</SafeAreaView>
         );
     }
 

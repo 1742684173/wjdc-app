@@ -20,10 +20,11 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
 
     //
     let token = await AsyncStorage.getItem(appJson.key.token);
+    let codeToken = await AsyncStorage.getItem(appJson.key.codeToken);
 
     //唯一标识
     const uid = 'uid';//DeviceInfo.getUniqueID();
-    const headerParams = Object.assign({uid:uid},token?{token:token}:{});
+    const headerParams = Object.assign({uid:uid},token?{token:token}:{},codeToken?{codeToken:codeToken}:{});
     console.log((desc?desc:'')+'headerParams信息：'+JSON.stringify(headerParams));
 
     //签名
@@ -44,16 +45,17 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
                 .setBody(params)
                 .dofetch();
 
-            console.log((desc?desc:'')+'返回数据：'+JSON.stringify(Object.assign({},result,data)));
-            if(result.type !== appJson.action.signOut && data.code === appJson.action.sessionError){
-                console.log(11);
-                reject(Object.assign({},result,data));
+            result = Object.assign({},result,data)
+            console.log((desc?desc:'')+'返回数据：'+JSON.stringify(result));
+
+            if(result.code === appJson.action.success){
+                resolve(result);
             }else{
-                console.log(22);
-                resolve(Object.assign({},result,data));
+                reject(result.msg);
             }
+
         }catch (e) {
-            console.log((desc?desc:'')+'返回异常：'+JSON.stringify(e));
+            //console.log((desc?desc:'')+'返回异常：'+JSON.stringify(e));
             let msg = e;
             if("server error TypeError: Network request failed" === e){
                 msg = '很报歉，服务器正在维修中，请稍后再使用';
@@ -62,7 +64,16 @@ export const postAction  = async (actionType:string,object:Object,desc?:string,b
             }else{
                 msg = '请求错误';
             }
-            reject(Object.assign({code:appJson.action.connectServerError,msg:msg},result));
+
+            result = Object.assign(result,{msg:msg,code:appJson.action.connectServerError})
+            console.log((desc?desc:'')+'返回数据异常：'+JSON.stringify(result));
+
+            if(result.type === appJson.action.signOut){
+                resolve(result);
+            }else{
+                reject(result);
+            }
+
         }
     })
 

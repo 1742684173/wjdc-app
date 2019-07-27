@@ -26,7 +26,7 @@ const TAB_ICONS = {
 };
 
 const TAB_CONFIG_MAP = [
-    // { title: '首页', routeName: 'Home', screen: Home },
+    { title: '首页', routeName: 'Home', screen: Home },
     // { title: '工作', routeName: 'Work', screen: Work },
     { title: '我的', routeName: 'Mine', screen: Mine },
 ];

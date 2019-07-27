@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import {View, StyleSheet, FlatList, Text, TouchableOpacity, Image, TouchableWithoutFeedback} from 'react-native';
+import {
+    View,
+    StyleSheet,
+    Text,
+} from 'react-native';
 import {connect} from 'react-redux';
 import * as appJson from '../../../../app';
 import * as actions from '../../../actions';
 import BaseComponent from '../../base/BaseComponent'
 import Button from "../../common/Button";
 import {pxTodpHeight, pxTodpWidth} from "../../../utils/ScreenUtil";
+import Field from "../../common/Field";
+import TextArea from "../../common/TextArea";
 
 
-class About extends BaseComponent {
+class Instruction extends BaseComponent {
 
     state = {
 
@@ -17,15 +23,13 @@ class About extends BaseComponent {
     // 构造
     constructor(props){
         super(props);
-        this.setTitle('关于我们');
+        this.setTitle('帮助');
     }
-
-
 
     render() {
         super.render();
         let view = (
-            <View style={styles.contain}>
+            <View style={{flex:1}}>
 
             </View>
         )
@@ -38,11 +42,8 @@ class About extends BaseComponent {
 
 
 const styles = StyleSheet.create({
-    contain:{
-        flex:1,
-        justifyContent: 'center',
-        alignItems:'center',
-    }
+
 });
 
-export default connect(null,actions)(About);
+
+export default connect(null,actions)(Instruction);

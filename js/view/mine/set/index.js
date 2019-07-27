@@ -26,14 +26,16 @@ class About extends BaseComponent {
         this.showActivityIndicator();
         try{
             await this.props.postAction(appJson.action.signOut,{},'退出');
-            this.hideActivityIndicator();
+
         }catch (e) {
+            console.log(JSON.stringify(e));
         }
+        this.hideActivityIndicator();
         this.props.navigation.navigate('Auth');
     }
 
-    _onPress = () => {
-
+    _onPress = (nav) => {
+        this.props.navigation.navigate(nav);
     }
 
     render() {
@@ -43,17 +45,17 @@ class About extends BaseComponent {
 
                 <View style={{height:pxTodpHeight(10)}}/>
 
-                <Button style={styles.itemView} onPress={()=>this._onPress('Service')}>
+                <Button style={styles.itemView} onPress={()=>this._onPress('UpdateTel')}>
                     <Text style={styles.itemFontFront}>更换手机</Text>
                     <Image source={rightImg}/>
                 </Button>
 
-                <Button style={styles.itemView} onPress={()=>this._onPress('Service')}>
+                <Button style={styles.itemView} onPress={()=>this._onPress('UpdatePassword')}>
                     <Text style={styles.itemFontFront}>修改密码</Text>
                     <Image source={rightImg}/>
                 </Button>
 
-                <Button style={styles.itemView} onPress={()=>this._onPress('Service')}>
+                <Button style={styles.itemView} onPress={()=>this._onPress('Lock')}>
                     <Text style={styles.itemFontFront}>设备锁</Text>
                     <Image source={rightImg}/>
                 </Button>
@@ -61,7 +63,7 @@ class About extends BaseComponent {
 
                 <View style={{height:pxTodpHeight(30)}}/>
 
-                <Button style={styles.itemView} onPress={()=>this._onPress('Service')}>
+                <Button style={styles.itemView}>
                     <Text style={styles.itemFontFront}>版本号</Text>
                     <Text style={styles.itemFontBehind}>
                         {DeviceInfo.getVersion()}
